@@ -11,7 +11,7 @@ using namespace glm;
 #include "math.h"
 
 glm::mat4 ViewMatrix;
-glm::mat4 ProjectionMatrix;
+glm::mat4 ProjectionMatrix = glm::perspective(45.0f, 4.0f/3.0f, 0.1f, 100.0f);
 glm::mat4 ModelMatrix = glm::mat4(1.0f);
 
 glm::mat4 getViewMatrix(){
@@ -20,6 +20,10 @@ glm::mat4 getViewMatrix(){
 
 glm::mat4 getModelMatrix(){
 	return ModelMatrix;
+}
+
+glm::mat4 getProjectionMatrix(){
+	return ProjectionMatrix;
 }
 
 

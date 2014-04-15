@@ -8,5 +8,6 @@ void computeMatricesFromInputs(sf::Window& window, float time);
 void handleKeyboard(float time);
 glm::mat4 getViewMatrix();
 glm::mat4 getModelMatrix();
+glm::mat4 getProjectionMatrix();
 
 #endif
