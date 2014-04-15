@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{c3f09285-dfc9-43fd-8ec4-941ec74f1d85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,6 +27,12 @@
     <ClCompile Include="Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controls.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Particle.h">
@@ -31,6 +40,12 @@
     </ClInclude>
     <ClInclude Include="Utility.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="controls.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.hpp">
+      <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

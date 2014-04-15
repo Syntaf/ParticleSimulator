@@ -1,0 +1,12 @@
+#ifndef CONTROLS_HPP
+#define CONTROLS_HPP
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
+
+void computeMatricesFromInputs(sf::Window& window, float time);
+void handleKeyboard(float time);
+glm::mat4 getViewMatrix();
+glm::mat4 getModelMatrix();
+
+#endif
