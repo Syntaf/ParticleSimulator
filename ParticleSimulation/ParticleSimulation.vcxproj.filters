@@ -24,26 +24,15 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="controls.cpp">
+    <ClCompile Include="common\controls.cpp">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="shader.cpp">
+    <ClCompile Include="common\shader.cpp">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="texture.cpp">
+    <ClCompile Include="common\texture.cpp">
       <Filter>common</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="controls.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="shader.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="texture.hpp">
-      <Filter>common</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.frag">
@@ -52,5 +41,16 @@
     <None Include="vertexShader.vert">
       <Filter>Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\controls.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\shader.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\texture.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

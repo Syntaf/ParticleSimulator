@@ -157,19 +157,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="controls.cpp" />
+    <ClCompile Include="common\controls.cpp" />
+    <ClCompile Include="common\shader.cpp" />
+    <ClCompile Include="common\texture.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="shader.cpp" />
-    <ClCompile Include="texture.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="controls.hpp" />
-    <ClInclude Include="shader.hpp" />
-    <ClInclude Include="texture.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShader.frag" />
     <None Include="vertexShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\controls.hpp" />
+    <ClInclude Include="common\shader.hpp" />
+    <ClInclude Include="common\texture.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
