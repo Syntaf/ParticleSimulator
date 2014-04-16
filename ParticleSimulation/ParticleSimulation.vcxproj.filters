@@ -30,12 +30,18 @@
     <ClCompile Include="shader.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controls.hpp">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="shader.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.hpp">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
