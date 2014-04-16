@@ -18,6 +18,15 @@ A particle simulator written with C++ SFML OpenGL and HPX demonstrating the powe
   
 [**SFML**](http://www.sfml-dev.org/):   SFML provides a simple interface to the various components of your PC, to ease the development of games and multimedia applications.
 
+Configuration
+-----------------
+The current configuration properties are set to the following locations:
+* Include directories are set to ```C:/local/(NAME)/include``` where NAME is either *SFML-2.1* or *glm*
+* SFML libraries are set to ```C:/local/SFML-2.1/lib```
+* GLEW libraries are set to ```C:/local/glew-1.10.0/lib/Release/x64```
+
+######Make sure to change these settings, or you face a number of confusing errors
+
 Building
 -------------------
 
