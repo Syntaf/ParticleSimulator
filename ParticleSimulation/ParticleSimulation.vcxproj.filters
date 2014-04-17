@@ -9,48 +9,44 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="common">
-      <UniqueIdentifier>{c3f09285-dfc9-43fd-8ec4-941ec74f1d85}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders">
-      <UniqueIdentifier>{5febb0f4-8391-4fd9-9544-18ba08f87d91}</UniqueIdentifier>
+      <UniqueIdentifier>{5af16760-1989-4550-b40c-a61269359588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{f6040ddd-28fe-47fc-af61-bf10e7249256}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="common\controls.cpp">
-      <Filter>common</Filter>
+    <ClCompile Include="Common\controls.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="common\shader.cpp">
-      <Filter>common</Filter>
+    <ClCompile Include="Common\shader.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="common\texture.cpp">
-      <Filter>common</Filter>
+    <ClCompile Include="Common\texture.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragmentShader.frag">
+    <None Include="Shaders\fragmentShader.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="vertexShader.vert">
+    <None Include="Shaders\vertexShader.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common\controls.hpp">
-      <Filter>common</Filter>
+    <ClInclude Include="Common\controls.hpp">
+      <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="common\shader.hpp">
-      <Filter>common</Filter>
+    <ClInclude Include="Common\shader.hpp">
+      <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="common\texture.hpp">
-      <Filter>common</Filter>
+    <ClInclude Include="Common\texture.hpp">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

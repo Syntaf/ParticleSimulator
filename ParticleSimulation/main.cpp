@@ -1,13 +1,15 @@
 #include <iostream>
 #include <GL/glew.h>
+#include <cstdlib>
 #include <SFML/graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
-#include "common/shader.hpp"
-#include "common/controls.hpp"
-#include "common/texture.hpp"
+#include "Common/shader.hpp"
+#include "Common/controls.hpp"
+#include "Common/texture.hpp"
+#include <sstream>
 #pragma comment(lib, "glew32.lib")
 
 int FindUnusedParticle();
@@ -61,7 +63,7 @@ int main(int argc, char* argv[]) {
 	glBindVertexArray(VertexArrayID);
 
 	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders( "vertexShader.vert", "fragmentShader.frag" );
+	GLuint programID = LoadShaders( "Shaders/vertexShader.vert", "Shaders/fragmentShader.frag" );
 
 	// Vertex shader
 	GLuint CameraRight_worldspace_ID  = glGetUniformLocation(programID, "CameraRight_worldspace");
@@ -82,7 +84,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	//load texture
-	GLuint Texture = loadDDS("particle.DDS");	
+	GLuint Texture = loadDDS("Textures/Particle.DDS");	
 
 	// The VBO containing the 4 vertices of the particles.
 	// Thanks to instancing, they will be shared by all particles.
@@ -111,8 +113,6 @@ int main(int argc, char* argv[]) {
 	glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
 	glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
-
-
 	
 	bool running=true;										//set up bool to run SFML loop
 	sf::Clock clock;										//clock for delta and controls
@@ -145,11 +145,11 @@ int main(int argc, char* argv[]) {
 		glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
 
 
-		// Generate 10 new particule each millisecond,
+		// Generate 30 new particule each millisecond,
 		// but limit this to 16 ms (60 fps), or if you have 1 long frame (1sec)
-		int newparticles = (int)(delta*10000.0);
-		if (newparticles > (int)(0.016f*10000.0))
-			newparticles = (int)(0.016f*10000.0);
+		int newparticles = (int)(delta*30000.0);
+		if (newparticles > (int)(0.016f*30000.0))
+			newparticles = (int)(0.016f*30000.0);
 		
 		for(int i=0; i<newparticles; i++){
 			int particleIndex = FindUnusedParticle();		//grab the index to give a particle life
@@ -175,7 +175,7 @@ int main(int argc, char* argv[]) {
 			ParticlesContainer[particleIndex].b = rand() % 256;
 			ParticlesContainer[particleIndex].a = 255;//(rand() % 256) / 3;
 
-			ParticlesContainer[particleIndex].size = .1f;//(rand()%1000)/2000.0f + 0.1f;
+			ParticlesContainer[particleIndex].size = .07f;//(rand()%1000)/2000.0f + 0.1f;
 			
 		}
 
@@ -299,9 +299,13 @@ int main(int argc, char* argv[]) {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
+
+		std::cout << "Particle Count: " << ParticlesCount << "\r";
 		
 		//sfml display to window
 		window.display();
+
+		
 
 	}
 	
