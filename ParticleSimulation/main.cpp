@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
 		"Particle Simulation"					//window title
 		);										//default context settings, my custom ones were screwing with the program so I let SFML decide
 
-	window.setMouseCursorVisible(false);		//no cursor is needed in this application
+	window.setMouseCursorVisible(true);			//Make sure cursor is visible
 	window.setVerticalSyncEnabled(true);		//smooth
 
 	// Initialize GLEW
@@ -113,7 +113,9 @@ int main(int argc, char* argv[]) {
 	glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
 	glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
-	
+
+	//Important to set the mouse to the middle of the screen before loop creation and calculating direction
+	sf::Mouse::setPosition(sf::Vector2i(400,300), window);	
 	bool running=true;										//set up bool to run SFML loop
 	sf::Clock clock;										//clock for delta and controls
 	float lastTime = clock.getElapsedTime().asSeconds();	//UNDER REVISION NOT IN USE
@@ -147,7 +149,9 @@ int main(int argc, char* argv[]) {
 
 		// Generate 30 new particule each millisecond,
 		// but limit this to 16 ms (60 fps), or if you have 1 long frame (1sec)
-		int newparticles = (int)(delta*30000.0);
+		int newparticles = (int)(delta*30000.0)
+			
+			;
 		if (newparticles > (int)(0.016f*30000.0))
 			newparticles = (int)(0.016f*30000.0);
 		
@@ -194,6 +198,12 @@ int main(int argc, char* argv[]) {
 				if (p.life > 0.0f){
 
 					// Simulate simple physics : gravity only, no collisions
+					glm::vec2 mousePos(
+						sf::Mouse::getPosition(window).x, 
+						sf::Mouse::getPosition(window).y
+					); 
+					mousePos = mousePos / glm::vec2(window.getSize().x/2, window.getSize().y/2) - glm::vec2(CameraPosition.x, CameraPosition.y);
+					//std::cout << "mousePos(x,y): (" << mousePos.x << "," << mousePos.y << ")\r";
 					p.speed += glm::vec3(0.0f,-9.81f, 0.0f) * (float)delta * 0.5f;
 					p.pos += p.speed * (float)delta;
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
@@ -300,7 +310,7 @@ int main(int argc, char* argv[]) {
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 
-		std::cout << "Particle Count: " << ParticlesCount << "\r";
+		//std::cout << "Particle Count: " << ParticlesCount << "\r";
 		
 		//sfml display to window
 		window.display();

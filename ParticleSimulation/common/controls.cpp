@@ -47,6 +47,7 @@ void computeMatricesFromInputs(sf::Window& window, float time){
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 		//set position of mouse so it does not move at all
 	sf::Mouse::setPosition(sf::Vector2i(400, 300), window);
+
 	//since the mouse position is always set to the center of the screen, any slight movements
 	//	are added to the horizontal and vertical angle. (400,300) must also equal zero for the 
 	//	cube to remain still at origin, so that's why the mouse position is the subtractor to
