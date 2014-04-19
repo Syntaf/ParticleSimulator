@@ -13,6 +13,8 @@ using namespace glm;
 glm::mat4 ViewMatrix;
 glm::mat4 ProjectionMatrix = glm::perspective(45.0f, 4.0f/3.0f, 0.1f, 100.0f);
 glm::mat4 ModelMatrix = glm::mat4(1.0f);
+//bool to determine if mouse button is clicked
+bool LMB_hit = false;
 
 glm::mat4 getViewMatrix(){
 	return ViewMatrix;
@@ -24,6 +26,10 @@ glm::mat4 getModelMatrix(){
 
 glm::mat4 getProjectionMatrix(){
 	return ProjectionMatrix;
+}
+
+bool LMB(){
+	return LMB_hit;
 }
 
 
@@ -40,20 +46,23 @@ glm::vec3 right(0.0);
 //speed of player moving around
 float speed = 7.0f;
 //mouse speed
-float mouseSpeed = 0.005f;
+float lookSpeed = 0.005f;
+
 
 void computeMatricesFromInputs(sf::Window& window, float time){
-	//get mouse position
-	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-		//set position of mouse so it does not move at all
-	sf::Mouse::setPosition(sf::Vector2i(400, 300), window);
 
-	//since the mouse position is always set to the center of the screen, any slight movements
-	//	are added to the horizontal and vertical angle. (400,300) must also equal zero for the 
-	//	cube to remain still at origin, so that's why the mouse position is the subtractor to
-	//	the center of the screen
-	horizontalAngle += mouseSpeed * (800/2 - mousePos.x);
-	verticalAngle   += mouseSpeed * (600/2 - mousePos.y);
+	//key inputs in order to look around, not sure what use this will
+	//have in the final program but I already written an SFML implementation
+	//awhile ago so I used it here
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+		horizontalAngle += lookSpeed * speed;
+	}else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+		horizontalAngle += lookSpeed * speed * -1;
+	}else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+		verticalAngle += lookSpeed * speed;
+	}else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+		verticalAngle += lookSpeed * speed * -1;
+	}
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
 	direction = glm::vec3(
@@ -88,14 +97,8 @@ void computeMatricesFromInputs(sf::Window& window, float time){
 		position -= right * time * speed;
 	}
 
-	//beta implementation of moving model in object space
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-		ModelMatrix = glm::translate(ModelMatrix, glm::vec3(-0.1f,0.0f,0.0f));
-	}else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-		ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.1f,0.0f,0.0f));
-	}else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-		ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.0f,0.1f,0.0f));
-	}else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-		ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.0f,-0.1f,0.0f));
-	}
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::H))
+		LMB_hit = true;
+	else
+		LMB_hit = false;
 }

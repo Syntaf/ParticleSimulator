@@ -15,6 +15,8 @@
 int FindUnusedParticle();
 void SortParticles();
 
+const int DRAG = .5;
+
 // CPU representation of a particle
 struct Particle{
 	glm::vec3 pos, speed;		//used for physics manipulation
@@ -29,7 +31,7 @@ struct Particle{
 	}
 };
 
-const int MaxParticles = 100000;				//100k max particles to start humble						
+const int MaxParticles = 100000;					//100k max particles to start humble						
 Particle ParticlesContainer[MaxParticles];		//declare array for particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -41,6 +43,7 @@ int main(int argc, char* argv[]) {
 		"Particle Simulation"					//window title
 		);										//default context settings, my custom ones were screwing with the program so I let SFML decide
 
+	glViewport(0,0,window.getSize().x,window.getSize().y);
 	window.setMouseCursorVisible(true);			//Make sure cursor is visible
 	window.setVerticalSyncEnabled(true);		//smooth
 
@@ -114,8 +117,6 @@ int main(int argc, char* argv[]) {
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
 	glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
-	//Important to set the mouse to the middle of the screen before loop creation and calculating direction
-	sf::Mouse::setPosition(sf::Vector2i(400,300), window);	
 	bool running=true;										//set up bool to run SFML loop
 	sf::Clock clock;										//clock for delta and controls
 	float lastTime = clock.getElapsedTime().asSeconds();	//UNDER REVISION NOT IN USE
@@ -147,32 +148,22 @@ int main(int argc, char* argv[]) {
 		glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
 
 
-		// Generate 30 new particule each millisecond,
+		// Generate 10 new particule each millisecond,
 		// but limit this to 16 ms (60 fps), or if you have 1 long frame (1sec)
-		int newparticles = (int)(delta*30000.0)
+		int newparticles = (int)(delta*10000.0)
 			
 			;
-		if (newparticles > (int)(0.016f*30000.0))
-			newparticles = (int)(0.016f*30000.0);
+		if (newparticles > (int)(0.016f*10000.0))
+			newparticles = (int)(0.016f*10000.0);
 		
 		for(int i=0; i<newparticles; i++){
 			int particleIndex = FindUnusedParticle();		//grab the index to give a particle life
-			ParticlesContainer[particleIndex].life = 5.0f;	//This particle will live 5 seconds.
-			ParticlesContainer[particleIndex].pos = glm::vec3(0,0,-20.0f);
+			ParticlesContainer[particleIndex].life = 2.0f;	//This particle will live 5 seconds.
 
-			float spread = 1.5f;
-			glm::vec3 maindir = glm::vec3(0.0f, 10.0f, 0.0f);
+			//generate random positions for particles in the shape of a box
+			ParticlesContainer[particleIndex].pos = glm::vec3((rand()%200)/100.0f,(rand()%200/100.0f),-20.0f);
 			
-			//bad way to randomize direction
-			glm::vec3 randomdir = glm::vec3(
-				(rand()%2000 - 1000.0f)/1000.0f,
-				(rand()%2000 - 1000.0f)/1000.0f,
-				(rand()%2000 - 1000.0f)/1000.0f
-			);
-			
-			ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
-
-
+			//ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
 			// Very bad way to generate a random color
 			ParticlesContainer[particleIndex].r = rand() % 256;
 			ParticlesContainer[particleIndex].g = rand() % 256;
@@ -198,14 +189,39 @@ int main(int argc, char* argv[]) {
 				if (p.life > 0.0f){
 
 					// Simulate simple physics : gravity only, no collisions
-					glm::vec2 mousePos(
+					glm::vec4 mousePos(
 						sf::Mouse::getPosition(window).x, 
-						sf::Mouse::getPosition(window).y
+						sf::Mouse::getPosition(window).y,
+						0.0f,
+						1.0f
 					); 
-					mousePos = mousePos / glm::vec2(window.getSize().x/2, window.getSize().y/2) - glm::vec2(CameraPosition.x, CameraPosition.y);
-					//std::cout << "mousePos(x,y): (" << mousePos.x << "," << mousePos.y << ")\r";
-					p.speed += glm::vec3(0.0f,-9.81f, 0.0f) * (float)delta * 0.5f;
-					p.pos += p.speed * (float)delta;
+
+					//manipulation from mouse cords to model-view mouse cords
+					//find inverse of Proj * View
+					glm::mat4 matProj = ViewMatrix * ProjectionMatrix;
+					glm::mat4 inverse = glm::inverse(matProj);
+					float winZ = 1.0;
+
+					//determine space cords
+					glm::vec4 vIn(	(2.0f*((float)(mousePos.x) / (window.getSize().x))) - 1.0f,		//2 * x / window.x - 1.0f
+									1.0f - (2.0f * ((float)(mousePos.y)) / (window.getSize().y)),	//1 - 2 * y / window.y
+									2.0 * winZ - 1.0f,												//equates to 1, we are only manipulating y,z
+									1.0f															//dont question it
+								);
+					//find inverse
+					glm::vec4 pos = vIn * inverse;
+
+					pos.w = 1.0 / pos.w;
+					pos.x *= pos.w;
+					pos.y *= pos.w;
+					pos.z *= pos.w;
+					
+					//probably shouldnt have this control here... but it works anyways
+					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+						p.speed += glm::vec3(-pos.x * 20, -pos.y * 20 ,0.0f);
+						p.pos += p.speed * (float)delta;
+					}
+					
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
 					//ParticlesContainer[i].pos += glm::vec3(0.0f,10.0f, 0.0f) * (float)delta;
 
@@ -311,7 +327,7 @@ int main(int argc, char* argv[]) {
 		glDisableVertexAttribArray(2);
 
 		//std::cout << "Particle Count: " << ParticlesCount << "\r";
-		
+
 		//sfml display to window
 		window.display();
 
