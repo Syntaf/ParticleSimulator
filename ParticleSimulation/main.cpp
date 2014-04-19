@@ -14,6 +14,7 @@
 
 int FindUnusedParticle();
 void SortParticles();
+float clamp(float value, float min, float max);
 
 const int DRAG = .5;
 
@@ -150,27 +151,27 @@ int main(int argc, char* argv[]) {
 
 		// Generate 10 new particule each millisecond,
 		// but limit this to 16 ms (60 fps), or if you have 1 long frame (1sec)
-		int newparticles = (int)(delta*10000.0)
+		int newparticles = (int)(delta*40000.0)
 			
 			;
-		if (newparticles > (int)(0.016f*10000.0))
-			newparticles = (int)(0.016f*10000.0);
+		if (newparticles > (int)(0.016f*40000.0))
+			newparticles = (int)(0.016f*40000.0);
 		
 		for(int i=0; i<newparticles; i++){
 			int particleIndex = FindUnusedParticle();		//grab the index to give a particle life
-			ParticlesContainer[particleIndex].life = 2.0f;	//This particle will live 5 seconds.
+			ParticlesContainer[particleIndex].life = 5.0f;	//This particle will live 5 seconds.
 
 			//generate random positions for particles in the shape of a box
-			ParticlesContainer[particleIndex].pos = glm::vec3((rand()%200)/100.0f,(rand()%200/100.0f),-20.0f);
+			ParticlesContainer[particleIndex].pos = glm::vec3((rand()%200)/50.0f,(rand()%200/50.0f),-50.0f);
 			
 			//ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
 			// Very bad way to generate a random color
-			ParticlesContainer[particleIndex].r = rand() % 256;
-			ParticlesContainer[particleIndex].g = rand() % 256;
-			ParticlesContainer[particleIndex].b = rand() % 256;
+			ParticlesContainer[particleIndex].r = 255;
+			ParticlesContainer[particleIndex].g = 0;
+			ParticlesContainer[particleIndex].b = 0;
 			ParticlesContainer[particleIndex].a = 255;//(rand() % 256) / 3;
 
-			ParticlesContainer[particleIndex].size = .07f;//(rand()%1000)/2000.0f + 0.1f;
+			ParticlesContainer[particleIndex].size = .1f;//(rand()%1000)/2000.0f + 0.1f;
 			
 		}
 
@@ -218,9 +219,14 @@ int main(int argc, char* argv[]) {
 					
 					//probably shouldnt have this control here... but it works anyways
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-						p.speed += glm::vec3(-pos.x * 20, -pos.y * 20 ,0.0f);
+						p.speed += glm::vec3(-pos.x * 40, -pos.y * 40 ,0.0f);
 						p.pos += p.speed * (float)delta;
 					}
+
+					float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
+					p.r = 255;
+					p.g = clamp(255 - (normSpeed)*25,0,255);
+					p.b = 0;
 					
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
 					//ParticlesContainer[i].pos += glm::vec3(0.0f,10.0f, 0.0f) * (float)delta;
@@ -276,6 +282,7 @@ int main(int argc, char* argv[]) {
 		glUniform3f(CameraUp_worldspace_ID   , ViewMatrix[0][1], ViewMatrix[1][1], ViewMatrix[2][1]);
 
 		glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
+
 
 		// 1st attrib buffer: vertices
 		glEnableVertexAttribArray(0);
@@ -370,4 +377,16 @@ int FindUnusedParticle(){
 //sort particles according to dist.
 void SortParticles(){
 	std::sort(&ParticlesContainer[0], &ParticlesContainer[MaxParticles]);
+}
+
+float clamp(float value, float min, float max)
+{
+	float result;
+	if(value > max)
+		result = max;
+	else if(value < min)
+		result = min;
+	else 
+		result = value;
+	return result;
 }
