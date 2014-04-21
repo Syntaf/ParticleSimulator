@@ -31,3 +31,7 @@ Building
 -------------------
 
 **Coming Soon**
+
+Additional Notes
+-------------------------
+A thanks to opengl-tutorial.org for code structure and teachings
