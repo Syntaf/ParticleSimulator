@@ -5,3 +5,7 @@ ParticleSimulator
 
 **NOTE** 
 This branch takes advantage of OpenGL's fixed function pipeline. A version is currently under development that uses the programmable pipeline, offering more control and efficiency. As a result this branch is no longer under development, switch to branch **ProgPipe** to view recent advances.
+
+
+[Fixed Function pipeline screenshot](https://vimeo.com/90272457):
+![gif](http://i.imgur.com/XcbPawQ.png)
