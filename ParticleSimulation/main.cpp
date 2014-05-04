@@ -120,13 +120,12 @@ int main(int argc, char* argv[]) {
 
 	bool running=true;										//set up bool to run SFML loop
 	sf::Clock clock;										//clock for delta and controls
-	float lastTime = clock.getElapsedTime().asSeconds();	//UNDER REVISION NOT IN USE
 	while( running )
 	{
-		double time= clock.getElapsedTime().asSeconds();
-		double delta = .03;									//PLACE HOLDER, FAKE DELTA
-		lastTime = time;
 		clock.restart();
+		double time= clock.getElapsedTime().asSeconds();
+		double delta = 0.06;
+
 		sf::Event event;
 		while(window.pollEvent(event))						//handle any closing events
 		{
@@ -171,7 +170,7 @@ int main(int argc, char* argv[]) {
 			ParticlesContainer[particleIndex].b = 0;
 			ParticlesContainer[particleIndex].a = 255;//(rand() % 256) / 3;
 
-			ParticlesContainer[particleIndex].size = .1f;//(rand()%1000)/2000.0f + 0.1f;
+			ParticlesContainer[particleIndex].size = .2f;//(rand()%1000)/2000.0f + 0.1f;
 			
 		}
 
@@ -225,7 +224,7 @@ int main(int argc, char* argv[]) {
 
 					float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
 					p.r = 255;
-					p.g = clamp(255 - (normSpeed)*25,0,255);
+					p.g = clamp(255 - (normSpeed)*40,0,255);
 					p.b = 0;
 					
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
