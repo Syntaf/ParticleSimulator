@@ -122,9 +122,7 @@ int main(int argc, char* argv[]) {
 	sf::Clock clock;										//clock for delta and controls
 	while( running )
 	{
-		clock.restart();
-		double time= clock.getElapsedTime().asSeconds();
-		double delta = 0.06;
+		double delta = clock.restart().asSeconds();
 
 		sf::Event event;
 		while(window.pollEvent(event))						//handle any closing events
@@ -138,7 +136,7 @@ int main(int argc, char* argv[]) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	//clear the screen in anticipation for drawing
 
 		//handle any input and grab matrices
-		computeMatricesFromInputs(window, time);
+		computeMatricesFromInputs(window, delta);
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
 		glm::mat4 ViewMatrix = getViewMatrix();
 

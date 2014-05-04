@@ -1,4 +1,4 @@
-﻿Build started 5/3/2014 11:30:32 PM.
+﻿Build started 5/4/2014 1:30:19 PM.
      1>Project "C:\Github\ParticleSimulator\ParticleSimulation\ParticleSimulation.vcxproj" on node 2 (Build target(s)).
      1>InitializeBuildStatus:
          Creating "x64\Release\ParticleSimulation.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -26,4 +26,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.99
+Time Elapsed 00:00:08.20
