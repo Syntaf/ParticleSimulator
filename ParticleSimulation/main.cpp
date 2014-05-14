@@ -82,9 +82,9 @@ int main(int argc, char* argv[]) {
 	static GLubyte* g_particule_color_data         = new GLubyte[MaxParticles * 4];
 
 	//initialize particle information
-	for(int i=0; i<MaxParticles; i++){
-		ParticlesContainer[i].life = -1.0f;							//starts dead
-		ParticlesContainer[i].cameradistance = -1.0f;				//not on screen
+	for(auto i : particlesContainer){
+		i.life = -1.0f;						//starts dead
+		i.cameradistance = -1.0f;				//not on screen
 	}
 
 	//load texture
@@ -154,7 +154,7 @@ int main(int argc, char* argv[]) {
 		if (newparticles > (int)(0.016f*40000.0))
 			newparticles = (int)(0.016f*40000.0);
 		
-		for(int i=0; i<newparticles; i++){
+		for(auto i=0; i<newparticles; i++){
 			int particleIndex = FindUnusedParticle();		//grab the index to give a particle life
 			ParticlesContainer[particleIndex].life = 5.0f;	//This particle will live 5 seconds.
 
@@ -354,14 +354,14 @@ int main(int argc, char* argv[]) {
 //on the last particle found. If out of particles then it overwrites first element
 int FindUnusedParticle(){
 
-	for(int i=LastUsedParticle; i<MaxParticles; i++){
+	for(auto i=LastUsedParticle; i<MaxParticles; i++){
 		if(ParticlesContainer[i].life < 0){
 			LastUsedParticle = i;
 			return i;
 		}
 	}
 
-	for(int i=0; i<LastUsedParticle; i++){
+	for(auto i=0; i<LastUsedParticle; i++){
 		if (ParticlesContainer[i].life<0){
 			LastUsedParticle = i;
 			return i;
