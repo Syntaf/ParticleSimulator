@@ -17,7 +17,7 @@ void SortParticles();
 float clamp(float value, float min, float max);
 bool greaterThanZero(const glm::vec3& a);
 
-const int DRAG = .5;
+const float DRAG = .5;
 
 // CPU representation of a particle
 struct Particle{
@@ -221,7 +221,8 @@ int main(int argc, char* argv[]) {
 						p.speed += glm::vec3(-pos.x * 40, -pos.y * 40 ,0.0f);
 					}
 
-					p.pos += p.speed * ((float)delta);
+					//update position outside condition for continually moving particles
+					p.pos += p.speed * DRAG * ((float)delta);
 
 					
 
