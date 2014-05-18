@@ -1,55 +1,32 @@
-﻿Build started 4/19/2014 12:24:57 AM.
-     1>Project "C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\ParticleSimulation\ParticleSimulation.vcxproj" on node 2 (Build target(s)).
-     1>InitializeBuildStatus:
-         Creating "x64\Debug\ParticleSimulation.unsuccessfulbuild" because "AlwaysCreate" was specified.
-       ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /IC:\local\glm /I"C:\local\glew-1.10.0\include" /I"C:\local\SFML-2.1\include" /Zi /nologo /W3 /WX- /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /D SFML_STATIC /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt main.cpp
+﻿Build started 5/17/2014 4:20:51 PM.
+     1>Project "C:\Users\Gmercer\Documents\GitHub\ParticleSimulator\ParticleSimulation\ParticleSimulation.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /IC:\local\glm /I"C:\local\glew-1.10.0\include" /I"C:\local\SFML-2.1\include" /Zi /nologo /W3 /WX- /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /D SFML_STATIC /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt Common\controls.cpp Common\shader.cpp Common\texture.cpp main.cpp
          main.cpp
-     1>main.cpp(18): warning C4244: 'initializing' : conversion from 'double' to 'const int', possible loss of data
-     1>main.cpp(40): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>main.cpp(127): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>main.cpp(141): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>main.cpp(188): warning C4244: '-=' : conversion from 'double' to 'float', possible loss of data
-     1>main.cpp(214): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\ParticleSimulation.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\local\glew-1.10.0\lib\Release\x64" /LIBPATH:"C:\local\SFML-2.1\lib" "sfml-graphics-s-d.lib" "sfml-window-s-d.lib" "sfml-system-s-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\ParticleSimulation.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\ParticleSimulation.lib" /MACHINE:X64 x64\Debug\controls.obj
-         x64\Debug\shader.obj
-         x64\Debug\texture.obj
-         x64\Debug\main.obj
-     1>sfml-graphics-s-d.lib(Color.cpp.obj) : warning LNK4099: PDB 'sfml-graphics-s-d.pdb' was not found with 'sfml-graphics-s-d.lib(Color.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-graphics-s-d.pdb'; linking object as if no debug info
-     1>sfml-graphics-s-d.lib(Image.cpp.obj) : warning LNK4099: PDB 'sfml-graphics-s-d.pdb' was not found with 'sfml-graphics-s-d.lib(Image.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-graphics-s-d.pdb'; linking object as if no debug info
-     1>sfml-graphics-s-d.lib(ImageLoader.cpp.obj) : warning LNK4099: PDB 'sfml-graphics-s-d.pdb' was not found with 'sfml-graphics-s-d.lib(ImageLoader.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-graphics-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(GlContext.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(GlContext.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(GlResource.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(GlResource.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(JoystickManager.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(JoystickManager.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(Keyboard.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(Keyboard.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(Mouse.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(Mouse.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(VideoMode.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(VideoMode.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(Window.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(Window.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(WindowImpl.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(WindowImpl.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(WglContext.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(WglContext.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(InputImpl.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(InputImpl.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(JoystickImpl.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(JoystickImpl.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(VideoModeImpl.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(VideoModeImpl.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-window-s-d.lib(WindowImplWin32.cpp.obj) : warning LNK4099: PDB 'sfml-window-s-d.pdb' was not found with 'sfml-window-s-d.lib(WindowImplWin32.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-window-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(Clock.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(Clock.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(Err.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(Err.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(Lock.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(Lock.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(Mutex.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(Mutex.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(Sleep.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(Sleep.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(String.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(String.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(ThreadLocal.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(ThreadLocal.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(Time.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(Time.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(ClockImpl.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(ClockImpl.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(MutexImpl.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(MutexImpl.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(SleepImpl.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(SleepImpl.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-     1>sfml-system-s-d.lib(ThreadLocalImpl.cpp.obj) : warning LNK4099: PDB 'sfml-system-s-d.pdb' was not found with 'sfml-system-s-d.lib(ThreadLocalImpl.cpp.obj)' or at 'C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\sfml-system-s-d.pdb'; linking object as if no debug info
-         ParticleSimulation.vcxproj -> C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\x64\Debug\ParticleSimulation.exe
-       FinalizeBuildStatus:
-         Deleting file "x64\Debug\ParticleSimulation.unsuccessfulbuild".
-         Touching "x64\Debug\ParticleSimulation.lastbuildstate".
-     1>Done Building Project "C:\Users\Grant Mercer\Documents\GitHub\ParticleSimulator\ParticleSimulation\ParticleSimulation.vcxproj" (Build target(s)).
+     1>main.cpp(19): warning C4244: 'initializing' : conversion from 'double' to 'const int', possible loss of data
+     1>main.cpp(41): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>main.cpp(144): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>main.cpp(191): warning C4244: '-=' : conversion from 'double' to 'float', possible loss of data
+     1>main.cpp(217): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>main.cpp(230): warning C4244: '=' : conversion from 'float' to 'unsigned char', possible loss of data
+     1>main.cpp(360): error C2601: 'FindUnusedParticle' : local function definitions are illegal
+                 main.cpp(39): this line contains a '{' which has not yet been matched
+     1>main.cpp(380): error C2601: 'SortParticles' : local function definitions are illegal
+                 main.cpp(39): this line contains a '{' which has not yet been matched
+     1>main.cpp(385): error C2601: 'clamp' : local function definitions are illegal
+                 main.cpp(39): this line contains a '{' which has not yet been matched
+     1>main.cpp(395): fatal error C1075: end of file found before the left brace '{' at 'main.cpp(39)' was matched
+         texture.cpp
+     1>Common\texture.cpp(23): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdio.h(218) : see declaration of 'fopen'
+     1>Common\texture.cpp(141): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdio.h(218) : see declaration of 'fopen'
+         shader.cpp
+         controls.cpp
+         GLM: perspective function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+         Generating Code...
+     1>Done Building Project "C:\Users\Gmercer\Documents\GitHub\ParticleSimulator\ParticleSimulation\ParticleSimulation.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:02.13
+Time Elapsed 00:00:07.69
