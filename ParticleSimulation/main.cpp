@@ -87,8 +87,7 @@ int main(int argc, char* argv[]) {
 		ParticlesContainer[i].life = -1.0f;
 		ParticlesContainer[i].cameradistance = -1.0f;
 	}
-	
-
+		
 	//load texture
 	GLuint Texture = loadDDS("Textures/Particle.DDS");	
 
@@ -150,18 +149,16 @@ int main(int argc, char* argv[]) {
 
 		// Generate 10 new particule each millisecond,
 		// but limit this to 16 ms (60 fps), or if you have 1 long frame (1sec)
-		int newparticles = (int)(delta*10000.0)
-			
-			;
-		if (newparticles > (int)(0.016f*10000.0))
-			newparticles = (int)(0.016f*10000.0);
+		int newparticles = (int)(delta*5000.0);
+		if (newparticles > (int)(0.016f*5000.0))
+			newparticles = (int)(0.016f*5000.0);
 		
 		for(auto i=0; i<newparticles; i++){
 			int particleIndex = FindUnusedParticle();		//grab the index to give a particle life
 			ParticlesContainer[particleIndex].life = 5.0f;	//This particle will live 5 seconds.
 
 			//generate random positions for particles in the shape of a box
-			ParticlesContainer[particleIndex].pos = glm::vec3((rand()%300)/50.0f,(rand()%300)/50.0f,-50.0f);
+			ParticlesContainer[particleIndex].pos = glm::vec3(0.0,0.0,-50.0);//glm::vec3(((rand()%500)/50.0f)-5.0,((rand()%500)/50.0f)-5.0,-50.0f);
 		
 			//ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
 			// Very bad way to generate a random color
@@ -218,17 +215,14 @@ int main(int argc, char* argv[]) {
 					
 					//probably shouldnt have this control here... but it works anyways
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-						p.speed += glm::vec3(-pos.x * 40, -pos.y * 40 ,0.0f);
+						p.speed += glm::vec3(-pos.x * 30, -pos.y * 30 ,0.0f);
 					}
-
-					//update position outside condition for continually moving particles
-					p.pos += p.speed * DRAG * ((float)delta);
-
-					
+						
+					p.pos += p.speed * (float)(delta) * DRAG * glm::vec3(rand()%5,rand()%5,0);
 
 					float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
 					p.r = 255;
-					p.g = clamp(255 - (normSpeed)*40,0,255);
+					p.g = clamp(255 - (normSpeed)*10,0,255);
 					p.b = 0;
 					
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
