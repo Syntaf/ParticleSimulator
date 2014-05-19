@@ -15,9 +15,6 @@
 int FindUnusedParticle();
 void SortParticles();
 float clamp(float value, float min, float max);
-bool greaterThanZero(const glm::vec3& a);
-
-const float DRAG = .5;
 
 // CPU representation of a particle
 struct Particle{
@@ -33,8 +30,9 @@ struct Particle{
 	}
 };
 
-const int MaxParticles = 100000;					//100k max particles to start humble						
-Particle ParticlesContainer[MaxParticles];		//declare array for particles
+const float DRAG = .5;
+const int MAXPARTICLES= 100000;					//100k max particles to start humble						
+Particle ParticlesContainer[MAXPARTICLES];		//declare array for particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
 int main(int argc, char* argv[]) {
@@ -79,11 +77,11 @@ int main(int argc, char* argv[]) {
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
 
 	//data!
-	static GLfloat* g_particule_position_size_data = new GLfloat[MaxParticles * 4];
-	static GLubyte* g_particule_color_data         = new GLubyte[MaxParticles * 4];
+	static GLfloat* g_particule_position_size_data = new GLfloat[MAXPARTICLES* 4];
+	static GLubyte* g_particule_color_data         = new GLubyte[MAXPARTICLES* 4];
 
 	//initialize particle information
-	for(auto i=0; i < MaxParticles; i++){
+	for(auto i=0; i < MAXPARTICLES; i++){
 		ParticlesContainer[i].life = -1.0f;
 		ParticlesContainer[i].cameradistance = -1.0f;
 	}
@@ -110,14 +108,14 @@ int main(int argc, char* argv[]) {
 	glGenBuffers(1, &particles_position_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
-	glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
 
 	// The VBO containing the colors of the particles
 	GLuint particles_color_buffer;
 	glGenBuffers(1, &particles_color_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
-	glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
 	bool running=true;										//set up bool to run SFML loop
 	sf::Clock clock;										//clock for delta and controls
@@ -175,7 +173,7 @@ int main(int argc, char* argv[]) {
 
 		// Simulate all particles
 		int ParticlesCount = 0;
-		for(int i=0; i<MaxParticles; i++){
+		for(int i=0; i<MAXPARTICLES; i++){
 
 			Particle& p = ParticlesContainer[i]; // shortcut
 
@@ -254,11 +252,11 @@ int main(int argc, char* argv[]) {
 
 		//update buffers openGL uses for rendering
 		glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
-		glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf
+		glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf
 		glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLfloat) * 4, g_particule_position_size_data);
 
 		glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
-		glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf
+		glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf
 		glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLubyte) * 4, g_particule_color_data);
 
 
@@ -354,7 +352,7 @@ int main(int argc, char* argv[]) {
 //on the last particle found. If out of particles then it overwrites first element
 int FindUnusedParticle(){
 
-	for(auto i=LastUsedParticle; i<MaxParticles; i++){
+	for(auto i=LastUsedParticle; i<MAXPARTICLES; i++){
 		if(ParticlesContainer[i].life < 0){
 			LastUsedParticle = i;
 			return i;
@@ -371,14 +369,9 @@ int FindUnusedParticle(){
 	return 0;		//All particles taken, override first one
 }
 
-bool greaterThanZero(const glm::vec3& a)
-{
-	return a.x > 0 && a.y > 0;
-}
-
 //sort particles according to dist.
 void SortParticles(){
-	std::sort(&ParticlesContainer[0], &ParticlesContainer[MaxParticles]);
+	std::sort(&ParticlesContainer[0], &ParticlesContainer[MAXPARTICLES]);
 }
 
 float clamp(float value, float min, float max)
