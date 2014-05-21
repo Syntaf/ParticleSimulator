@@ -163,7 +163,7 @@ int main(int argc, char* argv[]) {
 		glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
 
 
-		// Generate 10 new particule each millisecond,
+		// Generate 5 new particule each millisecond,
 		// but limit this to 16 ms (60 fps), or if you have 1 long frame (1sec)
 		int newparticles = (int)(delta*5000.0);
 		if (newparticles > (int)(0.016f*5000.0))
@@ -176,14 +176,13 @@ int main(int argc, char* argv[]) {
 			//generate random positions for particles in the shape of a box
 			ParticlesContainer[particleIndex].pos = glm::vec3(rand()%10,rand()%10,-50.0);
 		
-			//ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
 			// Very bad way to generate a random color
 			ParticlesContainer[particleIndex].r = 255;
 			ParticlesContainer[particleIndex].g = 0;
 			ParticlesContainer[particleIndex].b = 0;
-			ParticlesContainer[particleIndex].a = 255;//(rand() % 256) / 3;
+			ParticlesContainer[particleIndex].a = 255;
 
-			ParticlesContainer[particleIndex].size = .2f;//(rand()%1000)/2000.0f + 0.1f;
+			ParticlesContainer[particleIndex].size = .2f;
 			
 		}
 
@@ -232,16 +231,12 @@ int main(int argc, char* argv[]) {
 					//if left mouse button is pressed
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 						p.addForce( (glm::vec3(glm::vec3(pos.x,pos.y,-50.0) - p.pos) * (float)(5000/pow(Distance(glm::vec3(pos.x,pos.y,pos.z),p.pos)+10,2))));
-						//p.speed += glm::vec3(-pos.x * 30, -pos.y * 30 ,0.0f);	//increase speed in direction
 					}
 					p.addForce( -p.speed*DRAG);
 					
 					glm::vec3 prevPosition = p.pos;
 					p.pos = p.pos + p.speed*(float)delta + 0.5f*p.getTotalForce()/p.mass*(float)pow(delta,2);
 					p.speed = (p.pos - prevPosition)/(float)delta;
-					
-					//update position of particle with a little bit of spread -- speed(dt) * DRAG * Rand
-					//p.pos += p.speed * (float)(delta) * DRAG * glm::vec3(rand()%5,rand()%5,0);
 
 					float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
 					p.r = 255;
@@ -249,7 +244,6 @@ int main(int argc, char* argv[]) {
 					p.b = 0;
 					
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
-					//ParticlesContainer[i].pos += glm::vec3(0.0f,10.0f, 0.0f) * (float)delta;
 
 					// Fill the GPU buffer
 					g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
