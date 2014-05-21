@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <SFML/graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
@@ -15,14 +16,30 @@
 int FindUnusedParticle();
 void SortParticles();
 float clamp(float value, float min, float max);
+float Distance(glm::vec3 const&, glm::vec3 const&);
 
 // CPU representation of a particle
 struct Particle{
-	glm::vec3 pos, speed;		//position, speed
-	unsigned char r,g,b,a;		//color
-	float size, angle, weight;	//?
-	float life;					//remaining life of a particle, if <0 it's super dead
-	float cameradistance;		//squared distance to camera : -1.0f if dead
+	glm::vec3 pos, speed;			//position, speed
+	std::vector<glm::vec3> force;	//total force
+	unsigned char r,g,b,a;			//color
+	float mass,size;
+	float life;						//remaining life of a particle, if <0 it's super dead
+	float cameradistance;			//squared distance to camera : -1.0f if dead
+
+	void addForce(glm::vec3 const& m_force)
+	{
+		force.push_back(m_force);
+	}
+
+	glm::vec3 getTotalForce() const
+	{
+		glm::vec3 total(0.0,0.0,0.0);
+		for(auto i=0; i < force.size(); i++) {
+			total += force[i];
+		}
+		return total;
+	}
 
 	//used for std::sort, needs an overloaded comparison operator
 	bool operator<(const Particle& that) const {
@@ -30,8 +47,8 @@ struct Particle{
 	}
 };
 
-const float DRAG = .5;
-const int MAXPARTICLES= 100000;					//100k max particles to start humble						
+const float DRAG = 10;
+const int MAXPARTICLES= 10000;					//100k max particles to start humble						
 Particle ParticlesContainer[MAXPARTICLES];		//declare array for particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -82,6 +99,7 @@ int main(int argc, char* argv[]) {
 
 	//initialize particle information
 	for(auto i=0; i < MAXPARTICLES; i++){
+		ParticlesContainer[i].mass = 50.0;
 		ParticlesContainer[i].life = -1.0f;
 		ParticlesContainer[i].cameradistance = -1.0f;
 	}
@@ -153,10 +171,10 @@ int main(int argc, char* argv[]) {
 		
 		for(auto i=0; i<newparticles; i++){
 			int particleIndex = FindUnusedParticle();		//grab the index to give a particle life
-			ParticlesContainer[particleIndex].life = 5.0f;	//This particle will live 5 seconds.
+			ParticlesContainer[particleIndex].life = 50.0f;	//This particle will live 5 seconds.
 
 			//generate random positions for particles in the shape of a box
-			ParticlesContainer[particleIndex].pos = glm::vec3(0.0,0.0,-50.0);//glm::vec3(((rand()%500)/50.0f)-5.0,((rand()%500)/50.0f)-5.0,-50.0f);
+			ParticlesContainer[particleIndex].pos = glm::vec3(rand()%10,rand()%10,-50.0);
 		
 			//ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
 			// Very bad way to generate a random color
@@ -213,11 +231,17 @@ int main(int argc, char* argv[]) {
 					
 					//if left mouse button is pressed
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-							p.speed += glm::vec3(-pos.x * 30, -pos.y * 30 ,0.0f);	//increase speed in direction
+						p.addForce( (glm::vec3(glm::vec3(pos.x,pos.y,-50.0) - p.pos) * (float)(5000/pow(Distance(glm::vec3(pos.x,pos.y,pos.z),p.pos)+10,2))));
+						//p.speed += glm::vec3(-pos.x * 30, -pos.y * 30 ,0.0f);	//increase speed in direction
 					}
-					glm::vec3 acc = p.pos - glm::vec3(-pos.x*30,-pos.y*30,0.0f);
+					p.addForce( -p.speed*DRAG);
+					
+					glm::vec3 prevPosition = p.pos;
+					p.pos = p.pos + p.speed*(float)delta + 0.5f*p.getTotalForce()/p.mass*(float)pow(delta,2);
+					p.speed = (p.pos - prevPosition)/(float)delta;
+					
 					//update position of particle with a little bit of spread -- speed(dt) * DRAG * Rand
-					p.pos += p.speed * (float)(delta) * DRAG * glm::vec3(rand()%5,rand()%5,0);
+					//p.pos += p.speed * (float)(delta) * DRAG * glm::vec3(rand()%5,rand()%5,0);
 
 					float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
 					p.r = 255;
@@ -385,4 +409,10 @@ float clamp(float value, float min, float max)
 	else 
 		result = value;
 	return result;
+}
+
+float Distance(glm::vec3 const& v1, glm::vec3 const& v2)
+{
+	float distance = sqrt(pow((v2.x-v1.x),2) + pow((v2.y-v1.y),2));
+	return distance;
 }
