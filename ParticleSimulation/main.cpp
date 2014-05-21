@@ -18,9 +18,9 @@ float clamp(float value, float min, float max);
 
 // CPU representation of a particle
 struct Particle{
-	glm::vec3 pos, speed;		//used for physics manipulation
+	glm::vec3 pos, speed;		//position, speed
 	unsigned char r,g,b,a;		//color
-	float size, angle, weight;
+	float size, angle, weight;	//?
 	float life;					//remaining life of a particle, if <0 it's super dead
 	float cameradistance;		//squared distance to camera : -1.0f if dead
 
@@ -211,11 +211,12 @@ int main(int argc, char* argv[]) {
 					pos.y *= pos.w;
 					pos.z *= pos.w;
 					
-					//probably shouldnt have this control here... but it works anyways
+					//if left mouse button is pressed
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-						p.speed += glm::vec3(-pos.x * 30, -pos.y * 30 ,0.0f);
+							p.speed += glm::vec3(-pos.x * 30, -pos.y * 30 ,0.0f);	//increase speed in direction
 					}
-						
+					glm::vec3 acc = p.pos - glm::vec3(-pos.x*30,-pos.y*30,0.0f);
+					//update position of particle with a little bit of spread -- speed(dt) * DRAG * Rand
 					p.pos += p.speed * (float)(delta) * DRAG * glm::vec3(rand()%5,rand()%5,0);
 
 					float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
