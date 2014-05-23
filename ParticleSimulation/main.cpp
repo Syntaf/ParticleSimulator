@@ -48,7 +48,7 @@ struct Particle{
 };
 
 const float DRAG = 10;
-const int MAXPARTICLES= 10000;					//100k max particles to start humble						
+const int MAXPARTICLES= 1000;					//100k max particles to start humble						
 Particle ParticlesContainer[MAXPARTICLES];		//declare array for particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -135,6 +135,23 @@ int main(int argc, char* argv[]) {
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
 	glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
+	for(auto i=0; i<MAXPARTICLES; i++){
+		int particleIndex = FindUnusedParticle();		//grab the index to give a particle life
+		ParticlesContainer[particleIndex].life = 50.0f;	//This particle will live 5 seconds.
+
+		//generate random positions for particles in the shape of a box
+		ParticlesContainer[particleIndex].pos = glm::vec3((rand()%50)/5.0,(rand()%50)/5.0,-50.0);
+		
+		// Very bad way to generate a random color
+		ParticlesContainer[particleIndex].r = 255;
+		ParticlesContainer[particleIndex].g = 0;
+		ParticlesContainer[particleIndex].b = 0;
+		ParticlesContainer[particleIndex].a = 255;
+
+		ParticlesContainer[particleIndex].size = .2f;
+			
+	}
+
 	bool running=true;										//set up bool to run SFML loop
 	sf::Clock clock;										//clock for delta and controls
 	while( running )
@@ -162,31 +179,12 @@ int main(int argc, char* argv[]) {
 		//get the VP
 		glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
 
-
+		// NOT IN USE, pixels are currently not given a lifetime
 		// Generate 5 new particule each millisecond,
 		// but limit this to 16 ms (60 fps), or if you have 1 long frame (1sec)
-		int newparticles = (int)(delta*5000.0);
-		if (newparticles > (int)(0.016f*5000.0))
-			newparticles = (int)(0.016f*5000.0);
-		
-		for(auto i=0; i<newparticles; i++){
-			int particleIndex = FindUnusedParticle();		//grab the index to give a particle life
-			ParticlesContainer[particleIndex].life = 50.0f;	//This particle will live 5 seconds.
-
-			//generate random positions for particles in the shape of a box
-			ParticlesContainer[particleIndex].pos = glm::vec3(rand()%10,rand()%10,-50.0);
-		
-			// Very bad way to generate a random color
-			ParticlesContainer[particleIndex].r = 255;
-			ParticlesContainer[particleIndex].g = 0;
-			ParticlesContainer[particleIndex].b = 0;
-			ParticlesContainer[particleIndex].a = 255;
-
-			ParticlesContainer[particleIndex].size = .2f;
-			
-		}
-
-
+		// int newparticles = (int)(delta*5000.0);
+		// if (newparticles > (int)(0.016f*5000.0))
+		//	 newparticles = (int)(0.016f*5000.0);
 
 		// Simulate all particles
 		int ParticlesCount = 0;
