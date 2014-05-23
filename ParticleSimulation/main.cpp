@@ -48,7 +48,7 @@ struct Particle{
 };
 
 const float DRAG = 10;
-const int MAXPARTICLES= 1000;					//100k max particles to start humble						
+const int MAXPARTICLES= 3000;					//100k max particles to start humble						
 Particle ParticlesContainer[MAXPARTICLES];		//declare array for particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -140,8 +140,8 @@ int main(int argc, char* argv[]) {
 	//generate all particles only ONCE, this way you don't have particles spawning while testing
 	//not sure if this is a permanant implementation
 	for(auto i=0; i<MAXPARTICLES; i++){
-		int particleIndex = FindUnusedParticle();		//grab the index to give a particle life
-		ParticlesContainer[particleIndex].life = 50.0f;	//This particle will live 50 seconds, more than enough to simulate a particle for the program
+		int particleIndex = FindUnusedParticle();			//grab the index to give a particle life
+		ParticlesContainer[particleIndex].life = 100.0f;	//This particle will live 50 seconds, more than enough to simulate a particle for the program
 
 		//generate random positions for particles in the shape of a box with random patterns
 		ParticlesContainer[particleIndex].pos = glm::vec3((rand()%50)/5.0,(rand()%50)/5.0,-50.0);
