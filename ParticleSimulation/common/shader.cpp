@@ -19,6 +19,9 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
+	const unsigned char* version = (const unsigned char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+	printf("Running GLSL Version %s\n",version);
+
 	// Read the Vertex Shader code from the file
 	std::string VertexShaderCode;
 	std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
@@ -42,12 +45,8 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 		FragmentShaderStream.close();
 	}
 
-
-
 	GLint Result = GL_FALSE;
 	int InfoLogLength;
-
-
 
 	// Compile Vertex Shader
 	printf("Compiling shader : %s\n", vertex_file_path);

@@ -57,7 +57,9 @@ int main(int argc, char* argv[]) {
 	srand(time(NULL));							//seed the random generator
 	
 	sf::Window window(sf::VideoMode(800,600),	//declare window
-		"Particle Simulation"					//window title
+		"Particle Simulation",					//window title
+		sf::Style::Default,
+		sf::ContextSettings(32, 8, 0, 3, 3)
 		);										//default context settings, my custom ones were screwing with the program so I let SFML decide
 
 	glViewport(0,0,window.getSize().x,window.getSize().y);
@@ -135,11 +137,13 @@ int main(int argc, char* argv[]) {
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
 	glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
+	//generate all particles only ONCE, this way you don't have particles spawning while testing
+	//not sure if this is a permanant implementation
 	for(auto i=0; i<MAXPARTICLES; i++){
 		int particleIndex = FindUnusedParticle();		//grab the index to give a particle life
-		ParticlesContainer[particleIndex].life = 50.0f;	//This particle will live 5 seconds.
+		ParticlesContainer[particleIndex].life = 50.0f;	//This particle will live 50 seconds, more than enough to simulate a particle for the program
 
-		//generate random positions for particles in the shape of a box
+		//generate random positions for particles in the shape of a box with random patterns
 		ParticlesContainer[particleIndex].pos = glm::vec3((rand()%50)/5.0,(rand()%50)/5.0,-50.0);
 		
 		// Very bad way to generate a random color
