@@ -1,16 +1,18 @@
 #include <iostream>
-#include <GL/glew.h>
 #include <cstdlib>
+#include <vector>
+#include <sstream>
+#include <GL/glew.h>
 #include <SFML/graphics.hpp>
 #include <SFML/OpenGL.hpp>
-#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
 #include "Common/shader.hpp"
 #include "Common/controls.hpp"
 #include "Common/texture.hpp"
-#include <sstream>
+#include "Particle.hpp"
+
 #pragma comment(lib, "glew32.lib")
 
 int FindUnusedParticle();
@@ -18,37 +20,8 @@ void SortParticles();
 float clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
-// CPU representation of a particle
-struct Particle{
-	glm::vec3 pos, speed;			//position, speed
-	std::vector<glm::vec3> force;	//total force
-	unsigned char r,g,b,a;			//color
-	float mass,size;
-	float life;						//remaining life of a particle, if <0 it's super dead
-	float cameradistance;			//squared distance to camera : -1.0f if dead
-
-	void addForce(glm::vec3 const& m_force)
-	{
-		force.push_back(m_force);
-	}
-
-	glm::vec3 getTotalForce() const
-	{
-		glm::vec3 total(0.0,0.0,0.0);
-		for(auto i=0; i < force.size(); i++) {
-			total += force[i];
-		}
-		return total;
-	}
-
-	//used for std::sort, needs an overloaded comparison operator
-	bool operator<(const Particle& that) const {
-		return this->cameradistance > that.cameradistance;
-	}
-};
-
 const float DRAG = 10;
-const int MAXPARTICLES= 3000;					//100k max particles to start humble						
+const int MAXPARTICLES= 3000;					//3k particles					
 Particle ParticlesContainer[MAXPARTICLES];		//declare array for particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -202,6 +175,10 @@ int main(int argc, char* argv[]) {
 				p.life -= delta;
 				if (p.life > 0.0f){
 
+					///-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+					///DETERMINE FUTURE POSITION OF PARTICLE
+					///-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 					// Simulate simple physics : gravity only, no collisions
 					glm::vec4 mousePos(
 						sf::Mouse::getPosition(window).x, 
@@ -246,6 +223,10 @@ int main(int argc, char* argv[]) {
 					p.b = 0;
 					
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
+
+					///=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+					/// END 
+					///=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 					// Fill the GPU buffer
 					g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;

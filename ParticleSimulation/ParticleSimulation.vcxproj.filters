@@ -48,5 +48,8 @@
     <ClInclude Include="Common\texture.hpp">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="Particle.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

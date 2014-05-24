@@ -170,6 +170,7 @@
     <ClInclude Include="Common\controls.hpp" />
     <ClInclude Include="Common\shader.hpp" />
     <ClInclude Include="Common\texture.hpp" />
+    <ClInclude Include="Particle.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
