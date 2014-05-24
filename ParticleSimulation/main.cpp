@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
-#include <sstream>
+#include <fstream>
 #include <GL/glew.h>
 #include <SFML/graphics.hpp>
 #include <SFML/OpenGL.hpp>
@@ -19,6 +19,7 @@ int FindUnusedParticle();
 void SortParticles();
 float clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
+double findAverage(std::vector<int> const& vec);
 
 const float DRAG = 10;
 const int MAXPARTICLES= 3000;					//3k particles					
@@ -131,6 +132,9 @@ int main(int argc, char* argv[]) {
 
 	bool running=true;										//set up bool to run SFML loop
 	sf::Clock clock;										//clock for delta and controls
+	sf::Clock mathRuntime;									//measures time taken to execute physcis equation
+	std::vector<int> execution;
+	bool pressed;											//if mouse is clicked
 	while( running )
 	{
 		double delta = clock.restart().asSeconds();
@@ -209,8 +213,12 @@ int main(int argc, char* argv[]) {
 					
 					//if left mouse button is pressed
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-						p.addForce( (glm::vec3(glm::vec3(pos.x,pos.y,-50.0) - p.pos) * (float)(5000/pow(Distance(glm::vec3(pos.x,pos.y,pos.z),p.pos)+10,2))));
-					}
+						pressed = true;
+					}else
+						pressed = false;
+
+					mathRuntime.restart();
+					p.addForce( (glm::vec3(glm::vec3(pos.x,pos.y,-50.0) - p.pos) * (float)(pressed*5000/pow(Distance(glm::vec3(pos.x,pos.y,pos.z),p.pos)+10,2))));
 					p.addForce( -p.speed*DRAG);
 					
 					glm::vec3 prevPosition = p.pos;
@@ -223,7 +231,7 @@ int main(int argc, char* argv[]) {
 					p.b = 0;
 					
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
-
+					execution.push_back(mathRuntime.getElapsedTime().asMicroseconds());
 					///=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 					/// END 
 					///=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -338,7 +346,9 @@ int main(int argc, char* argv[]) {
 		
 
 	}
-	
+	std::ofstream dataOut("recordings.txt", std::ios_base::app);
+	dataOut << findAverage(execution) << std::endl;
+
 	//free up memory openGL used
 	glDeleteBuffers(1, &particles_color_buffer);
 	glDeleteBuffers(1, &particles_position_buffer);
@@ -392,4 +402,14 @@ float Distance(glm::vec3 const& v1, glm::vec3 const& v2)
 {
 	float distance = sqrt(pow((v2.x-v1.x),2) + pow((v2.y-v1.y),2));
 	return distance;
+}
+
+double findAverage(std::vector<int> const& vec)
+{
+	long double average;
+	for(auto i:vec){
+		average += i;
+	}
+	average = average / vec.size();
+	return average;
 }
