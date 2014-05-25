@@ -1,8 +1,12 @@
+#define _VARIADIC_MAX 9
 #include <iostream>
 #include <cstdlib>
 #include <vector>
 #include <fstream>
 #include <GL/glew.h>
+#include <mutex>
+#include <thread>
+#include <future>
 #include <SFML/graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
@@ -20,17 +24,27 @@ void SortParticles();
 float clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 double findAverage(std::vector<int> const& vec);
+//oh my lord those parameters
+void updateParticle(Particle& p,sf::Window const& window, glm::mat4& ViewMatrix, glm::mat4& ProjectionMatrix,
+					double& delta, glm::vec3& CameraPosition, GLfloat* g_particule_position_size_data, GLubyte* g_particule_color_data,
+					int& ParticlesCount);
 
+static const int NUMTHREADS = 3000;
 const float DRAG = 10;
 const int MAXPARTICLES= 3000;					//3k particles					
 Particle ParticlesContainer[MAXPARTICLES];		//declare array for particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
+std::mutex forceVectorMutex;
+std::mutex particleContainerMutex;
+std::mutex tryLock;
 
 int main(int argc, char* argv[]) {
 	
 	srand(time(NULL));							//seed the random generator
 	
-	sf::Window window(sf::VideoMode(800,600),	//declare window
+	
+	sf::Window window;
+	window.create(sf::VideoMode(800,600),	//declare window
 		"Particle Simulation",					//window title
 		sf::Style::Default,
 		sf::ContextSettings(32, 8, 0, 3, 3)
@@ -134,7 +148,7 @@ int main(int argc, char* argv[]) {
 	sf::Clock clock;										//clock for delta and controls
 	sf::Clock mathRuntime;									//measures time taken to execute physcis equation
 	std::vector<int> execution;
-	bool pressed;											//if mouse is clicked
+	std::thread t[NUMTHREADS];
 	while( running )
 	{
 		double delta = clock.restart().asSeconds();
@@ -178,75 +192,12 @@ int main(int argc, char* argv[]) {
 				// Decrease life
 				p.life -= delta;
 				if (p.life > 0.0f){
-
-					///-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-					///DETERMINE FUTURE POSITION OF PARTICLE
-					///-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-					// Simulate simple physics : gravity only, no collisions
-					glm::vec4 mousePos(
-						sf::Mouse::getPosition(window).x, 
-						sf::Mouse::getPosition(window).y,
-						0.0f,
-						1.0f
-					); 
-
-					//manipulation from mouse cords to model-view mouse cords
-					//find inverse of Proj * View
-					glm::mat4 matProj = ViewMatrix * ProjectionMatrix;
-					glm::mat4 inverse = glm::inverse(matProj);
-					float winZ = 1.0;
-
-					//determine space cords
-					glm::vec4 vIn(	(2.0f*((float)(mousePos.x) / (window.getSize().x))) - 1.0f,		//2 * x / window.x - 1.0f
-									1.0f - (2.0f * ((float)(mousePos.y)) / (window.getSize().y)),	//1 - 2 * y / window.y
-									2.0 * winZ - 1.0f,												//equates to 1, we are only manipulating y,z
-									1.0f															//dont question it
-								);
-					//find inverse
-					glm::vec4 pos = vIn * inverse;
-
-					pos.w = 1.0 / pos.w;
-					pos.x *= pos.w;
-					pos.y *= pos.w;
-					pos.z *= pos.w;
 					
-					//if left mouse button is pressed
-					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-						pressed = true;
-					}else
-						pressed = false;
-
-					mathRuntime.restart();
-					p.addForce( (glm::vec3(glm::vec3(pos.x,pos.y,-50.0) - p.pos) * (float)(pressed*5000/pow(Distance(glm::vec3(pos.x,pos.y,pos.z),p.pos)+10,2))));
-					p.addForce( -p.speed*DRAG);
-					
-					glm::vec3 prevPosition = p.pos;
-					p.pos = p.pos + p.speed*(float)delta + 0.5f*p.getTotalForce()/p.mass*(float)pow(delta,2);
-					p.speed = (p.pos - prevPosition)/(float)delta;
-
-					float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
-					p.r = 255;
-					p.g = clamp(255 - (normSpeed)*10,0,255);
-					p.b = 0;
-					
-					p.cameradistance = glm::length2( p.pos - CameraPosition );
-					execution.push_back(mathRuntime.getElapsedTime().asMicroseconds());
-					///=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-					/// END 
-					///=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-					// Fill the GPU buffer
-					g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
-					g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
-					g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
-												   
-					g_particule_position_size_data[4*ParticlesCount+3] = p.size;
-												   
-					g_particule_color_data[4*ParticlesCount+0] = p.r;
-					g_particule_color_data[4*ParticlesCount+1] = p.g;
-					g_particule_color_data[4*ParticlesCount+2] = p.b;
-					g_particule_color_data[4*ParticlesCount+3] = p.a;
+					//mathRuntime.restart();
+					updateParticle(p,window,ViewMatrix,ProjectionMatrix, delta,CameraPosition,g_particule_position_size_data,g_particule_color_data,ParticlesCount);
+					//CURRENTLY NOT WORKING, commented out
+					//t[i] = std::thread(updateParticle,p,ViewMatrix,ProjectionMatrix, delta,CameraPosition,g_particule_position_size_data,g_particule_color_data,ParticlesCount);
+					//execution.push_back(mathRuntime.getElapsedTime().asMicroseconds());
 
 				}else{
 					// Particles that just died will be put at the end of the buffer in SortParticles();
@@ -346,8 +297,8 @@ int main(int argc, char* argv[]) {
 		
 
 	}
-	std::ofstream dataOut("recordings.txt", std::ios_base::app);
-	dataOut << findAverage(execution) << std::endl;
+	//std::ofstream dataOut("recordings.txt", std::ios_base::app);
+	//dataOut << findAverage(execution) << std::endl;
 
 	//free up memory openGL used
 	glDeleteBuffers(1, &particles_color_buffer);
@@ -412,4 +363,72 @@ double findAverage(std::vector<int> const& vec)
 	}
 	average = average / vec.size();
 	return average;
+}
+
+void updateParticle(Particle& p,sf::Window const& window, glm::mat4& ViewMatrix, glm::mat4& ProjectionMatrix,
+					double& delta, glm::vec3& CameraPosition, GLfloat* g_particule_position_size_data, GLubyte* g_particule_color_data,
+					int& ParticlesCount)
+{
+	bool pressed;
+	
+	// Simulate simple physics : gravity only, no collisions
+	glm::vec4 mousePos(
+		sf::Mouse::getPosition(window).x, 
+		sf::Mouse::getPosition(window).y,
+		0.0f,
+		1.0f
+		); 
+
+	//manipulation from mouse cords to model-view mouse cords
+	//find inverse of Proj * View
+	glm::mat4 matProj = ViewMatrix * ProjectionMatrix;
+	glm::mat4 inverse = glm::inverse(matProj);
+	float winZ = 1.0;
+
+	//determine space cords
+	glm::vec4 vIn(	(2.0f*((float)(mousePos.x) / (window.getSize().x))) - 1.0f,		//2 * x / window.x - 1.0f
+		1.0f - (2.0f * ((float)(mousePos.y)) / (window.getSize().y)),	//1 - 2 * y / window.y
+		2.0 * winZ - 1.0f,												//equates to 1, we are only manipulating y,z
+		1.0f															//dont question it
+		);
+	//find inverse
+	glm::vec4 pos = vIn * inverse;
+
+	pos.w = 1.0 / pos.w;
+	pos.x *= pos.w;
+	pos.y *= pos.w;
+	pos.z *= pos.w;
+					
+	//if left mouse button is pressed
+	if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+		pressed = true;
+	}else
+		pressed = false;
+
+
+	p.addForce( (glm::vec3(glm::vec3(pos.x,pos.y,-50.0) - p.pos) * (float)(pressed*5000/pow(Distance(glm::vec3(pos.x,pos.y,pos.z),p.pos)+10,2))));
+	p.addForce( -p.speed*DRAG);
+				
+	glm::vec3 prevPosition = p.pos;
+	p.pos = p.pos + p.speed*(float)delta + 0.5f*p.getTotalForce()/p.mass*(float)pow(delta,2);
+	p.speed = (p.pos - prevPosition)/(float)delta;
+
+	float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
+	p.r = 255;
+	p.g = clamp(255 - (normSpeed)*10,0,255);
+	p.b = 0;
+					
+	p.cameradistance = glm::length2( p.pos - CameraPosition );
+
+	// Fill the GPU buffer
+	g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
+	g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
+	g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
+	g_particule_position_size_data[4*ParticlesCount+3] = p.size;											   
+	
+	g_particule_color_data[4*ParticlesCount+0] = p.r;				
+	g_particule_color_data[4*ParticlesCount+1] = p.g;
+	g_particule_color_data[4*ParticlesCount+2] = p.b;
+	g_particule_color_data[4*ParticlesCount+3] = p.a;
+
 }
