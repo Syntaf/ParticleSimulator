@@ -1,12 +1,8 @@
-#define _VARIADIC_MAX 9
 #include <iostream>
 #include <cstdlib>
 #include <vector>
 #include <fstream>
 #include <GL/glew.h>
-#include <mutex>
-#include <thread>
-#include <future>
 #include <SFML/graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
@@ -15,7 +11,9 @@
 #include "Common/shader.hpp"
 #include "Common/controls.hpp"
 #include "Common/texture.hpp"
+#include "ThreadPool.hpp"
 #include "Particle.hpp"
+
 
 #pragma comment(lib, "glew32.lib")
 
@@ -139,6 +137,9 @@ int main(int argc, char* argv[]) {
 
 	bool running=true;										//set up bool to run SFML loop
 	bool pressed=false;
+	ThreadPool pool(5);
+	std::condition_variable waitMain;
+	std::mutex mainMut;
 	sf::Clock clock;										//clock for delta and controls
 	while( running )
 	{
@@ -176,6 +177,7 @@ int main(int argc, char* argv[]) {
 				// Decrease life
 				p.life -= delta;
 				if (p.life > 0.0f){
+					pool.enqueue([&]{
 					glm::vec4 mousePos(
 						sf::Mouse::getPosition(window).x, 
 						sf::Mouse::getPosition(window).y,
@@ -224,16 +226,7 @@ int main(int argc, char* argv[]) {
 					
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
 
-					// Fill the GPU buffer
-					g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
-					g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
-					g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
-					g_particule_position_size_data[4*ParticlesCount+3] = p.size;											   
-	
-					g_particule_color_data[4*ParticlesCount+0] = p.r;				
-					g_particule_color_data[4*ParticlesCount+1] = p.g;
-					g_particule_color_data[4*ParticlesCount+2] = p.b;
-					g_particule_color_data[4*ParticlesCount+3] = p.a;
+					});
 
 				}else{
 					// Particles that just died will be put at the end of the buffer in SortParticles();
@@ -243,6 +236,27 @@ int main(int argc, char* argv[]) {
 				ParticlesCount++;
 
 			}
+		}
+
+		pool.waitFinished();
+
+		ParticlesCount=0;
+		for(auto i=0; i < MAXPARTICLES;i++){
+			Particle& p = ParticlesContainer[i];
+			if(p.life > 0.0f){
+				// Fill the GPU buffer
+				g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
+				g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
+				g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
+				g_particule_position_size_data[4*ParticlesCount+3] = p.size;	
+
+				g_particule_color_data[4*ParticlesCount+0] = p.r;				
+				g_particule_color_data[4*ParticlesCount+1] = p.g;
+				g_particule_color_data[4*ParticlesCount+2] = p.b;					
+				g_particule_color_data[4*ParticlesCount+3] = p.a;
+			
+			}
+			ParticlesCount++;
 		}
 
 		SortParticles();
