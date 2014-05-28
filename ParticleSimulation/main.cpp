@@ -25,9 +25,8 @@ float clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 double findAverage(std::vector<int> const& vec);
 
-static const int NUMTHREADS = 3000;
 const float DRAG = 10;
-const int MAXPARTICLES= 3000;					//3k particles					
+const int MAXPARTICLES= 10000;					//3k particles					
 Particle ParticlesContainer[MAXPARTICLES];		//declare array for particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -140,6 +139,8 @@ int main(int argc, char* argv[]) {
 	bool running=true;										//set up bool to run SFML loop
 	bool pressed=false;
 	sf::Clock clock;										//clock for delta and controls
+	sf::Clock sync;
+	std::vector<int> tm;
 	while( running )
 	{
 		double delta = clock.restart().asSeconds();
@@ -167,6 +168,7 @@ int main(int argc, char* argv[]) {
 
 		// Simulate all particles
 		int ParticlesCount = 0;
+		sync.restart();
 		for(int i=0; i<MAXPARTICLES; i++){
 
 			Particle& p = ParticlesContainer[i]; // shortcut
@@ -223,18 +225,6 @@ int main(int argc, char* argv[]) {
 					p.b = 0;
 					
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
-
-					// Fill the GPU buffer
-					g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
-					g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
-					g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
-					g_particule_position_size_data[4*ParticlesCount+3] = p.size;											   
-	
-					g_particule_color_data[4*ParticlesCount+0] = p.r;				
-					g_particule_color_data[4*ParticlesCount+1] = p.g;
-					g_particule_color_data[4*ParticlesCount+2] = p.b;
-					g_particule_color_data[4*ParticlesCount+3] = p.a;
-
 				}else{
 					// Particles that just died will be put at the end of the buffer in SortParticles();
 					p.cameradistance = -1.0f;
@@ -245,6 +235,27 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
+		int taken = sync.getElapsedTime().asMilliseconds();
+		tm.push_back(taken);
+
+		ParticlesCount=0;
+		for(auto i=0; i < MAXPARTICLES;i++){
+			Particle& p = ParticlesContainer[i];
+			if(p.life > 0.0f){
+				// Fill the GPU buffer
+				g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
+				g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
+				g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
+				g_particule_position_size_data[4*ParticlesCount+3] = p.size;	
+
+				g_particule_color_data[4*ParticlesCount+0] = p.r;				
+				g_particule_color_data[4*ParticlesCount+1] = p.g;
+				g_particule_color_data[4*ParticlesCount+2] = p.b;					
+				g_particule_color_data[4*ParticlesCount+3] = p.a;
+
+			}
+			ParticlesCount++;
+		}
 		SortParticles();
 
 		//update buffers openGL uses for rendering
@@ -333,8 +344,8 @@ int main(int argc, char* argv[]) {
 		
 
 	}
-	//std::ofstream dataOut("recordings.txt", std::ios_base::app);
-	//dataOut << findAverage(execution) << std::endl;
+	std::ofstream dataOut("recordings.txt", std::ios_base::app);
+	dataOut << findAverage(tm) << std::endl;
 
 	//free up memory openGL used
 	glDeleteBuffers(1, &particles_color_buffer);
