@@ -25,8 +25,8 @@ float clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
 const float DRAG = 10;
-const int MAXPARTICLES= 5000;					//5k particles					
-Particle ParticlesContainer[MAXPARTICLES];		//declare array for particles
+const int MAXPARTICLES= 2500;					//5k particles				
+std::vector<Particle> ParticlesContainer;
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
 int main(int argc, char* argv[]) {
@@ -77,13 +77,14 @@ int main(int argc, char* argv[]) {
 	//data!
 	static GLfloat* g_particule_position_size_data = new GLfloat[MAXPARTICLES* 4];
 	static GLubyte* g_particule_color_data         = new GLubyte[MAXPARTICLES* 4];
-
+	/*
 	//initialize particle information
 	for(auto i=0; i < MAXPARTICLES; i++){
 		ParticlesContainer[i].mass = 50.0;
 		ParticlesContainer[i].life = -1.0f;
 		ParticlesContainer[i].cameradistance = -1.0f;
 	}
+	*/
 		
 	//load texture
 	GLuint Texture = loadDDS("Textures/Particle.DDS");	
@@ -118,6 +119,7 @@ int main(int argc, char* argv[]) {
 
 	//generate all particles only ONCE, this way you don't have particles spawning while testing
 	//not sure if this is a permanant implementation
+	/*
 	for(auto i=0; i<MAXPARTICLES; i++){
 		int particleIndex = FindUnusedParticle();			//grab the index to give a particle life
 		ParticlesContainer[particleIndex].life = 100.0f;	//This particle will live 50 seconds, more than enough to simulate a particle for the program
@@ -133,6 +135,29 @@ int main(int argc, char* argv[]) {
 
 		ParticlesContainer[particleIndex].size = .2f;
 			
+	}
+	*/
+
+	for(auto i(0); i<50; i++) {													//store particle instances in particles array
+		for(auto j(0); j<50; j++) {
+			Particle particle;		
+			glm::vec2 d2Pos = glm::vec2(j*0.15, i*0.15) + glm::vec2(0,0);
+			particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-50);
+			
+			particle.mass=50.0;
+			
+			particle.life = 100.0f;
+
+			particle.cameradistance = -1.0f;
+			
+			particle.r = 255;
+			particle.g = 0;
+			particle.b = 0;
+			particle.a = 255;
+
+			particle.size = .2f;
+			ParticlesContainer.push_back(particle);
+		}
 	}
 
 	bool running=true;										//set up bool to run SFML loop
@@ -166,7 +191,6 @@ int main(int argc, char* argv[]) {
 		// Simulate all particles
 		int ParticlesCount = 0;
 		for(int i=0; i<MAXPARTICLES; i++){
-
 			Particle& p = ParticlesContainer[i]; // shortcut
 
 			if(p.life > 0.0f){
