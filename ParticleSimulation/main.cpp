@@ -23,10 +23,9 @@ int FindUnusedParticle();
 void SortParticles();
 float clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
-double findAverage(std::vector<int> const& vec);
 
 const float DRAG = 10;
-const int MAXPARTICLES= 10000;					//3k particles					
+const int MAXPARTICLES= 5000;					//5k particles					
 Particle ParticlesContainer[MAXPARTICLES];		//declare array for particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -125,7 +124,7 @@ int main(int argc, char* argv[]) {
 
 		//generate random positions for particles in the shape of a box with random patterns
 		ParticlesContainer[particleIndex].pos = glm::vec3((rand()%50)/5.0,(rand()%50)/5.0,-50.0);
-		
+
 		// Very bad way to generate a random color
 		ParticlesContainer[particleIndex].r = 255;
 		ParticlesContainer[particleIndex].g = 0;
@@ -139,8 +138,6 @@ int main(int argc, char* argv[]) {
 	bool running=true;										//set up bool to run SFML loop
 	bool pressed=false;
 	sf::Clock clock;										//clock for delta and controls
-	sf::Clock sync;
-	std::vector<int> tm;
 	while( running )
 	{
 		double delta = clock.restart().asSeconds();
@@ -168,7 +165,6 @@ int main(int argc, char* argv[]) {
 
 		// Simulate all particles
 		int ParticlesCount = 0;
-		sync.restart();
 		for(int i=0; i<MAXPARTICLES; i++){
 
 			Particle& p = ParticlesContainer[i]; // shortcut
@@ -234,9 +230,6 @@ int main(int argc, char* argv[]) {
 
 			}
 		}
-
-		int taken = sync.getElapsedTime().asMilliseconds();
-		tm.push_back(taken);
 
 		ParticlesCount=0;
 		for(auto i=0; i < MAXPARTICLES;i++){
@@ -336,16 +329,12 @@ int main(int argc, char* argv[]) {
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 
-		//std::cout << "Particle Count: " << ParticlesCount << "\r";
-
 		//sfml display to window
 		window.display();
 
 		
 
 	}
-	std::ofstream dataOut("recordings.txt", std::ios_base::app);
-	dataOut << findAverage(tm) << std::endl;
 
 	//free up memory openGL used
 	glDeleteBuffers(1, &particles_color_buffer);
@@ -400,14 +389,4 @@ float Distance(glm::vec3 const& v1, glm::vec3 const& v2)
 {
 	float distance = sqrt(pow((v2.x-v1.x),2) + pow((v2.y-v1.y),2));
 	return distance;
-}
-
-double findAverage(std::vector<int> const& vec)
-{
-	long double average;
-	for(auto i:vec){
-		average += i;
-	}
-	average = average / vec.size();
-	return average;
 }
