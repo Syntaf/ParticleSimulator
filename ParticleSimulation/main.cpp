@@ -1,4 +1,3 @@
-#define _VARIADIC_MAX 9
 #include <iostream>
 #include <cstdlib>
 #include <vector>
@@ -25,7 +24,7 @@ float clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
 const float DRAG = 10;
-const int MAXPARTICLES= 2500;					//5k particles				
+const int MAXPARTICLES= 2500;					//2.5k particles				
 std::vector<Particle> ParticlesContainer;
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -77,14 +76,6 @@ int main(int argc, char* argv[]) {
 	//data!
 	static GLfloat* g_particule_position_size_data = new GLfloat[MAXPARTICLES* 4];
 	static GLubyte* g_particule_color_data         = new GLubyte[MAXPARTICLES* 4];
-	/*
-	//initialize particle information
-	for(auto i=0; i < MAXPARTICLES; i++){
-		ParticlesContainer[i].mass = 50.0;
-		ParticlesContainer[i].life = -1.0f;
-		ParticlesContainer[i].cameradistance = -1.0f;
-	}
-	*/
 		
 	//load texture
 	GLuint Texture = loadDDS("Textures/Particle.DDS");	
@@ -116,27 +107,6 @@ int main(int argc, char* argv[]) {
 	glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
 	glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
-
-	//generate all particles only ONCE, this way you don't have particles spawning while testing
-	//not sure if this is a permanant implementation
-	/*
-	for(auto i=0; i<MAXPARTICLES; i++){
-		int particleIndex = FindUnusedParticle();			//grab the index to give a particle life
-		ParticlesContainer[particleIndex].life = 100.0f;	//This particle will live 50 seconds, more than enough to simulate a particle for the program
-
-		//generate random positions for particles in the shape of a box with random patterns
-		ParticlesContainer[particleIndex].pos = glm::vec3((rand()%50)/5.0,(rand()%50)/5.0,-50.0);
-
-		// Very bad way to generate a random color
-		ParticlesContainer[particleIndex].r = 255;
-		ParticlesContainer[particleIndex].g = 0;
-		ParticlesContainer[particleIndex].b = 0;
-		ParticlesContainer[particleIndex].a = 255;
-
-		ParticlesContainer[particleIndex].size = .2f;
-			
-	}
-	*/
 
 	for(auto i(0); i<50; i++) {													//store particle instances in particles array
 		for(auto j(0); j<50; j++) {
