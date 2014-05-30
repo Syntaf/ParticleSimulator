@@ -1,7 +1,9 @@
 ParticleSimulator
 =================
 
-A particle simulator written with C++ SFML OpenGL and HPX demonstrating the power of parallelism.
+A particle simulator written with C++ SFML OpenGL.
+
+![gif](http://i.imgur.com/duEgiDl.gif)
 
 **Required Libraries**
 --------------------------------------------------------
