@@ -2,6 +2,7 @@ ParticleSimulator
 =================
 
 A particle simulator written with C++ SFML OpenGL. 
+
 **See the site at http://syntaf.github.io/ParticleSimulator/**
 
 ![gif](http://i.imgur.com/duEgiDl.gif)
