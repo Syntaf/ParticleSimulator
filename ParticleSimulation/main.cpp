@@ -1,11 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
-#include <fstream>
 #include <GL/glew.h>
-#include <mutex>
-#include <thread>
-#include <future>
 #include <SFML/graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
@@ -23,9 +19,9 @@ void SortParticles();
 float clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
-const float DRAG = 10;
+const float DRAG = 10;							//drag force
 const int MAXPARTICLES= 2500;					//2.5k particles				
-std::vector<Particle> ParticlesContainer;
+std::vector<Particle> ParticlesContainer;		//holds all particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
 int main(int argc, char* argv[]) {
@@ -55,7 +51,6 @@ int main(int argc, char* argv[]) {
 
 	
 	glEnable(GL_DEPTH_TEST);					// Enable depth test
-	
 	glDepthFunc(GL_LESS);						// Accept fragment if it is closer to the camera than the former one
 
 	GLuint VertexArrayID;
@@ -73,7 +68,7 @@ int main(int argc, char* argv[]) {
 	// fragment shader
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
 
-	//data!
+	//buffer data
 	static GLfloat* g_particule_position_size_data = new GLfloat[MAXPARTICLES* 4];
 	static GLubyte* g_particule_color_data         = new GLubyte[MAXPARTICLES* 4];
 		
@@ -108,16 +103,15 @@ int main(int argc, char* argv[]) {
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
 	glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
-	for(auto i(0); i<50; i++) {													//store particle instances in particles array
+	//init particles and shape them like a rectangle, i*j should always = MAXPARTICLES or we have a problem
+	for(auto i(0); i<50; i++) {													
 		for(auto j(0); j<50; j++) {
 			Particle particle;		
 			glm::vec2 d2Pos = glm::vec2(j*0.15, i*0.15) + glm::vec2(0,0);
 			particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-50);
 			
 			particle.mass=50.0;
-			
 			particle.life = 100.0f;
-
 			particle.cameradistance = -1.0f;
 			
 			particle.r = 255;
@@ -182,18 +176,18 @@ int main(int argc, char* argv[]) {
 					float winZ = 1.0;
 
 					//determine space cords
-					glm::vec4 vIn(	(2.0f*((float)(mousePos.x) / (window.getSize().x))) - 1.0f,		//2 * x / window.x - 1.0f
-						1.0f - (2.0f * ((float)(mousePos.y)) / (window.getSize().y)),	//1 - 2 * y / window.y
-						2.0 * winZ - 1.0f,												//equates to 1, we are only manipulating y,z
-						1.0f															//dont question it
+					glm::vec4 vIn(	(2.0f*((float)(mousePos.x) / (window.getSize().x))) - 1.0f,	//2 * x / window.x - 1.0f
+						1.0f - (2.0f * ((float)(mousePos.y)) / (window.getSize().y)),			//1 - 2 * y / window.y
+						2.0 * winZ - 1.0f,														//equates to 1, we are only manipulating y,z
+						1.0f																	//dont question it
 						);
 					//find inverse
-					glm::vec4 pos = vIn * inverse;
+					glm::vec4 mousePosmdl = vIn * inverse;
 
-					pos.w = 1.0 / pos.w;
-					pos.x *= pos.w;
-					pos.y *= pos.w;
-					pos.z *= pos.w;
+					mousePosmdl.w = 1.0 / mousePosmdl.w;
+					mousePosmdl.x *= mousePosmdl.w;
+					mousePosmdl.y *= mousePosmdl.w;
+					mousePosmdl.z *= mousePosmdl.w;
 					
 					//if left mouse button is pressed
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
@@ -202,7 +196,8 @@ int main(int argc, char* argv[]) {
 						pressed = false;
 
 
-					p.addForce( (glm::vec3(glm::vec3(pos.x,pos.y,-50.0) - p.pos) * (float)(pressed*5000/pow(Distance(glm::vec3(pos.x,pos.y,pos.z),p.pos)+10,2))));
+					p.addForce( 
+						(glm::vec3(glm::vec3(mousePosmdl.x,mousePosmdl.y,-50.0) - p.pos) * (float)(pressed*5000/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y,mousePosmdl.z),p.pos)+10,2))));
 					p.addForce( -p.speed*DRAG);
 				
 					glm::vec3 prevPosition = p.pos;
@@ -381,6 +376,5 @@ float clamp(float value, float min, float max)
 
 float Distance(glm::vec3 const& v1, glm::vec3 const& v2)
 {
-	float distance = sqrt(pow((v2.x-v1.x),2) + pow((v2.y-v1.y),2));
-	return distance;
+	return sqrt(pow((v2.x-v1.x),2) + pow((v2.y-v1.y),2));
 }
