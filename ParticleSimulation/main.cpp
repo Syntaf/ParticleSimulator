@@ -27,10 +27,9 @@ int LastUsedParticle=0;							//used to help with efficiency since i'm using a l
 int main(int argc, char* argv[]) {
 	
 	srand(time(NULL));							//seed the random generator
-	
-	
+
 	sf::Window window;
-	window.create(sf::VideoMode(800,600),	//declare window
+	window.create(sf::VideoMode(800,600),		//declare window
 		"Particle Simulation",					//window title
 		sf::Style::Default,
 		sf::ContextSettings(32, 8, 0, 3, 3)

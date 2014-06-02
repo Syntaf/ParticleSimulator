@@ -5,55 +5,32 @@
 // Include GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-using namespace glm;
-
 #include "controls.hpp"
 #include "math.h"
+
+using namespace glm;
+
+const float speed = 7.0f;					// speed of camera moving around 
+const float lookSpeed = 0.005f;				// mouse speed
 
 glm::mat4 ViewMatrix;
 glm::mat4 ProjectionMatrix = glm::perspective(45.0f, 4.0f/3.0f, 0.1f, 100.0f);
 glm::mat4 ModelMatrix = glm::mat4(1.0f);
-//bool to determine if mouse button is clicked
-bool LMB_hit = false;
-
-glm::mat4 getViewMatrix(){
-	return ViewMatrix;
-}
-
-glm::mat4 getModelMatrix(){
-	return ModelMatrix;
-}
-
-glm::mat4 getProjectionMatrix(){
-	return ProjectionMatrix;
-}
-
-bool LMB(){
-	return LMB_hit;
-}
+glm::vec3 position = glm::vec3( 0, 0, 5 );  // Initial position : on +Z
+float horizontalAngle = 3.14f;				// Initial horizontal angle : toward -Z
+float verticalAngle = 0.0f;					// Initial vertical angle : none
+glm::vec3 direction(0.0);					// camera direction vector
+glm::vec3 right(0.0);						// right vector used for lookat()
 
 
-// Initial position : on +Z
-glm::vec3 position = glm::vec3( 0, 0, 5 ); 
-// Initial horizontal angle : toward -Z
-float horizontalAngle = 3.14f;
-// Initial vertical angle : none
-float verticalAngle = 0.0f;
-//direction variable
-glm::vec3 direction(0.0);
-//how right vector
-glm::vec3 right(0.0);
-//speed of player moving around
-float speed = 7.0f;
-//mouse speed
-float lookSpeed = 0.005f;
-
+//get matricies
+glm::mat4 getViewMatrix(){return ViewMatrix;}
+glm::mat4 getModelMatrix(){return ModelMatrix;}
+glm::mat4 getProjectionMatrix(){return ProjectionMatrix;}
 
 void computeMatricesFromInputs(sf::Window& window, float time){
 
-	//key inputs in order to look around, not sure what use this will
-	//have in the final program but I already written an SFML implementation
-	//awhile ago so I used it here
+	// Looking around, think of just a head pivoting
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
 		horizontalAngle += lookSpeed * speed;
 	}else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
@@ -77,6 +54,7 @@ void computeMatricesFromInputs(sf::Window& window, float time){
 		0,
 		cos(horizontalAngle - 3.14f/2.0f)
 	);
+
 	// Up vector
 	glm::vec3 up = glm::cross( right, direction );
 	
@@ -87,6 +65,7 @@ void computeMatricesFromInputs(sf::Window& window, float time){
 		up	//head up
 	);
 
+	// moving around, think of a person walking left/right/forward/backward
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
 		position += direction * time * speed;
 	}else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
@@ -96,9 +75,4 @@ void computeMatricesFromInputs(sf::Window& window, float time){
 	}else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
 		position -= right * time * speed;
 	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::H))
-		LMB_hit = true;
-	else
-		LMB_hit = false;
 }
