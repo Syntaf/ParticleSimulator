@@ -27,6 +27,11 @@ struct Particle{
 		return total;
 	}
 
+	void clearForce()
+	{
+		force.clear();
+	}
+
 	//used for std::sort, needs an overloaded comparison operator
 	bool operator<(const Particle& that) const {
 		return this->cameradistance > that.cameradistance;

@@ -1,5 +1,4 @@
-#version 330 core
-
+#version 330
 // Input vertex data, different for all executions of this shader.
 layout(location = 0) in vec3 squareVertices;
 layout(location = 1) in vec4 xyzs; // Position of the center of the particule and size of the square
