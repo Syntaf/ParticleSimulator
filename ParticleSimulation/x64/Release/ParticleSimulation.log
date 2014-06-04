@@ -1,4 +1,4 @@
-﻿Build started 6/3/2014 10:13:23 PM.
+﻿Build started 6/3/2014 10:21:08 PM.
      1>Project "C:\Users\Gmercer\Documents\GitHub\ParticleSimulator\ParticleSimulation\ParticleSimulation.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /I"C:\local\glew-1.10.0\include" /IC:\local\glm /IC:\local\boost_1_55_0 /I"C:\Program Files\hpx\include" /I"C:\local\SFML-2.1\include" /Zi /nologo /W3 /WX- /O2 /Oi /GL /D SFML_STATIC /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc110.pdb" /Gd /TP /errorReport:prompt main.cpp
@@ -20,4 +20,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:10.15
+Time Elapsed 00:00:09.69
