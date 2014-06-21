@@ -20,7 +20,7 @@ float clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
 const float DRAG = 20;							//drag force
-const int MAXPARTICLES= 22500;					//2.5k particles				
+const int MAXPARTICLES= 20000;					//2.5k particles				
 std::vector<Particle> ParticlesContainer;		//holds all particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -103,11 +103,11 @@ int main(int argc, char* argv[]) {
 	glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
 	//init particles and shape them like a rectangle, i*j should always = MAXPARTICLES or we have a problem
-	for(auto i(0); i<150; i++) {													
-		for(auto j(0); j<150; j++) {
+    for(auto i(0); i<sqrt(MAXPARTICLES); i++) {													
+		for(auto j(0); j<sqrt(MAXPARTICLES); j++) {
 			Particle particle;		
 			glm::vec2 d2Pos = glm::vec2(j*0.15, i*0.15) + glm::vec2(-15.0f,-15.0f);
-			particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-50);
+			particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-70);
 			
 			particle.mass=50.0;
 			particle.life = 100.0f;
@@ -196,7 +196,7 @@ int main(int argc, char* argv[]) {
 
 					
 					p.addForce( 
-						(glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500,-50.0) - p.pos) * (float)(pressed*50000/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y,-50.0f),p.pos)+10,2))));
+						(glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500,-70.0) - p.pos) * (float)(pressed*50000/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y,-70.0f),p.pos)+10,2))));
 					p.addForce( -p.speed*DRAG);
 				
 					glm::vec3 prevPosition = p.pos;
