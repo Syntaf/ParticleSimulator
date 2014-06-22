@@ -5,8 +5,7 @@ A particle simulator written with C++ SFML OpenGL.
 
 **Read more about this project at http://syntaf.github.io/ParticleSimulator/**
 
-*This gif is currently outdated, the whole phsyics system has recently been revamped*
-![gif](http://i.imgur.com/duEgiDl.gif)
+![gif](http://i.imgur.com/ihMnqs3.gif)
 
 Or see the full video here: https://vimeo.com/96867903  (**Password:** particles)
 
@@ -34,10 +33,12 @@ The current configuration properties are set to the following locations:
 
 ######Make sure to change these settings, or you may face a number of confusing errors
 
-Building
+To-Do
 -------------------
-
-**Coming Soon**
+- [ ] Begin GUI development
+- [ ] Optimize particle container(chunking)
+- [ ] Provide a CMake build system
+- [ ] Implement highly customizable enviroment
 
 Additional Notes
 -------------------------
