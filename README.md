@@ -3,20 +3,21 @@ ParticleSimulator
 
 A particle simulator written with C++ SFML OpenGL. 
 
-**See the site at http://syntaf.github.io/ParticleSimulator/**
+**Read more about this project at http://syntaf.github.io/ParticleSimulator/**
 
 *This gif is currently outdated, the whole phsyics system has recently been revamped*
 ![gif](http://i.imgur.com/duEgiDl.gif)
-Or see the full video here: https://vimeo.com/96867903  (PASSWORD: particles)
+
+Or see the full video here: https://vimeo.com/96867903  (**Password:** particles)
 
 **Required Libraries**
 --------------------------------------------------------
 
-| Library        | Minimum Version           | Header Only  |
-| ------------- |:-------------:| -----:|
-| GLM           | 0.9.5.3       | Yes   |
-| GLEW          | 1.5.3         |   No |
-| SFML          | 2.1           |   No |
+| Library        | Minimum Version | Architecture |Header Only  |
+| -------------  |:-------------:  | :---------:  |-----:       |
+| GLM            | 0.9.5.3         | N/A          |  Yes        |
+| GLEW           | 1.5.3           | x64          |  No         |
+| SFML           | 2.1             | x64          |  No         |
 
 [**GLM**](http://glm.g-truc.net/0.9.5/index.html):  A header only C++ mathematics library for graphics software based on the OpenGL Shading Language (GLSL) specification and released under the MIT license.
 
@@ -31,7 +32,7 @@ The current configuration properties are set to the following locations:
 * SFML libraries are set to ```C:/local/SFML-2.1/lib```
 * GLEW libraries are set to ```C:/local/glew-1.10.0/lib/Release/x64```
 
-######Make sure to change these settings, or you face a number of confusing errors
+######Make sure to change these settings, or you may face a number of confusing errors
 
 Building
 -------------------
@@ -40,4 +41,5 @@ Building
 
 Additional Notes
 -------------------------
-A thanks to opengl-tutorial.org for code structure and teachings
+- Intel HD 4000 graphics cards currently have issues running ModernGL, however this should not inhibit the simulator from running
+- A thanks to opengl-tutorial.org for code structure and teachings
