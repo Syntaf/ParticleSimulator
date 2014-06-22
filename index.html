@@ -36,16 +36,17 @@
 <p>This Simulator is currently an ongoing project, originally used to test my knowledge and understanding of OpenGL and SFML, the project grew on me and I continued development. I plan to eventually include a build system or 
 maybe even an executable under release, but for now it will remain a VS2012 project. To understand what the simulator currently does, here is a recent build, <strong>password:</strong> particles</p>
 
-<iframe src="https://vimeo.com/98855736" width="650" height="375" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<iframe src="//player.vimeo.com/video/98855736" width="500" height="375" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
-<p>Weird right? Well that feature was <strong>not</strong> intended, but looked too cool to take out!</p>
+<p>Cool right? Well there's plenty more features to come!</p>
 
 <h3>
 <a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>What Exactly Is This Doing?</h3>
 
-<p>The simulator currently combines mouse input with newtons famous law (1/2)at^2 + v(i)t. Something went wrong however during the mouses translation from SFML window coordinates
-   to OpenGL model space coordinates, and this is the result. The particle accelerates toward the center of the screen when the mouse is held down and is constantly affected by a
-   drag force, creating sort of a pulsating effect.</p>
+<p>The simulator currently combines mouse input with newtons famous law (1/2)at^2 + v(i)t. Particles continually accelerate towards the mouse point 
+ while the user holds down LMB. Once released, a constant drag force is applied until the particles eventually grind to a halt, making for some pretty
+ neat formations in the simulations!
+ </p>
 
 <h3>
 <a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Real World Applications</h3>
