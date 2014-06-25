@@ -20,7 +20,7 @@ float clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
 const float DRAG = 20;							//drag force
-const int MAXPARTICLES= 20000;					//2.5k particles				
+const int MAXPARTICLES= 40000;					//2.5k particles				
 std::vector<Particle> ParticlesContainer;		//holds all particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -150,43 +150,49 @@ int main(int argc, char* argv[]) {
 		glm::vec3 CameraPosition(glm::inverse(ViewMatrix)[3]);
 		//get the VP
 		glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
+        
+        //grab mouse coordinates so the particles can accelerate toward the given
+        //  position. The following code converts SFML mouse coordinates into model
+        //  space coordinates that OpenGL can use with the current particle coords
+        //  . The equation is a brain twister, I barley understand what I did myself
+        glm::vec4 mousePos(
+			sf::Mouse::getPosition(window).x, 
+			sf::Mouse::getPosition(window).y,
+			0.0f,
+			1.0f
+			); 
 
-		// Simulate all particles
+		//manipulation from mouse cords to model-view mouse cords
+		//find inverse of Proj * View
+		glm::mat4 matProj = ViewMatrix * ProjectionMatrix;
+		glm::mat4 inverse = glm::inverse(matProj);
+		float winZ = 1.0;
+
+		//determine space cords
+		glm::vec4 vIn(	(2.0f*((float)(mousePos.x) / (window.getSize().x))) - 1.0f,	//2 * x / window.x - 1.0f
+			1.0f - (2.0f * ((float)(mousePos.y)) / (window.getSize().y)),			//1 - 2 * y / window.y
+			2.0 * winZ - 1.0f,														//equates to 1, we are only manipulating y,z
+			1.0f																	//dont question it
+			);
+		//find inverse
+		glm::vec4 mousePosmdl = vIn * inverse;
+
+		mousePosmdl.w = 1.0 / mousePosmdl.w;
+		mousePosmdl.x *= mousePosmdl.w;
+		mousePosmdl.y *= mousePosmdl.w;
+		mousePosmdl.z *= mousePosmdl.w;
+
+		// calculate next position of particles, determine color as well
 		int ParticlesCount = 0;
 		for(int i=0; i<MAXPARTICLES; i++){
 			Particle& p = ParticlesContainer[i]; // shortcut
 
+            //cycle through all particles currently alive
 			if(p.life > 0.0f){
 
-				// Decrease life
+				// Decrease life, cycle through now if it's *still alive
 				p.life -= delta;
 				if (p.life > 0.0f){
-					glm::vec4 mousePos(
-						sf::Mouse::getPosition(window).x, 
-						sf::Mouse::getPosition(window).y,
-						0.0f,
-						1.0f
-						); 
-
-					//manipulation from mouse cords to model-view mouse cords
-					//find inverse of Proj * View
-					glm::mat4 matProj = ViewMatrix * ProjectionMatrix;
-					glm::mat4 inverse = glm::inverse(matProj);
-					float winZ = 1.0;
-
-					//determine space cords
-					glm::vec4 vIn(	(2.0f*((float)(mousePos.x) / (window.getSize().x))) - 1.0f,	//2 * x / window.x - 1.0f
-						1.0f - (2.0f * ((float)(mousePos.y)) / (window.getSize().y)),			//1 - 2 * y / window.y
-						2.0 * winZ - 1.0f,														//equates to 1, we are only manipulating y,z
-						1.0f																	//dont question it
-						);
-					//find inverse
-					glm::vec4 mousePosmdl = vIn * inverse;
-
-					mousePosmdl.w = 1.0 / mousePosmdl.w;
-					mousePosmdl.x *= mousePosmdl.w;
-					mousePosmdl.y *= mousePosmdl.w;
-					mousePosmdl.z *= mousePosmdl.w;
 					
 					//if left mouse button is pressed
 					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
