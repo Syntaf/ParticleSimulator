@@ -24,6 +24,20 @@ Or see the full video here: https://vimeo.com/96867903  (**Password:** particles
   
 [**SFML**](http://www.sfml-dev.org/):   SFML provides a simple interface to the various components of your PC, to ease the development of games and multimedia applications.
 
+**Compiler Support**
+--------------------------------------------------------
+
+|  Compilers  |  Recommended Version  |  Minimum Version  |
+| ----------- | --------------------- | ----------------- |
+| MSVC | `v110` |  `v100` |
+| GNU Compiler Collection(G++) | `?` | `?` |
+| Clang | `?` | `?` |
+
+| Build System | Recommended Version | Minimum Version |
+|--------------|---------------------|-----------------|
+| CMake | `2.8.4` | `2.8.4` |
+
+
 Build
 -----------------
 Before beginning to build this application, make sure you have downloaded the prerequisites above.
