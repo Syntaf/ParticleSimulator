@@ -1,0 +1,3 @@
+./configure && make
+language: cpp
+compiler: gcc
