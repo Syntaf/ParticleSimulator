@@ -27,16 +27,15 @@ Or see the full video here: https://vimeo.com/96867903  (**Password:** particles
 Configuration
 -----------------
 
-**I Just finished writing a CMake out of source build system! Yay! Give me a day to write a tutorial on building the source with CMake though :/
-
-######Make sure to change these settings, or you may face a number of confusing errors
+######I Just finished writing a CMake out of source build system! Yay! Give me a day to write a tutorial on building the source with CMake though :/######
 
 To-Do
 -------------------
 - [ ] Begin GUI development
 - [ ] Optimize particle container(chunking)
-- [ ] Provide a CMake build system
+- [x] Provide a CMake build system
 - [ ] Implement highly customizable enviroment
+- [ ] Move particle calculations to GPU
 
 Additional Notes
 -------------------------
