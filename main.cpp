@@ -12,6 +12,9 @@
 #include "common/texture.hpp"
 #include "Particle.hpp"
 #include "config.h"
+#ifdef USE_OPENCL
+#include <CL/opencl.h>
+#endif
 
 #pragma comment(lib, "glew32.lib")
 
@@ -26,6 +29,12 @@ std::vector<Particle> ParticlesContainer;		//holds all particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
 int main(int argc, char* argv[]) {
+
+//debug is slow as fuck, make sure people are running on release 
+#ifdef _DEBUG
+    std::cout << "\nWARNING: Debug is currently active, optimizations are not enabled this is configuration" <<
+        ". Unless you are actually debugging, switch to Release mode\n" << std::endl;
+#endif
 	
     std::cout << "Particle Simulator Version: " << VERSION_MAJOR << "." << VERSION_MINOR << "\n";
 
