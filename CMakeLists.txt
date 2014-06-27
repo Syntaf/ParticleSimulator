@@ -2,6 +2,14 @@
 cmake_minimum_required(VERSION 2.8)
 project(ParticleSimulator)
 
+if(NOT CMAKE_BUILD_TYPE  AND NOT CMAKE_CONFIGURATION_TYPES)
+	message( STATUS "Setting build type to 'Release as none was specified.")
+	set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+	#set possible values of built type for cmake-gui
+	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Release" "Debug"
+		"MinSizeRel" "RelWithDebInfo")
+endif()
+
 set(EXECUTABLE_NAME "ParticleSimulator")
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 2)
@@ -49,29 +57,15 @@ include_directories("${PROJECT_SOURCE_DIR}/common")
 message(STATUS "GLM included at ${GLM_ROOT}")
 
 #copy shaders and textures into release folder, TEMP solution to ths issue
-file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
-file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/shaders)
-file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/textures)
-file(COPY shaders/vertexshader.vert shaders/fragmentshader.frag 
-	DESTINATION ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/shaders)
-file(COPY textures/particle.dds 
-	DESTINATION ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/textures)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release ${PROJECT_BINARY_DIR}/Debug)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release/shaders ${PROJECT_BINARY_DIR}/Debug/shaders)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release/textures ${PROJECT_BINARY_DIR}/Debug/textures)
+file(COPY shaders/vertexshader.vert shaders/fragmentshader.frag DESTINATION ${PROJECT_BINARY_DIR}/Release/shaders)
+file(COPY shaders/vertexshader.vert shaders/fragmentshader.frag DESTINATION ${PROJECT_BINARY_DIR}/Debug/shaders)
+file(COPY textures/particle.dds DESTINATION ${PROJECT_BINARY_DIR}/Release/textures)
+file(COPY textures/particle.dds DESTINATION ${PROJECT_BINARY_DIR}/Debug/textures)
 
-if(NOT CMAKE_BUILD_TYPE  AND NOT CMAKE_CONFIGURATION_TYPES)
-	message( STATUS "Setting build type to 'Release as none was specified.")
-	set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
-	#set possible values of built type for cmake-gui
-	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Release" "Debug"
-		"MinSizeRel" "RelWithDebInfo")
-endif()
 add_executable(${EXECUTABLE_NAME} ${SOURCES} ${HEADERS})
-
-#OpenCL experimental
-if(USE_OPENGL)
-	find_package(OpenCL REQUIRED)
-	include_directories(${OPENCL_INCLUDE_DIRS})
-	target_link_libraries(${EXECUTABLE_NAME} ${OPENCL_LIBRARIES})
-endif()
 
 #OpenGL Libraries and definitions
 find_package(OpenGL REQUIRED)
@@ -85,6 +79,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 find_package(SFML 2 REQUIRED system window graphics)
 include_directories(${SFML_INCLUDE_DIR})
 target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
+
+#OpenCL experimental
+if(USE_OPENGL)
+	find_package(OpenCL REQUIRED)
+	include_directories(${OPENCL_INCLUDE_DIRS})
+	target_link_libraries(${EXECUTABLE_NAME} ${OPENCL_LIBRARIES})
+endif()
 
 #GLEW libraries
 add_library(glew_static STATIC IMPORTED)
