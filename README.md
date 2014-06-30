@@ -8,7 +8,7 @@ A particle simulator written with C++ SFML OpenGL.
 
 ![gif](http://i.imgur.com/ihMnqs3.gif)
 
-Or see the full video here: https://vimeo.com/96867903  (**Password:** particles)
+Or see the full video here: https://vimeo.com/98855736  (**Password:** particles)
 
 **Required Libraries**
 --------------------------------------------------------
