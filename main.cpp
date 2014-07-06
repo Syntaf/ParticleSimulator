@@ -20,7 +20,7 @@
 
 int FindUnusedParticle();
 void SortParticles();
-float clamp(float value, float min, float max);
+unsigned char clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
 const float DRAG = 20;							//drag force
@@ -149,7 +149,7 @@ int main(int argc, char* argv[]) {
 	sf::Clock clock;										//clock for delta and controls
 	while( running )
 	{
-		double delta = clock.restart().asSeconds();
+		float delta = clock.restart().asSeconds();
 
 		sf::Event event;
 		while(window.pollEvent(event) && console.pollEvent(event))						//handle any closing events
@@ -198,7 +198,7 @@ int main(int argc, char* argv[]) {
 		//find inverse
 		glm::vec4 mousePosmdl = vIn * inverse;
 
-		mousePosmdl.w = 1.0 / mousePosmdl.w;
+		mousePosmdl.w = 1.0f / mousePosmdl.w;
 		mousePosmdl.x *= mousePosmdl.w;
 		mousePosmdl.y *= mousePosmdl.w;
 		mousePosmdl.z *= mousePosmdl.w;
@@ -382,7 +382,7 @@ void SortParticles(){
 	std::sort(&ParticlesContainer[0], &ParticlesContainer[MAXPARTICLES]);
 }
 
-float clamp(float value, float min, float max)
+unsigned char clamp(float value, float min, float max)
 {
 	float result;
 	if(value > max)
