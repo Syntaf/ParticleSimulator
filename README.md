@@ -85,7 +85,7 @@ OS X (Mac)
 
 To-Do
 -------------------
-- [ ] Begin GUI development
+- [x] Begin GUI development
 - [ ] Optimize particle container(chunking)
 - [x] Provide a CMake build system
 - [ ] Implement highly customizable enviroment
