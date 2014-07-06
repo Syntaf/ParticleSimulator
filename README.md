@@ -47,7 +47,7 @@ Windows
 --------
 1. Clone the master Particle Simulator repository in a directory of your choice.
 
-2. Create a build folder. This project requires and out-of-tree-build. This means you ~~will be unable to~~ **should not ** run CMake in the hpx folder
+2. Create a build folder. This project requires and out-of-tree-build. This means you ~~will be unable to~~ **should not** run CMake in the hpx folder
 
 3. Open up the CMake GUI. In the input box labelled "Where is the source code:", enter the full path to the source folder. In the input box labelled "Where to build the binaries:", enter the full path to the build folder you created in step 2
 
