@@ -47,6 +47,15 @@ int main(int argc, char* argv[]) {
 		sf::ContextSettings(32, 8, 0, 3, 3)
 		);										//default context settings, my custom ones were screwing with the program so I let SFML decide
 
+    sf::RenderWindow console;
+    console.create(sf::VideoMode(400,200),
+        "Console",
+        sf::Style::Default);
+
+    sf::CircleShape circle(5.0f);
+
+    console.setPosition(sf::Vector2i(window.getPosition().x-450, window.getPosition().y));
+
 	glViewport(0,0,window.getSize().x,window.getSize().y);
 	window.setMouseCursorVisible(true);			//Make sure cursor is visible
 	window.setVerticalSyncEnabled(true);		//smooth
@@ -143,7 +152,7 @@ int main(int argc, char* argv[]) {
 		double delta = clock.restart().asSeconds();
 
 		sf::Event event;
-		while(window.pollEvent(event))						//handle any closing events
+		while(window.pollEvent(event) && console.pollEvent(event))						//handle any closing events
 		{
 			if(event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				running = false;
@@ -280,7 +289,6 @@ int main(int argc, char* argv[]) {
 
 		glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
-
 		// 1st attrib buffer: vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
@@ -330,11 +338,11 @@ int main(int argc, char* argv[]) {
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 
+        console.draw(circle);
+        console.display();
 		//sfml display to window
 		window.display();
-
-		
-
+        
 	}
 
 	//free up memory openGL used
