@@ -23,10 +23,11 @@ option (USE_OPENCL
 	"Use OpenCL experimental implementation" OFF)
 
 #include sources
-set(HEADERS
+set(HEADERS	
 		common/shader.hpp
 		common/texture.hpp
 		common/controls.hpp
+		Particle.hpp
 )
 #include headers
 set(SOURCES
