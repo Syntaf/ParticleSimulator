@@ -27,11 +27,13 @@ set(HEADERS
 		common/shader.hpp
 		common/texture.hpp
 		common/controls.hpp
+		console.hpp
 		Particle.hpp
 )
 #include headers
 set(SOURCES
 		main.cpp
+		console.cpp
 		common/shader.cpp
 		common/texture.cpp
 		common/controls.cpp

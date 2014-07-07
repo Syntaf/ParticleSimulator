@@ -10,8 +10,10 @@
 #include "common/shader.hpp"
 #include "common/controls.hpp"
 #include "common/texture.hpp"
+#include "console.hpp"
 #include "Particle.hpp"
 #include "config.h"
+
 #ifdef USE_OPENCL
 #include <CL/opencl.h>
 #endif
@@ -23,7 +25,7 @@ void SortParticles();
 unsigned char clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
-const float DRAG = 20;							//drag force
+const float DRAG = 40;							//drag force
 const int MAXPARTICLES= 100000;					//2.5k particles				
 std::vector<Particle> ParticlesContainer;		//holds all particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
@@ -41,24 +43,19 @@ int main(int argc, char* argv[]) {
 	srand(time(NULL));							//seed the random generator
 
 	sf::Window window;
-	window.create(sf::VideoMode(800,600),		//declare window
+	window.create(sf::VideoMode(1200,900),		//declare window
 		"Particle Simulation",					//window title
 		sf::Style::Default,
 		sf::ContextSettings(32, 8, 0, 3, 3)
 		);										//default context settings, my custom ones were screwing with the program so I let SFML decide
-
-    sf::RenderWindow console;
-    console.create(sf::VideoMode(400,200),
-        "Console",
-        sf::Style::Default);
-
-    sf::CircleShape circle(5.0f);
-
-    console.setPosition(sf::Vector2i(window.getPosition().x-450, window.getPosition().y));
-
-	glViewport(0,0,window.getSize().x,window.getSize().y);
+	
+    ConsoleManager console_window(&window);
+    
+    glViewport(0,0,window.getSize().x,window.getSize().y);
 	window.setMouseCursorVisible(true);			//Make sure cursor is visible
 	window.setVerticalSyncEnabled(true);		//smooth
+
+    
 
 	// Initialize GLEW
 	glewExperimental = true;					// Needed for core profile
@@ -67,7 +64,7 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
-	glClearColor(0.0f, 0.0f, 0.1f, 0.0f);		// Dark blue background
+	glClearColor(0.0f, 0.0f, 0.15f, 0.0f);		// Dark blue background
 
 	
 	glEnable(GL_DEPTH_TEST);					// Enable depth test
@@ -147,21 +144,20 @@ int main(int argc, char* argv[]) {
 	bool running=true;										//set up bool to run SFML loop
 	bool pressed=false;
 	sf::Clock clock;										//clock for delta and controls
-	while( running )
+    while( running )
 	{
 		float delta = clock.restart().asSeconds();
 
 		sf::Event event;
-		while(window.pollEvent(event) && console.pollEvent(event))						//handle any closing events
+		while(window.pollEvent(event))						//handle any closing events
 		{
 			if(event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				running = false;
 			else if(event.type == sf::Event::Resized)
 				glViewport(0,0,event.size.width,event.size.height);
 		}
-
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	//clear the screen in anticipation for drawing
-
+        
 		//handle any input and grab matrices
 		computeMatricesFromInputs(window, delta);
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
@@ -333,15 +329,20 @@ int main(int argc, char* argv[]) {
 
 		//draw particles
 		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, ParticlesCount);
-
+        
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 
-        console.draw(circle);
-        console.display();
+        console_window.render();
+        window.display();
+        
+        
+        
+        
+        
 		//sfml display to window
-		window.display();
+		
         
 	}
 

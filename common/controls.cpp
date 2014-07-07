@@ -10,7 +10,7 @@
 
 using namespace glm;
 
-const float speed = 7.0f;					// speed of camera moving around 
+const float speed = 14.0f;					// speed of camera moving around 
 const float lookSpeed = 0.005f;				// mouse speed
 
 glm::mat4 ViewMatrix;
