@@ -136,7 +136,7 @@ int main(int argc, char* argv[]) {
 			particle.b = 0;
 			particle.a = 255;
 
-			particle.size = .2f;
+			particle.size = .3f;
 			ParticlesContainer.push_back(particle);
 		}
 	}
