@@ -25,7 +25,7 @@ void SortParticles();
 unsigned char clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
-const float DRAG = 40;							//drag force
+const float DRAG = 20;							//drag force
 const int MAXPARTICLES= 100000;					//2.5k particles				
 std::vector<Particle> ParticlesContainer;		//holds all particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 	srand(time(NULL));							//seed the random generator
 
 	sf::Window window;
-	window.create(sf::VideoMode(1200,900),		//declare window
+	window.create(sf::VideoMode(800,600),		//declare window
 		"Particle Simulation",					//window title
 		sf::Style::Default,
 		sf::ContextSettings(32, 8, 0, 3, 3)
@@ -65,10 +65,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	glClearColor(0.0f, 0.0f, 0.15f, 0.0f);		// Dark blue background
-
-	
-	glEnable(GL_DEPTH_TEST);					// Enable depth test
-	glDepthFunc(GL_LESS);						// Accept fragment if it is closer to the camera than the former one
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -229,9 +225,9 @@ int main(int argc, char* argv[]) {
 					p.clearForce();
 
 					float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
-					p.r = 255;
-					p.g = clamp(255 - (normSpeed)*10,0,255);
-					p.b = 0;
+					p.r = 120;
+					p.g = clamp(200 - (normSpeed)*10,0,255);
+					p.b = 5;
 					
 					p.cameradistance = glm::length2( p.pos - CameraPosition );
 
@@ -268,7 +264,7 @@ int main(int argc, char* argv[]) {
 
 
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 		// Use our shader
 		glUseProgram(programID);
