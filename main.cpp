@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
     glViewport(0,0,window.getSize().x,window.getSize().y);
 	window.setMouseCursorVisible(true);			//Make sure cursor is visible
 	window.setVerticalSyncEnabled(true);		//smooth
-
+    sf::Mouse::setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x + window.getSize().x/2, sf::Mouse::getPosition(window).y));
     
 
 	// Initialize GLEW
@@ -140,18 +140,20 @@ int main(int argc, char* argv[]) {
 	bool running=true;										//set up bool to run SFML loop
 	bool pressed=false;
 	sf::Clock clock;										//clock for delta and controls
+    //sf::Clock fps_clock;
+    //float fps_last_time = 0;
     while( running )
 	{
 		float delta = clock.restart().asSeconds();
-
 		sf::Event event;
-		while(window.pollEvent(event) && console_window.getConsoleWindowPtr()->pollEvent(event))						//handle any closing events
+		while(window.pollEvent(event))						//handle any closing events
 		{
 			if(event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				running = false;
 			else if(event.type == sf::Event::Resized)
 				glViewport(0,0,event.size.width,event.size.height);
 		}
+        console_window.handleEvent(event, running);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	//clear the screen in anticipation for drawing
         
@@ -335,6 +337,11 @@ int main(int argc, char* argv[]) {
 
         console_window.render();
         window.display();
+
+        //float fps_current_time = fps_clock.restart().asSeconds();
+        //float fps = 1.f / (fps_current_time - (fps_current_time - fps_last_time));
+        //fps_last_time = fps_current_time;
+        //std::cout << "\r" << fps;   
 	}
 
 	//free up memory openGL used

@@ -19,10 +19,13 @@ ConsoleManager::ConsoleManager(sf::Window *Parent):
     circle = sf::CircleShape(15.0f);
     circle.setPosition(0.0f,0.0f);
 }
-
-sf::RenderWindow* ConsoleManager::getConsoleWindowPtr()
+void ConsoleManager::handleEvent(sf::Event& event, bool& run)
 {
-    return &ConsoleWindow;
+    while(ConsoleWindow.pollEvent(event)) 
+    {
+        if(event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+				run = false;
+    }
 }
 
 void ConsoleManager::render()

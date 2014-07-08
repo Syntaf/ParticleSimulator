@@ -8,7 +8,7 @@ class ConsoleManager {
         ConsoleManager(sf::Window *Parent);
         ~ConsoleManager(){}
 
-        sf::RenderWindow* getConsoleWindowPtr();
+        void handleEvent(sf::Event& event,bool& run);
 
         void render();
     private:
