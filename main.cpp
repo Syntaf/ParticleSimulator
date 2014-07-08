@@ -18,7 +18,7 @@
 #include <CL/opencl.h>
 #endif
 
-#pragma comment(lib, "glew32.lib")
+//#pragma comment(lib, "glew32.lib")
 
 int FindUnusedParticle();
 void SortParticles();
@@ -187,6 +187,8 @@ int main(int argc, char* argv[]) {
 			2.0 * winZ - 1.0f,														//equates to 1, we are only manipulating y,z
 			1.0f																	//dont question it
 			);
+
+        
 		//find inverse
 		glm::vec4 mousePosmdl = vIn * inverse;
 
@@ -332,13 +334,6 @@ int main(int argc, char* argv[]) {
 
         console_window.render();
         window.display();
-        
-        
-        
-        
-        
-		//sfml display to window
-		
         
 	}
 
