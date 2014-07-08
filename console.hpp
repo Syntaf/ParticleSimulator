@@ -8,7 +8,7 @@ class ConsoleManager {
         ConsoleManager(sf::Window *Parent);
         ~ConsoleManager(){}
 
-        bool pollEvent(sf::Event& event);
+        sf::RenderWindow* getConsoleWindowPtr();
 
         void render();
     private:

@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 	srand(time(NULL));							//seed the random generator
 
 	sf::Window window;
-	window.create(sf::VideoMode(800,600),		//declare window
+	window.create(sf::VideoMode(1000,750),		//declare window
 		"Particle Simulation",					//window title
 		sf::Style::Default,
 		sf::ContextSettings(32, 8, 0, 3, 3)
@@ -145,13 +145,14 @@ int main(int argc, char* argv[]) {
 		float delta = clock.restart().asSeconds();
 
 		sf::Event event;
-		while(window.pollEvent(event))						//handle any closing events
+		while(window.pollEvent(event) && console_window.getConsoleWindowPtr()->pollEvent(event))						//handle any closing events
 		{
 			if(event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				running = false;
 			else if(event.type == sf::Event::Resized)
 				glViewport(0,0,event.size.width,event.size.height);
 		}
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	//clear the screen in anticipation for drawing
         
 		//handle any input and grab matrices
@@ -334,7 +335,6 @@ int main(int argc, char* argv[]) {
 
         console_window.render();
         window.display();
-        
 	}
 
 	//free up memory openGL used
