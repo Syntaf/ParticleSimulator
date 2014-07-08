@@ -3,9 +3,6 @@ ParticleSimulator
 
 A particle simulator written with C++ SFML OpenGL. 
 
-*The website is out of date and needs updating, I will get to that shortly:*
-**Read more about this project at http://syntaf.github.io/ParticleSimulator/**
-
 ![gif](http://i.imgur.com/xreESqX.gif)
 
 Or see the full video here: https://vimeo.com/98855736  (**Password:** particles)
