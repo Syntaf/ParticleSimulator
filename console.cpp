@@ -13,7 +13,7 @@ ConsoleManager::ConsoleManager(sf::Window *Parent):
     
     //to line console up with main window, divide parent size by some constant(2.35)
     ConsoleWindow.setPosition( sf::Vector2i(
-        Parent->getPosition().x - Parent->getSize().x/2.35,
+        (int)(Parent->getPosition().x - Parent->getSize().x/2.35),
         Parent->getPosition().y));
 
     circle = sf::CircleShape(15.0f);
