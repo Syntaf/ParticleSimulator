@@ -59,7 +59,7 @@ include_directories("${PROJECT_SOURCE_DIR}/textures")
 include_directories("${PROJECT_SOURCE_DIR}/common")
 
 if(USE_OPENCL)
-	include_directories("${PROJECT_SOURCE_DIR}/textures")
+	include_directories("${PROJECT_SOURCE_DIR}/kernels")
 endif()
 
 #copy shaders and textures into release folder, TEMP solution to ths issue
