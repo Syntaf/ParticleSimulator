@@ -116,6 +116,7 @@ int main(int argc, char* argv[]) {
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
 	glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
+
 	//init particles and shape them like a rectangle, i*j should always = MAXPARTICLES or we have a problem
     for(int i(0); i < (int)sqrt(MAXPARTICLES); i++) {													
 		for(int j(0); j < (int)sqrt(MAXPARTICLES); j++) {
@@ -138,6 +139,24 @@ int main(int argc, char* argv[]) {
 	}
 
     std::cout << ParticlesContainer.size() << std::endl;
+
+#ifdef USE_OPENCL
+
+	// initialize opencl using opengl buffers
+	cl_particle_updater cl_updater(wglGetCurrentContext(), wglGetCurrentDC(), MAXPARTICLES,
+							       particles_position_buffer, particles_color_buffer);
+
+	// move gl buffers to cl
+	cl_updater.lock_gl_buffers();
+
+	// set the initial values of the particles
+	cl_updater.set_particle_values(ParticlesContainer);
+
+	// move buffers back to gl
+	cl_updater.unlock_gl_buffers();
+
+#endif
+
 
 	bool running=true;										//set up bool to run SFML loop
 	bool pressed=false;
@@ -209,8 +228,9 @@ int main(int argc, char* argv[]) {
 	        pressed = false;
 
 		// calculate next position of particles, determine color as well
-		int ParticlesCount = 0;
-		for(int i=0; i<MAXPARTICLES; i++){
+		GLsizei ParticlesCount = 0;
+#ifndef USE_OPENCL
+		for(size_t i=0; i<ParticlesContainer.size(); i++){
 			Particle& p = ParticlesContainer[i]; // shortcut
 
             //cycle through all particles currently alive
@@ -257,6 +277,8 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
+
+
 		//SortParticles();
 
 		//update buffers openGL uses for rendering
@@ -267,6 +289,20 @@ int main(int argc, char* argv[]) {
 		glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
 		glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf
 		glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLubyte) * 4, g_particule_color_data);
+
+#else // USE_OPENCL
+		
+		ParticlesCount = (GLsizei)ParticlesContainer.size();
+
+		// move gl buffers to cl
+		cl_updater.lock_gl_buffers();
+
+		cl_updater.update(mousePosmdl, pressed, delta, ParticlesCount);
+
+		// move buffers back to gl
+		cl_updater.unlock_gl_buffers();
+
+#endif // USE_OPENCL
 
 
 		glEnable(GL_BLEND);

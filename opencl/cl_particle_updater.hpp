@@ -23,7 +23,7 @@ public:
 	~cl_particle_updater();
 	
 	// the main calculation query
-	void update(glm::vec4 mousepos, bool mouse_pressed, float delta, size_t max_num_particles);
+	void update(glm::vec4 mousepos, bool mouse_pressed, float delta, size_t num_particles);
 
 	// the initialization
 	void set_particle_values(std::vector<Particle> & particles);
