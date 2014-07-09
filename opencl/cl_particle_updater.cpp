@@ -1,8 +1,5 @@
 #include "cl_particle_updater.hpp"
 #include "cl_tools.hpp"
-
-
-
 #include <iostream>
 #include <vector>
 #include <string>

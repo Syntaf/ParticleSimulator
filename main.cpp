@@ -138,8 +138,6 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-    std::cout << ParticlesContainer.size() << std::endl;
-
 #ifdef USE_OPENCL
 
 	// initialize opencl using opengl buffers
