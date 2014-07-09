@@ -32,7 +32,8 @@ set(HEADERS
 )
 if(USE_OPENCL)
 	set(HEADERS ${HEADERS}
-			opencl/cl_particle_calculator.hpp
+			opencl/cl_particle_updater.hpp
+			opencl/cl_tools.hpp
 	)
 endif()
 
@@ -46,7 +47,8 @@ set(SOURCES
 )
 if(USE_OPENCL)
 	set(SOURCES ${SOURCES}
-			opencl/cl_particle_calculator.cpp
+			opencl/cl_particle_updater.cpp
+			opencl/cl_tools.cpp
 	)
 endif()
 
@@ -56,6 +58,10 @@ include_directories("${PROJECT_SOURCE_DIR}/shaders")
 include_directories("${PROJECT_SOURCE_DIR}/textures")
 include_directories("${PROJECT_SOURCE_DIR}/common")
 
+if(USE_OPENCL)
+	include_directories("${PROJECT_SOURCE_DIR}/textures")
+endif()
+
 #copy shaders and textures into release folder, TEMP solution to ths issue
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release ${PROJECT_BINARY_DIR}/Debug)
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release/shaders ${PROJECT_BINARY_DIR}/Debug/shaders)
@@ -64,6 +70,12 @@ file(COPY shaders/vertexshader.vert shaders/fragmentshader.frag DESTINATION ${PR
 file(COPY shaders/vertexshader.vert shaders/fragmentshader.frag DESTINATION ${PROJECT_BINARY_DIR}/Debug/shaders)
 file(COPY textures/particle.dds DESTINATION ${PROJECT_BINARY_DIR}/Release/textures)
 file(COPY textures/particle.dds DESTINATION ${PROJECT_BINARY_DIR}/Debug/textures)
+if(USE_OPENCL)
+	file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release/kernels ${PROJECT_BINARY_DIR}/Debug/kernels)
+	file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release/kernels ${PROJECT_BINARY_DIR}/Release/kernels)
+	file(COPY kernels/update_particles.cl DESTINATION ${PROJECT_BINARY_DIR}/Debug/kernels)
+	file(COPY kernels/update_particles.cl DESTINATION ${PROJECT_BINARY_DIR}/Release/kernels)
+endif()
 
 
 add_executable(${EXECUTABLE_NAME} ${SOURCES} ${HEADERS})
