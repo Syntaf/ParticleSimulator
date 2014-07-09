@@ -49,6 +49,7 @@ if(USE_OPENCL)
 	set(SOURCES ${SOURCES}
 			opencl/cl_particle_updater.cpp
 			opencl/cl_tools.cpp
+			kernels/update_particles.cl
 	)
 endif()
 
