@@ -115,8 +115,8 @@ static void CL_CALLBACK cl_error_callback (const char *errinfo,
 
 
 
-cl_particle_updater::cl_particle_updater(HGLRC glContext, HDC glDC, size_t num_particles_, GLuint posBuffer_, GLuint colBuffer_)
-	: num_particles(num_particles_)
+cl_particle_updater::cl_particle_updater(HGLRC glContext, HDC glDC, size_t max_num_particles_, GLuint posBuffer_, GLuint colBuffer_)
+	: max_num_particles(max_num_particles_)
 {
 	std::cout << "Initializing CL Particle Updater ..." << std::endl;
 	
@@ -142,10 +142,10 @@ cl_particle_updater::cl_particle_updater(HGLRC glContext, HDC glDC, size_t num_p
 	if(posBuffer_ == 0 || colBuffer_ == 0) use_gl_buffers = false;
 
 	// initialize buffers
-	size_t pos_buffer_size   = num_particles * sizeof(pos_buffer_type);
-	size_t speed_buffer_size = num_particles * sizeof(speed_buffer_type);
-	size_t col_buffer_size   = num_particles * sizeof(col_buffer_type);
-	size_t specs_buffer_size = num_particles * sizeof(specs_buffer_type);
+	size_t pos_buffer_size   = max_num_particles * sizeof(pos_buffer_type);
+	size_t speed_buffer_size = max_num_particles * sizeof(speed_buffer_type);
+	size_t col_buffer_size   = max_num_particles * sizeof(col_buffer_type);
+	size_t specs_buffer_size = max_num_particles * sizeof(specs_buffer_type);
 	size_t mouse_buffer_size = 5 * sizeof(mouse_buffer_type);
 	pos_buffer   = clCreateBuffer(context, CL_MEM_READ_WRITE, pos_buffer_size,   NULL, &err); cl_ensure(err);
 	speed_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, speed_buffer_size, NULL, &err); cl_ensure(err);
@@ -237,7 +237,7 @@ void
 cl_particle_updater::set_particle_values(std::vector<Particle> & particles)
 {
 	
-	if(particles.size() > num_particles) cl_die("Our CL buffers can't hold that many particles! (" << particles.size() << "/" << num_particles << ")");
+	if(particles.size() > max_num_particles) cl_die("Our CL buffers can't hold that many particles! (" << particles.size() << "/" << max_num_particles << ")");
 
 	// collect all data in vectors
 	std::vector<pos_buffer_type>   vec_pos;
@@ -287,7 +287,7 @@ cl_particle_updater::read_pos_and_col(GLfloat* pos_data, GLubyte* col_data, size
 }
 
 void
-cl_particle_updater::update(glm::vec4 mousepos, bool mouse_pressed, float delta)
+cl_particle_updater::update(glm::vec4 mousepos, bool mouse_pressed, float delta, size_t num_particles)
 {
 
 	// write data to mouse buffer

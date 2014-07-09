@@ -22,7 +22,7 @@ public:
 	~cl_particle_updater();
 	
 	// the main calculation query
-	void update(glm::vec4 mousepos, bool mouse_pressed, float delta);
+	void update(glm::vec4 mousepos, bool mouse_pressed, float delta, size_t max_num_particles);
 
 	// the initialization
 	void set_particle_values(std::vector<Particle> & particles);
@@ -44,7 +44,7 @@ private:
 	cl_command_queue command_queue;
 	bool use_gl_buffers;
 	
-	size_t num_particles;
+	size_t max_num_particles;
 	typedef cl_float4 pos_buffer_type;
 	typedef cl_float3 speed_buffer_type;
 	typedef cl_uchar4 col_buffer_type;
