@@ -1,6 +1,8 @@
 #include "cl_particle_updater.hpp"
 #include "cl_tools.hpp"
 
+
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -147,12 +149,26 @@ cl_particle_updater::cl_particle_updater(HGLRC glContext, HDC glDC, size_t max_n
 	size_t col_buffer_size   = max_num_particles * sizeof(col_buffer_type);
 	size_t specs_buffer_size = max_num_particles * sizeof(specs_buffer_type);
 	size_t mouse_buffer_size = 5 * sizeof(mouse_buffer_type);
-	pos_buffer   = clCreateBuffer(context, CL_MEM_READ_WRITE, pos_buffer_size,   NULL, &err); cl_ensure(err);
 	speed_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, speed_buffer_size, NULL, &err); cl_ensure(err);
-	col_buffer   = clCreateBuffer(context, CL_MEM_WRITE_ONLY, col_buffer_size,   NULL, &err); cl_ensure(err);
 	specs_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, specs_buffer_size, NULL, &err); cl_ensure(err);
 	mouse_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY,  mouse_buffer_size, NULL, &err); cl_ensure(err);
-
+	if(!use_gl_buffers) {
+		pos_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, pos_buffer_size, NULL, &err); cl_ensure(err);
+		col_buffer = clCreateBuffer(context, CL_MEM_WRITE_ONLY, col_buffer_size, NULL, &err); cl_ensure(err);
+	} else {
+		// check if sizes match
+		GLint pos_gl_size, col_gl_size;
+		glBindBuffer(GL_ARRAY_BUFFER, posBuffer_);
+		glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &pos_gl_size);
+		glBindBuffer(GL_ARRAY_BUFFER, colBuffer_);
+		glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &col_gl_size);
+		std::cout << "Pos CL Buffer created from GL Buffer (size: " << pos_gl_size << "/" << pos_buffer_size << ")" << std::endl;
+		std::cout << "Col CL Buffer created from GL Buffer (size: " << col_gl_size << "/" << col_buffer_size << ")" << std::endl;
+		if(pos_gl_size < pos_buffer_size || col_gl_size < col_buffer_size) cl_die("OpenGL buffers are too small!");
+		
+		pos_buffer = clCreateFromGLBuffer(context, CL_MEM_READ_WRITE, posBuffer_, &err); cl_ensure(err);
+		col_buffer = clCreateFromGLBuffer(context, CL_MEM_READ_WRITE, colBuffer_, &err); cl_ensure(err);
+	}
 
 	// read kernel source from file
 	std::ifstream file("kernels/update_particles.cl");
@@ -304,5 +320,36 @@ cl_particle_updater::update(glm::vec4 mousepos, bool mouse_pressed, float delta,
 	// start calculation. needs synchronization at some point, will be at read_pos_and_col or release_gl_buffer
 	size_t zero = 0;
 	clEnqueueNDRangeKernel(command_queue, calculation_kernel, 1, &zero, &num_particles, NULL, 0, NULL, NULL);
+
+}
+
+void
+cl_particle_updater::lock_gl_buffers()
+{
+	cl_int err;
+
+	// unbind buffers from GL
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// aquire buffers for CL calculation
+	cl_mem bufs[] = {pos_buffer, col_buffer};
+	err = clEnqueueAcquireGLObjects(command_queue, 2, bufs, 0, NULL, NULL);
+	cl_ensure(err);
+
+}
+
+void
+cl_particle_updater::unlock_gl_buffers()
+{
+	cl_int err;
+
+	// release buffers from CL, can be used for OpenGL purposes again.
+	cl_mem bufs[] = {pos_buffer, col_buffer};
+	err = clEnqueueReleaseGLObjects(command_queue, 2, bufs, 0, NULL, NULL);
+	cl_ensure(err);
+
+	// wait for release to finish
+	err = clFinish(command_queue);
+	cl_ensure(err);
 
 }

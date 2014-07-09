@@ -2,6 +2,7 @@
 #define CL_PARTICLE_UPDATER_HPP_
 
 
+#include <GL/glew.h>
 #include <SFML/OpenGL.hpp>
 #include <CL/opencl.h>
 
@@ -29,6 +30,10 @@ public:
 
 	// the read, if necessary.
 	void read_pos_and_col(GLfloat* pos_data, GLubyte* col_data, size_t num_particles);
+
+	// map und unmap opengl buffers. needs to be called before update(), set_particle_values() and read_pos_and_col().
+	void lock_gl_buffers();
+	void unlock_gl_buffers();
 
 private:
 	/////////////////////////////////////
@@ -61,6 +66,7 @@ private:
 	cl_mem mouse_buffer;	// Holds mousepos and wether or not the mous is pressed and the delta time
 
 	cl_kernel calculation_kernel;	// the actual calculation
+
 };
 
 
