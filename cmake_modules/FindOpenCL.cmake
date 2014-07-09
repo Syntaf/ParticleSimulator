@@ -1,14 +1,15 @@
+# - Try to find OpenCL
 # This module tries to find an OpenCL implementation on your system. It supports
 # AMD / ATI, Apple and NVIDIA implementations, but should work, too.
 #
 # To set manually the paths, define these environment variables:
-# OpenCL_INCPATH    - Include path (e.g. OpenCL_INCPATH=/opt/cuda/4.0/cuda/include)
-# OpenCL_LIBPATH    - Library path (e.h. OpenCL_LIBPATH=/usr/lib64/nvidia)
+# OpenCL_INCPATH - Include path (e.g. OpenCL_INCPATH=/opt/cuda/4.0/cuda/include)
+# OpenCL_LIBPATH - Library path (e.h. OpenCL_LIBPATH=/usr/lib64/nvidia)
 #
 # Once done this will define
-#  OPENCL_FOUND        - system has OpenCL
-#  OPENCL_INCLUDE_DIRS  - the OpenCL include directory
-#  OPENCL_LIBRARIES    - link these to use OpenCL
+# OPENCL_FOUND - system has OpenCL
+# OPENCL_INCLUDE_DIRS - the OpenCL include directory
+# OPENCL_LIBRARIES - link these to use OpenCL
 #
 # WIN32 should work, but is untested
 FIND_PACKAGE(PackageHandleStandardArgs)
@@ -27,9 +28,9 @@ ELSE (APPLE)
     # The AMD SDK currently installs both x86 and x86_64 libraries
     # This is only a hack to find out architecture
     IF( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "AMD64" )
-      SET(OPENCL_LIB_DIR "$ENV{ATISTREAMSDKROOT}/lib/x86_64")
+      SET(OPENCL_LIB_DIR "$ENV{AMDAPPSDKROOT}/lib/x86_64")
     ELSE (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "AMD64")
-      SET(OPENCL_LIB_DIR "$ENV{ATISTREAMSDKROOT}/lib/x86")
+      SET(OPENCL_LIB_DIR "$ENV{AMDAPPSDKROOT}/lib/x86")
     ENDIF( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "AMD64" )
     FIND_LIBRARY(OPENCL_LIBRARIES OpenCL.lib PATHS "${OPENCL_LIB_DIR}" ENV OpenCL_LIBPATH)
     GET_FILENAME_COMPONENT(_OPENCL_INC_CAND "${OPENCL_LIB_DIR}/../../include" ABSOLUTE)

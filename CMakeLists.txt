@@ -30,6 +30,12 @@ set(HEADERS
 		console.hpp
 		Particle.hpp
 )
+if(USE_OPENCL)
+	set(HEADERS ${HEADERS}
+			opencl/cl_particle_calculator.hpp
+	)
+endif()
+
 #include headers
 set(SOURCES
 		main.cpp
@@ -38,6 +44,11 @@ set(SOURCES
 		common/texture.cpp
 		common/controls.cpp
 )
+if(USE_OPENCL)
+	set(SOURCES ${SOURCES}
+			opencl/cl_particle_calculator.cpp
+	)
+endif()
 
 #include needed directories
 include_directories("${PROJECT_BINARY_DIR}")
@@ -83,6 +94,8 @@ if(USE_OPENCL)
 	find_package(OpenCL REQUIRED)
 	include_directories(${OPENCL_INCLUDE_DIRS})
 	target_link_libraries(${EXECUTABLE_NAME} ${OPENCL_LIBRARIES})
+	#enable OpenCL in code
+	add_definitions("-DUSE_OPENCL")
 endif()
 
 #GLEW libraries
