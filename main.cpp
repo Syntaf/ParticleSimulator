@@ -26,7 +26,7 @@ unsigned char clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
 const float DRAG = 20;							//drag force
-const int MAXPARTICLES= 100000;					//2.5k particles				
+const int MAXPARTICLES= 1000000;					//2.5k particles				
 std::vector<Particle> ParticlesContainer;		//holds all particles
 int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
 
@@ -117,10 +117,10 @@ int main(int argc, char* argv[]) {
 	glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
 	//init particles and shape them like a rectangle, i*j should always = MAXPARTICLES or we have a problem
-    for(auto i(0); i<sqrt(MAXPARTICLES); i++) {													
-		for(auto j(0); j<sqrt(MAXPARTICLES); j++) {
+    for(int i(0); i < (int)sqrt(MAXPARTICLES); i++) {													
+		for(int j(0); j < (int)sqrt(MAXPARTICLES); j++) {
 			Particle particle;		
-			glm::vec2 d2Pos = glm::vec2(j*0.15, i*0.15) + glm::vec2(-15.0f,-15.0f);
+			glm::vec2 d2Pos = glm::vec2(j*0.05, i*0.05) + glm::vec2(-15.0f,-15.0f);
 			particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-70);
 			
 			particle.mass=50.0;
@@ -132,16 +132,18 @@ int main(int argc, char* argv[]) {
 			particle.b = 0;
 			particle.a = 255;
 
-			particle.size = .3f;
+			particle.size = .1f;
 			ParticlesContainer.push_back(particle);
 		}
 	}
 
+    std::cout << ParticlesContainer.size() << std::endl;
+
 	bool running=true;										//set up bool to run SFML loop
 	bool pressed=false;
 	sf::Clock clock;										//clock for delta and controls
-    //sf::Clock fps_clock;
-    //float fps_last_time = 0;
+    sf::Clock fps_clock;
+    float fps_last_time = 0;
     while( running )
 	{
 		float delta = clock.restart().asSeconds();
@@ -200,6 +202,12 @@ int main(int argc, char* argv[]) {
 		mousePosmdl.y *= mousePosmdl.w;
 		mousePosmdl.z *= mousePosmdl.w;
 
+        //if left mouse button is pressed
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+	        pressed = true;
+        }else
+	        pressed = false;
+
 		// calculate next position of particles, determine color as well
 		int ParticlesCount = 0;
 		for(int i=0; i<MAXPARTICLES; i++){
@@ -212,15 +220,8 @@ int main(int argc, char* argv[]) {
 				p.life -= delta;
 				if (p.life > 0.0f){
 					
-					//if left mouse button is pressed
-					if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-						pressed = true;
-					}else
-						pressed = false;
-
-					
 					p.addForce( 
-						(glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500,-70.0) - p.pos) * (float)(pressed*50000/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y, -70.0f),p.pos)+10,2))));
+						(glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500, -70.0) - p.pos) * (float)(pressed*50000/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y, -70.0f),p.pos)+10,2))));
 					p.addForce( -p.speed*DRAG);
 				
 					glm::vec3 prevPosition = p.pos;
@@ -256,7 +257,7 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-		SortParticles();
+		//SortParticles();
 
 		//update buffers openGL uses for rendering
 		glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
@@ -338,10 +339,10 @@ int main(int argc, char* argv[]) {
         console_window.render();
         window.display();
 
-        //float fps_current_time = fps_clock.restart().asSeconds();
-        //float fps = 1.f / (fps_current_time - (fps_current_time - fps_last_time));
-        //fps_last_time = fps_current_time;
-        //std::cout << "\r" << fps;   
+        float fps_current_time = fps_clock.restart().asSeconds();
+        float fps = 1.f / (fps_current_time - (fps_current_time - fps_last_time));
+        fps_last_time = fps_current_time;
+        std::cout << "\r" << fps;   
 	}
 
 	//free up memory openGL used

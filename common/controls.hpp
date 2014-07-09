@@ -9,6 +9,5 @@ void handleKeyboard(float time);
 glm::mat4 getViewMatrix();
 glm::mat4 getModelMatrix();
 glm::mat4 getProjectionMatrix();
-bool LMB();
 
 #endif
