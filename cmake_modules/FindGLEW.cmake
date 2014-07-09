@@ -10,6 +10,7 @@
 IF (WIN32)
 	FIND_PATH( GLEW_INCLUDE_PATH GL/glew.h
 		$ENV{GLEW_ROOT}/include
+		${GLEW_ROOT}/include
 		${PROJECT_SOURCE_DIR}/src/nvgl/glew/include
 		DOC "The directory where GL/glew.h resides")
 	FIND_LIBRARY( GLEW_LIBRARY

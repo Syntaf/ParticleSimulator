@@ -39,25 +39,11 @@ set(SOURCES
 		common/controls.cpp
 )
 
-#assure roots are properly set before proceeding
-if(GLM_ROOT STREQUAL "")
-	message(ERROR "Invalid path provided for GLM_ROOT")
-endif()
-if(SFML_ROOT STREQUAL "")
-	message(ERROR "Invalid path provided for SFML_ROOT")
-endif()
-if(GLEW_ROOT STREQUAL "")
-	message(ERROR "Invalid path provided for GLEW_ROOT")
-endif()
-
 #include needed directories
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/shaders")
 include_directories("${PROJECT_SOURCE_DIR}/textures")
-include_directories("${GLM_ROOT}")
-include_directories("${GLEW_ROOT}/include")
 include_directories("${PROJECT_SOURCE_DIR}/common")
-message(STATUS "GLM included at ${GLM_ROOT}")
 
 #copy shaders and textures into release folder, TEMP solution to ths issue
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release ${PROJECT_BINARY_DIR}/Debug)
@@ -68,6 +54,7 @@ file(COPY shaders/vertexshader.vert shaders/fragmentshader.frag DESTINATION ${PR
 file(COPY textures/particle.dds DESTINATION ${PROJECT_BINARY_DIR}/Release/textures)
 file(COPY textures/particle.dds DESTINATION ${PROJECT_BINARY_DIR}/Debug/textures)
 
+
 add_executable(${EXECUTABLE_NAME} ${SOURCES} ${HEADERS})
 
 #OpenGL Libraries and definitions
@@ -77,27 +64,35 @@ link_directories(${OPENGL_LIBRARY_DIRS})
 target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})
 add_definitions(${OPENGL_DEFINITIONS})
 
-#SFML libraries
+
+# move to own module path
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+
+#SFML libraries
 find_package(SFML 2 REQUIRED system window graphics)
 include_directories(${SFML_INCLUDE_DIR})
 target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
 
+#GLM libraries
+find_package(GLM REQUIRED)
+include_directories(${GLM_INCLUDE_DIRS})
+message(STATUS "GLM included at ${GLM_INCLUDE_DIRS}")
+
 #OpenCL experimental
-if(USE_OPENGL)
+if(USE_OPENCL)
 	find_package(OpenCL REQUIRED)
 	include_directories(${OPENCL_INCLUDE_DIRS})
 	target_link_libraries(${EXECUTABLE_NAME} ${OPENCL_LIBRARIES})
 endif()
 
 #GLEW libraries
-add_library(glew_static STATIC IMPORTED)
-set_target_properties(glew_static PROPERTIES
-	IMPORTED_LOCATION ${GLEW_ROOT}/lib/Release/x64/glew32.lib)
-target_link_libraries(${EXECUTABLE_NAME} glew_static)
-message( STATUS "Found GLEW in ${GLEW_ROOT}")
+find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_PATH})
+target_link_libraries(${EXECUTABLE_NAME} ${GLEW_LIBRARY})
+message( STATUS "Found GLEW in ${GLEW_INCLUDE_PATH}")
 
 install (TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
+
 
 # CPack packaging
 include(InstallRequiredSystemLibraries)
