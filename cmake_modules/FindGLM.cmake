@@ -37,16 +37,16 @@ SET(_glm_HEADER_SEARCH_DIRS
 # check environment variable
 SET(_glm_ENV_ROOT_DIR "$ENV{GLM_ROOT_DIR}")
 
-IF(NOT GLM_ROOT_DIR AND _glm_ENV_ROOT_DIR)
-    SET(GLM_ROOT_DIR "${_glm_ENV_ROOT_DIR}")
-ENDIF(NOT GLM_ROOT_DIR AND _glm_ENV_ROOT_DIR)
+IF(NOT GLM_ROOT AND _glm_ENV_ROOT_DIR)
+    SET(GLM_ROOT "${_glm_ENV_ROOT_DIR}")
+ENDIF(NOT GLM_ROOT AND _glm_ENV_ROOT_DIR)
 
 # put user specified location at beginning of search
-IF(GLM_ROOT_DIR)
-    SET(_glm_HEADER_SEARCH_DIRS "${GLM_ROOT_DIR}"
-                                "${GLM_ROOT_DIR}/include"
+IF(GLM_ROOT)
+    SET(_glm_HEADER_SEARCH_DIRS "${GLM_ROOT}"
+                                "${GLM_ROOT}/include"
                                  ${_glm_HEADER_SEARCH_DIRS})
-ENDIF(GLM_ROOT_DIR)
+ENDIF(GLM_ROOT)
 
 # locate header
 FIND_PATH(GLM_INCLUDE_DIR "glm/glm.hpp"
