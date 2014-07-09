@@ -15,7 +15,7 @@
 #include "config.h"
 
 #ifdef USE_OPENCL
-#include <CL/opencl.h>
+#include "opencl/cl_particle_updater.hpp"
 #endif
 
 //#pragma comment(lib, "glew32.lib")
