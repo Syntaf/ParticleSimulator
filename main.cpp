@@ -251,7 +251,7 @@ int main(int argc, char* argv[]) {
                     float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
                     p.r = 120;
                     p.g = clamp(200 - (normSpeed)*20,5,255);
-                    p.b = 5;
+                    p.b = 10;
                     
                     p.cameradistance = glm::length2( p.pos - CameraPosition );
 
