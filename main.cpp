@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
     window.create(sf::VideoMode(1000,750),        //maintain 1.33 ratio
         "Particle Simulation",                    //window title
         sf::Style::Default,
-      	sf::ContextSettings(32, 8, 0, 3, 3)       //we're using openGL 3.3
+          sf::ContextSettings(32, 8, 0, 3, 3)       //we're using openGL 3.3
         );
 
     ConsoleManager console_window(&window);

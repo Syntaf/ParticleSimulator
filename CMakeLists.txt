@@ -3,54 +3,54 @@ cmake_minimum_required(VERSION 2.8)
 project(ParticleSimulator)
 
 if(NOT CMAKE_BUILD_TYPE  AND NOT CMAKE_CONFIGURATION_TYPES)
-	message( STATUS "Setting build type to 'Release as none was specified.")
-	set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
-	#set possible values of built type for cmake-gui
-	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Release" "Debug"
-		"MinSizeRel" "RelWithDebInfo")
+    message( STATUS "Setting build type to 'Release as none was specified.")
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+    #set possible values of built type for cmake-gui
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Release" "Debug"
+        "MinSizeRel" "RelWithDebInfo")
 endif()
 
 set(EXECUTABLE_NAME "ParticleSimulator")
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 2)
 configure_file(
-	"${PROJECT_SOURCE_DIR}/config.h.in"
-	"${PROJECT_BINARY_DIR}/config.h"
-	)
+    "${PROJECT_SOURCE_DIR}/config.h.in"
+    "${PROJECT_BINARY_DIR}/config.h"
+    )
 
 #option to enable OpenCL experimental
 option (USE_OPENCL
-	"Use OpenCL experimental implementation" OFF)
+    "Use OpenCL experimental implementation" OFF)
 
 #include sources
-set(HEADERS	
-		common/shader.hpp
-		common/texture.hpp
-		common/controls.hpp
-		console.hpp
-		Particle.hpp
+set(HEADERS    
+        common/shader.hpp
+        common/texture.hpp
+        common/controls.hpp
+        console.hpp
+        Particle.hpp
 )
 if(USE_OPENCL)
-	set(HEADERS ${HEADERS}
-			opencl/cl_particle_updater.hpp
-			opencl/cl_tools.hpp
-	)
+    set(HEADERS ${HEADERS}
+            opencl/cl_particle_updater.hpp
+            opencl/cl_tools.hpp
+    )
 endif()
 
 #include headers
 set(SOURCES
-		main.cpp
-		console.cpp
-		common/shader.cpp
-		common/texture.cpp
-		common/controls.cpp
+        main.cpp
+        console.cpp
+        common/shader.cpp
+        common/texture.cpp
+        common/controls.cpp
 )
 if(USE_OPENCL)
-	set(SOURCES ${SOURCES}
-			opencl/cl_particle_updater.cpp
-			opencl/cl_tools.cpp
-			kernels/update_particles.cl
-	)
+    set(SOURCES ${SOURCES}
+            opencl/cl_particle_updater.cpp
+            opencl/cl_tools.cpp
+            kernels/update_particles.cl
+    )
 endif()
 
 #include needed directories
@@ -60,7 +60,7 @@ include_directories("${PROJECT_SOURCE_DIR}/textures")
 include_directories("${PROJECT_SOURCE_DIR}/common")
 
 if(USE_OPENCL)
-	include_directories("${PROJECT_SOURCE_DIR}/kernels")
+    include_directories("${PROJECT_SOURCE_DIR}/kernels")
 endif()
 
 #copy shaders and textures into release folder, TEMP solution to ths issue
@@ -72,10 +72,10 @@ file(COPY shaders/vertexshader.vert shaders/fragmentshader.frag DESTINATION ${PR
 file(COPY textures/particle.dds DESTINATION ${PROJECT_BINARY_DIR}/Release/textures)
 file(COPY textures/particle.dds DESTINATION ${PROJECT_BINARY_DIR}/Debug/textures)
 if(USE_OPENCL)
-	file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release/kernels ${PROJECT_BINARY_DIR}/Debug/kernels)
-	file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release/kernels ${PROJECT_BINARY_DIR}/Release/kernels)
-	file(COPY kernels/update_particles.cl DESTINATION ${PROJECT_BINARY_DIR}/Debug/kernels)
-	file(COPY kernels/update_particles.cl DESTINATION ${PROJECT_BINARY_DIR}/Release/kernels)
+    file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release/kernels ${PROJECT_BINARY_DIR}/Debug/kernels)
+    file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/Release/kernels ${PROJECT_BINARY_DIR}/Release/kernels)
+    file(COPY kernels/update_particles.cl DESTINATION ${PROJECT_BINARY_DIR}/Debug/kernels)
+    file(COPY kernels/update_particles.cl DESTINATION ${PROJECT_BINARY_DIR}/Release/kernels)
 endif()
 
 
@@ -104,11 +104,11 @@ message(STATUS "GLM included at ${GLM_INCLUDE_DIRS}")
 
 #OpenCL experimental
 if(USE_OPENCL)
-	find_package(OpenCL REQUIRED)
-	include_directories(${OPENCL_INCLUDE_DIRS})
-	target_link_libraries(${EXECUTABLE_NAME} ${OPENCL_LIBRARIES})
-	#enable OpenCL in code
-	add_definitions("-DUSE_OPENCL")
+    find_package(OpenCL REQUIRED)
+    include_directories(${OPENCL_INCLUDE_DIRS})
+    target_link_libraries(${EXECUTABLE_NAME} ${OPENCL_LIBRARIES})
+    #enable OpenCL in code
+    add_definitions("-DUSE_OPENCL")
 endif()
 
 #GLEW libraries
