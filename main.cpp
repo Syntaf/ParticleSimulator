@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <vector>
 #include <GL/glew.h>
-#include <SFML/graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
     glBindVertexArray(VertexArrayID);
 
     // Create and compile our GLSL program from the shaders
-    GLuint programID = LoadShaders( "shaders/vertexShader.vert", "shaders/fragmentShader.frag" );
+    GLuint programID = LoadShaders( "shaders/vertexshader.vert", "shaders/fragmentshader.frag" );
 
     // Vertex shader
     GLuint CameraRight_worldspace_ID  = glGetUniformLocation(programID, "CameraRight_worldspace");
@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
 #ifdef USE_OPENCL
 
     // initialize opencl using opengl buffers
-    cl_particle_updater cl_updater(wglGetCurrentContext(), wglGetCurrentDC(), MAXPARTICLES,
+    cl_particle_updater cl_updater(MAXPARTICLES,
                                    particles_position_buffer, particles_color_buffer);
 
     // move gl buffers to cl
@@ -175,7 +175,7 @@ int main(int argc, char* argv[]) {
         sf::Event event;
         while(window.pollEvent(event))
                   {
-            if(event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            if(event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
                 running = false;
             else if(event.type == sf::Event::Resized)
                 glViewport(0,0,event.size.width,event.size.height);

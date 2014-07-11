@@ -1,4 +1,4 @@
-#include <SFML/graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include "console.hpp"
 
@@ -10,7 +10,7 @@ ConsoleManager::ConsoleManager(sf::Window *Parent):
         sf::Style::Default,
         sf::ContextSettings(32, 8, 0, 3, 3)
     );
-    
+
     //to line console up with main window, divide parent size by some constant(2.35)
     ConsoleWindow.setPosition( sf::Vector2i(
         (int)(Parent->getPosition().x - Parent->getSize().x/2.35),
@@ -21,10 +21,10 @@ ConsoleManager::ConsoleManager(sf::Window *Parent):
 }
 void ConsoleManager::handleEvent(sf::Event& event, bool& run)
 {
-    while(ConsoleWindow.pollEvent(event)) 
+    while(ConsoleWindow.pollEvent(event))
     {
-        if(event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-                run = false;
+        if(event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
+				      run = false;
     }
 }
 

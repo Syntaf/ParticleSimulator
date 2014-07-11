@@ -1,7 +1,7 @@
 #ifndef CONSOLE_H_
 #define CONSOLE_H_
 
-#include<SFML/graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 class ConsoleManager {
     public:

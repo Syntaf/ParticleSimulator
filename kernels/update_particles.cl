@@ -10,7 +10,7 @@ __kernel void update_particles(global float4* pos,
     float mouse_z         = mousedata[2];
     bool mouse_pressed  = (mousedata[3] > 0);
     float delta         = mousedata[4];
-    
+
     size_t tid = get_global_id(0);
     
     // example:
