@@ -1,3 +1,7 @@
+/*
+    This file needs to be broken up BADLY! Work in progress, be careful
+    editing this file as it will be changed very soon.
+*/
 #include <iostream>
 #include <cstdlib>
 #include <vector>
@@ -14,57 +18,60 @@
 #include "Particle.hpp"
 #include "config.h"
 
+//this is for experimental openCL support, if you do not have this enabled
+//the program still run nicely
 #ifdef USE_OPENCL
 #include "opencl/cl_particle_updater.hpp"
 #endif
 
+//this used to be needed... I guess not anymore though
 //#pragma comment(lib, "glew32.lib")
 
 int FindUnusedParticle();
-void SortParticles();
 unsigned char clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
 
-const float DRAG = 20;							//drag force
-const int MAXPARTICLES= 1000000;					//2.5k particles				
-std::vector<Particle> ParticlesContainer;		//holds all particles
-int LastUsedParticle=0;							//used to help with efficiency since i'm using a linear search
+//define physics constants
+const float DRAG = 20;
+const int MAXPARTICLES= 1000000;
+std::vector<Particle> ParticlesContainer;
+int LastUsedParticle=0;
 
 int main(int argc, char* argv[]) {
 
-//debug is slow as fuck, make sure people are running on release 
+//debug is slow as fuck, make sure people are running on release
 #ifdef _DEBUG
     std::cout << "\nWARNING: Debug is currently active, optimizations are not enabled this is configuration" <<
         ". Unless you are actually debugging, switch to Release mode\n" << std::endl;
 #endif
-    
+
     std::cout << "Particle Simulator Version: " << VERSION_MAJOR << "." << VERSION_MINOR << "\n";
 
-    srand(time(NULL));							//seed the random generator
+    srand(time(NULL));                            //seed the random generator
 
     sf::Window window;
-    window.create(sf::VideoMode(1000,750),		//declare window
-        "Particle Simulation",					//window title
+    window.create(sf::VideoMode(1000,750),        //maintain 1.33 ratio
+        "Particle Simulation",                    //window title
         sf::Style::Default,
-        sf::ContextSettings(32, 8, 0, 3, 3)
-        );										//default context settings, my custom ones were screwing with the program so I let SFML decide
-    
-    ConsoleManager console_window(&window);
-    
-    glViewport(0,0,window.getSize().x,window.getSize().y);
-    window.setMouseCursorVisible(true);			//Make sure cursor is visible
-    window.setVerticalSyncEnabled(true);		//smooth
-    sf::Mouse::setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x + window.getSize().x/2, sf::Mouse::getPosition(window).y));
-    
+      	sf::ContextSettings(32, 8, 0, 3, 3)       //we're using openGL 3.3
+        );
 
-    // Initialize GLEW
-    glewExperimental = true;					// Needed for core profile
+    ConsoleManager console_window(&window);
+
+    glViewport(0,0,window.getSize().x,window.getSize().y);
+    window.setVerticalSyncEnabled(true);
+    sf::Mouse::setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x + window.getSize().x/2, sf::Mouse::getPosition(window).y));
+
+
+    // Initialize GLEW, needed for core profile
+    glewExperimental = true;
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
         return -1;
     }
 
-    glClearColor(0.0f, 0.0f, 0.15f, 0.0f);		// Dark blue background
+    //dark blue background
+    glClearColor(0.0f, 0.0f, 0.15f, 0.0f);
 
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
@@ -84,13 +91,13 @@ int main(int argc, char* argv[]) {
     //buffer data
     static GLfloat* g_particule_position_size_data = new GLfloat[MAXPARTICLES* 4];
     static GLubyte* g_particule_color_data         = new GLubyte[MAXPARTICLES* 4];
-        
+
     //load texture
-    GLuint Texture = loadDDS("textures/Particle.DDS");	
+    GLuint Texture = loadDDS("textures/Particle.DDS");
 
     // The VBO containing the 4 vertices of the particles.
     // Thanks to instancing, they will be shared by all particles.
-    static const GLfloat g_vertex_buffer_data[] = { 
+    static const GLfloat g_vertex_buffer_data[] = {
          -0.5f, -0.5f, 0.0f,
           0.5f, -0.5f, 0.0f,
          -0.5f,  0.5f, 0.0f,
@@ -118,16 +125,16 @@ int main(int argc, char* argv[]) {
 
 
     //init particles and shape them like a rectangle, i*j should always = MAXPARTICLES or we have a problem
-    for(int i(0); i < (int)sqrt(MAXPARTICLES); i++) {													
+    for(int i(0); i < (int)sqrt(MAXPARTICLES); i++) {
         for(int j(0); j < (int)sqrt(MAXPARTICLES); j++) {
-            Particle particle;		
+            Particle particle;
             glm::vec2 d2Pos = glm::vec2(j*0.05, i*0.05) + glm::vec2(-15.0f,-15.0f);
             particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-70);
-            
+
             particle.mass=50.0;
             particle.life = 100.0f;
             particle.cameradistance = -1.0f;
-            
+
             particle.r = 255;
             particle.g = 0;
             particle.b = 0;
@@ -156,17 +163,18 @@ int main(int argc, char* argv[]) {
 #endif
 
 
-    bool running=true;										//set up bool to run SFML loop
-    bool pressed=false;
-    sf::Clock clock;										//clock for delta and controls
-    sf::Clock fps_clock;
+    bool running=true;    //set up bool to run SFML loop
+    bool pressed=false;   //bool for managing when LMB pressed
+    sf::Clock clock;      //clock for delta timing
+    sf::Clock fps_clock;  //fps clock
     float fps_last_time = 0;
     while( running )
     {
         float delta = clock.restart().asSeconds();
+        //handle window events
         sf::Event event;
-        while(window.pollEvent(event))						//handle any closing events
-        {
+        while(window.pollEvent(event))
+                  {
             if(event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
                 running = false;
             else if(event.type == sf::Event::Resized)
@@ -174,8 +182,8 @@ int main(int argc, char* argv[]) {
         }
         console_window.handleEvent(event, running);
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	//clear the screen in anticipation for drawing
-        
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         //handle any input and grab matrices
         computeMatricesFromInputs(window, delta);
         glm::mat4 ProjectionMatrix = getProjectionMatrix();
@@ -185,17 +193,17 @@ int main(int argc, char* argv[]) {
         glm::vec3 CameraPosition(glm::inverse(ViewMatrix)[3]);
         //get the VP
         glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
-        
+
         //grab mouse coordinates so the particles can accelerate toward the given
         //  position. The following code converts SFML mouse coordinates into model
         //  space coordinates that OpenGL can use with the current particle coords
         //  . The equation is a brain twister, I barley understand what I did myself
         glm::vec4 mousePos(
-            sf::Mouse::getPosition(window).x, 
+            sf::Mouse::getPosition(window).x,
             sf::Mouse::getPosition(window).y,
             0.0f,
             1.0f
-            ); 
+            );
 
         //manipulation from mouse cords to model-view mouse cords
         //find inverse of Proj * View
@@ -204,13 +212,13 @@ int main(int argc, char* argv[]) {
         float winZ = 1.0;
 
         //determine space cords
-        glm::vec4 vIn(	(2.0f*((float)(mousePos.x) / (window.getSize().x))) - 1.0f,	//2 * x / window.x - 1.0f
-            1.0f - (2.0f * ((float)(mousePos.y)) / (window.getSize().y)),			//1 - 2 * y / window.y
-            2.0 * winZ - 1.0f,														//equates to 1, we are only manipulating y,z
-            1.0f																	//dont question it
+        glm::vec4 vIn(    (2.0f*((float)(mousePos.x) / (window.getSize().x))) - 1.0f,    //2 * x / window.x - 1.0f
+            1.0f - (2.0f * ((float)(mousePos.y)) / (window.getSize().y)),            //1 - 2 * y / window.y
+            2.0 * winZ - 1.0f,                                                        //equates to 1, we are only manipulating y,z
+            1.0f                                                                    //dont question it
             );
 
-        
+
         //find inverse
         glm::vec4 mousePosmdl = vIn * inverse;
 
@@ -237,11 +245,11 @@ int main(int argc, char* argv[]) {
                 // Decrease life, cycle through now if it's *still alive
                 p.life -= delta;
                 if (p.life > 0.0f){
-                    
-                    p.addForce( 
+
+                    p.addForce(
                         (glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500, -70.0) - p.pos) * (float)(pressed*50000/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y, -70.0f),p.pos)+10,2))));
                     p.addForce( -p.speed*DRAG);
-                
+
                     glm::vec3 prevPosition = p.pos;
                     p.pos = p.pos + p.speed*(float)delta + 0.5f*p.getTotalForce()/p.mass*(float)pow(delta,2);
                     p.speed = (p.pos - prevPosition)/(float)delta;
@@ -252,18 +260,18 @@ int main(int argc, char* argv[]) {
                     p.r = 120;
                     p.g = clamp(200 - (normSpeed)*20,5,255);
                     p.b = 10;
-                    
+
                     p.cameradistance = glm::length2( p.pos - CameraPosition );
 
                     // Fill the GPU buffer
                     g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
                     g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
                     g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
-                    g_particule_position_size_data[4*ParticlesCount+3] = p.size;	
+                    g_particule_position_size_data[4*ParticlesCount+3] = p.size;
 
-                    g_particule_color_data[4*ParticlesCount+0] = p.r;				
+                    g_particule_color_data[4*ParticlesCount+0] = p.r;
                     g_particule_color_data[4*ParticlesCount+1] = p.g;
-                    g_particule_color_data[4*ParticlesCount+2] = p.b;					
+                    g_particule_color_data[4*ParticlesCount+2] = p.b;
                     g_particule_color_data[4*ParticlesCount+3] = p.a;
                 }else{
                     // Particles that just died will be put at the end of the buffer in SortParticles();
@@ -275,10 +283,6 @@ int main(int argc, char* argv[]) {
             }
         }
 
-
-
-        //SortParticles();
-
         //update buffers openGL uses for rendering
         glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
         glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf
@@ -289,7 +293,7 @@ int main(int argc, char* argv[]) {
         glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLubyte) * 4, g_particule_color_data);
 
 #else // USE_OPENCL
-        
+
         ParticlesCount = (GLsizei)ParticlesContainer.size();
 
         // move gl buffers to cl
@@ -332,7 +336,7 @@ int main(int argc, char* argv[]) {
             0,                  // stride
             (void*)0            // array buffer offset
         );
-        
+
         // 2nd attrib buffer : positions of particle centers
         glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
@@ -365,7 +369,7 @@ int main(int argc, char* argv[]) {
 
         //draw particles
         glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, ParticlesCount);
-        
+
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);
@@ -373,10 +377,11 @@ int main(int argc, char* argv[]) {
         console_window.render();
         window.display();
 
+        //used for determining application performance
         float fps_current_time = fps_clock.restart().asSeconds();
         float fps = 1.f / (fps_current_time - (fps_current_time - fps_last_time));
         fps_last_time = fps_current_time;
-        std::cout << "\r" << fps;   
+        std::cout << "\r" << fps;
     }
 
     //free up memory openGL used
@@ -408,12 +413,7 @@ int FindUnusedParticle(){
         }
     }
 
-    return 0;		//All particles taken, override first one
-}
-
-//sort particles according to dist.
-void SortParticles(){
-    std::sort(&ParticlesContainer[0], &ParticlesContainer[MAXPARTICLES]);
+    return 0;        //All particles taken, override first one
 }
 
 unsigned char clamp(float value, float min, float max)
@@ -423,7 +423,7 @@ unsigned char clamp(float value, float min, float max)
         result = max;
     else if(value < min)
         result = min;
-    else 
+    else
         result = value;
     return result;
 }
