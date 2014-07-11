@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
 #ifdef USE_OPENCL
 
     // initialize opencl using opengl buffers
-    cl_particle_updater cl_updater(wglGetCurrentContext(), wglGetCurrentDC(), MAXPARTICLES,
+    cl_particle_updater cl_updater(MAXPARTICLES,
                                    particles_position_buffer, particles_color_buffer);
 
     // move gl buffers to cl

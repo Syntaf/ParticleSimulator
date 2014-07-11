@@ -9,7 +9,9 @@
 #include <set>
 #include <fstream>
 #include <streambuf>
-
+#ifndef _WIN32
+    #include <GL/glx.h>
+#endif
 
 // ensure that gl-cl-sharing extension is available
 #ifndef cl_khr_gl_sharing
@@ -27,8 +29,14 @@ static std::set<std::string> split_str(std::string props)
 	return result;
 }
 
+static cl_device_id find_cl_device()
+{
+    cl_die("Not implemented yet");
 
-static cl_device_id find_opengl_device(HGLRC glContext, HDC glDC)
+    return 0;
+}
+
+static cl_device_id find_opengl_device()
 {
 	cl_int err;
 	
@@ -70,19 +78,31 @@ static cl_device_id find_opengl_device(HGLRC glContext, HDC glDC)
 		if(!clGetGLContextInfo) cl_die("Unable to get clGetGLContextInfo function pointer!");
 
 		// set up properties that we use to find a device
-		cl_context_properties props[] = {
-			CL_GL_CONTEXT_KHR, (cl_context_properties) glContext,
-			CL_WGL_HDC_KHR, (cl_context_properties) glDC,
-			CL_CONTEXT_PLATFORM, (cl_context_properties) platform,
-			0
-		};
+        #ifdef _WIN32 // WINDOWS
+    		cl_context_properties props[] = {
+    			CL_GL_CONTEXT_KHR, (cl_context_properties) wglGetCurrentContext(),
+    			CL_WGL_HDC_KHR, (cl_context_properties) wglGetCurrentDC(),
+    			CL_CONTEXT_PLATFORM, (cl_context_properties) platform,
+    			0
+    		};
+        #else // LINUX
+    		cl_context_properties props[] = {
+    			CL_GL_CONTEXT_KHR, (cl_context_properties) glXGetCurrentContext(),
+    			CL_GLX_DISPLAY_KHR, (cl_context_properties) glXGetCurrentDisplay(),
+    			CL_CONTEXT_PLATFORM, (cl_context_properties) platform,
+    			0
+    		};
+        #endif
+
+        std::cout << "glXGetCurrentContext: " << glXGetCurrentContext() << std::endl;
+        std::cout << "glXGetCurrentDisplay: " << glXGetCurrentDisplay() << std::endl;
 
 		// query for an openGL-connected device
 		cl_device_id device;
 		size_t was_successful;
 		err = clGetGLContextInfo(props,
 								CL_CURRENT_DEVICE_FOR_GL_CONTEXT_KHR,
-								32*sizeof(cl_device_id),
+								sizeof(cl_device_id),
 								&device,
 								&was_successful);
 		cl_ensure(err);
@@ -114,31 +134,55 @@ static void CL_CALLBACK cl_error_callback (const char *errinfo,
 
 
 
-cl_particle_updater::cl_particle_updater(HGLRC glContext, HDC glDC, size_t max_num_particles_, GLuint posBuffer_, GLuint colBuffer_)
+cl_particle_updater::cl_particle_updater(size_t max_num_particles_, GLuint posBuffer_, GLuint colBuffer_)
 	: max_num_particles(max_num_particles_)
 {
 	std::cout << "Initializing CL Particle Updater ..." << std::endl;
 	
 	cl_int err;
 
+	// determine wether or not to use opengl buffers
+	if(posBuffer_ == 0 || colBuffer_ == 0)
+        use_gl_buffers = false;
+    else
+        use_gl_buffers = true;
+
 	// get the opencl device associated with the glContext
-	device = find_opengl_device(glContext, glDC);
+    if(use_gl_buffers)
+    	device = find_opengl_device();
+    else
+        device = find_cl_device();
 
 	// create context
-	cl_context_properties props[] = {
-			CL_GL_CONTEXT_KHR, (cl_context_properties) glContext,
-			CL_WGL_HDC_KHR, (cl_context_properties) glDC,
-			0
-	};
-	context = clCreateContext(props, 1, &device, cl_error_callback, NULL, &err);
-	cl_ensure(err);
+    if(use_gl_buffers) 
+    {
+        #ifdef _WIN32 // WINDOWS
+    		cl_context_properties props[] = {
+    			CL_GL_CONTEXT_KHR, (cl_context_properties) wglGetCurrentContext(),
+    			CL_WGL_HDC_KHR, (cl_context_properties) wglGetCurrentDC(),
+    			0
+    		};
+        #else // LINUX
+    		cl_context_properties props[] = {
+    			CL_GL_CONTEXT_KHR, (cl_context_properties) glXGetCurrentContext(),
+    			CL_GLX_DISPLAY_KHR, (cl_context_properties) glXGetCurrentDisplay(),
+    			0
+    		};
+        #endif
+    
+    	context = clCreateContext(props, 1, &device, cl_error_callback, NULL, &err);
+    	cl_ensure(err);
+    }
+    else
+    {
+    	context = clCreateContext(NULL, 1, &device, cl_error_callback, NULL, &err);
+    	cl_ensure(err);
+    }
+
 
 	// create command queue
 	command_queue = clCreateCommandQueue(context, device, (cl_command_queue_properties)0, &err);
 	cl_ensure(err);
-
-	// determine wether or not to use opengl buffers
-	if(posBuffer_ == 0 || colBuffer_ == 0) use_gl_buffers = false;
 
 	// initialize buffers
 	size_t pos_buffer_size   = max_num_particles * sizeof(pos_buffer_type);
@@ -161,7 +205,7 @@ cl_particle_updater::cl_particle_updater(HGLRC glContext, HDC glDC, size_t max_n
 		glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &col_gl_size);
 		std::cout << "Pos CL Buffer created from GL Buffer (size: " << pos_gl_size << "/" << pos_buffer_size << ")" << std::endl;
 		std::cout << "Col CL Buffer created from GL Buffer (size: " << col_gl_size << "/" << col_buffer_size << ")" << std::endl;
-		if(pos_gl_size < pos_buffer_size || col_gl_size < col_buffer_size) cl_die("OpenGL buffers are too small!");
+		if((size_t)pos_gl_size < pos_buffer_size || (size_t)col_gl_size < col_buffer_size) cl_die("OpenGL buffers are too small!");
 		
 		pos_buffer = clCreateFromGLBuffer(context, CL_MEM_READ_WRITE, posBuffer_, &err); cl_ensure(err);
 		col_buffer = clCreateFromGLBuffer(context, CL_MEM_READ_WRITE, colBuffer_, &err); cl_ensure(err);
@@ -279,10 +323,10 @@ cl_particle_updater::set_particle_values(std::vector<Particle> & particles)
 	}
 
 	// copy vectors to gpu
-	clEnqueueWriteBuffer(command_queue, pos_buffer,   FALSE, 0, particles.size() * sizeof(pos_buffer_type),   &vec_pos[0],   0, NULL, NULL);
-	clEnqueueWriteBuffer(command_queue, speed_buffer, FALSE, 0, particles.size() * sizeof(speed_buffer_type), &vec_speed[0], 0, NULL, NULL);
-	clEnqueueWriteBuffer(command_queue, col_buffer,   FALSE, 0, particles.size() * sizeof(col_buffer_type),   &vec_col[0],   0, NULL, NULL);
-	clEnqueueWriteBuffer(command_queue, specs_buffer, FALSE, 0, particles.size() * sizeof(specs_buffer_type), &vec_specs[0], 0, NULL, NULL);
+	clEnqueueWriteBuffer(command_queue, pos_buffer,   CL_FALSE, 0, particles.size() * sizeof(pos_buffer_type),   &vec_pos[0],   0, NULL, NULL);
+	clEnqueueWriteBuffer(command_queue, speed_buffer, CL_FALSE, 0, particles.size() * sizeof(speed_buffer_type), &vec_speed[0], 0, NULL, NULL);
+	clEnqueueWriteBuffer(command_queue, col_buffer,   CL_FALSE, 0, particles.size() * sizeof(col_buffer_type),   &vec_col[0],   0, NULL, NULL);
+	clEnqueueWriteBuffer(command_queue, specs_buffer, CL_FALSE, 0, particles.size() * sizeof(specs_buffer_type), &vec_specs[0], 0, NULL, NULL);
 	clFinish(command_queue);
 
 }
@@ -293,8 +337,8 @@ cl_particle_updater::read_pos_and_col(GLfloat* pos_data, GLubyte* col_data, size
 	if(sizeof(GLfloat) * 4 != sizeof(pos_buffer_type) || sizeof(GLubyte) * 4 != sizeof(col_buffer_type))
 		cl_die("Buffer types don't match!");
 
-	clEnqueueReadBuffer(command_queue, pos_buffer, FALSE, 0, num_particles * sizeof(pos_buffer_type), pos_data, 0, NULL, NULL);
-	clEnqueueReadBuffer(command_queue, col_buffer, FALSE, 0, num_particles * sizeof(col_buffer_type), col_data, 0, NULL, NULL);
+	clEnqueueReadBuffer(command_queue, pos_buffer, CL_FALSE, 0, num_particles * sizeof(pos_buffer_type), pos_data, 0, NULL, NULL);
+	clEnqueueReadBuffer(command_queue, col_buffer, CL_FALSE, 0, num_particles * sizeof(col_buffer_type), col_data, 0, NULL, NULL);
 	clFinish(command_queue);
 
 }
@@ -312,7 +356,7 @@ cl_particle_updater::update(glm::vec4 mousepos, bool mouse_pressed, float delta,
 	mousedata[4] = delta;
 	
 	// send mouse data to gpu
-	clEnqueueWriteBuffer(command_queue, mouse_buffer, FALSE, 0, 5 * sizeof(mouse_buffer_type), mousedata, 0, NULL, NULL);
+	clEnqueueWriteBuffer(command_queue, mouse_buffer, CL_FALSE, 0, 5 * sizeof(mouse_buffer_type), mousedata, 0, NULL, NULL);
 
 	// start calculation. needs synchronization at some point, will be at read_pos_and_col or release_gl_buffer
 	size_t zero = 0;

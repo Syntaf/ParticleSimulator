@@ -17,7 +17,7 @@ public:
     // public functions
     
     // constructor
-    cl_particle_updater(HGLRC glContext, HDC glDC, size_t particlecount, GLuint posBuffer = (GLuint)0, GLuint colBuffer = (GLuint)0);
+    cl_particle_updater(size_t particlecount, GLuint posBuffer = (GLuint)0, GLuint colBuffer = (GLuint)0);
     
     // destructor
     ~cl_particle_updater();
