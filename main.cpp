@@ -33,7 +33,7 @@ float Distance(glm::vec3 const&, glm::vec3 const&);
 
 //define physics constants
 const float DRAG = 20;
-const int MAXPARTICLES= 1000000;
+const int MAXPARTICLES= 500000;
 std::vector<Particle> ParticlesContainer;
 int LastUsedParticle=0;
 

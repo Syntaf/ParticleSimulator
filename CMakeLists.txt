@@ -22,7 +22,6 @@ configure_file(
 option (USE_OPENCL
     "Use OpenCL experimental implementation" OFF)
 
-<<<<<<< HEAD
 #include sources
 set(HEADERS
         common/shader.hpp
