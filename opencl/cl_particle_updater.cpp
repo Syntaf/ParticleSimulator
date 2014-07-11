@@ -367,6 +367,10 @@ cl_particle_updater::update(glm::vec4 mousepos, bool mouse_pressed, float delta,
 void
 cl_particle_updater::lock_gl_buffers()
 {
+    
+    // don't do anything if we don't have gl buffers
+    if(!use_gl_buffers) return;
+
 	cl_int err;
 
 	// unbind buffers from GL
@@ -382,6 +386,10 @@ cl_particle_updater::lock_gl_buffers()
 void
 cl_particle_updater::unlock_gl_buffers()
 {
+
+    // don't do anything if we don't have gl buffers
+    if(!use_gl_buffers) return;
+
 	cl_int err;
 
 	// release buffers from CL, can be used for OpenGL purposes again.
