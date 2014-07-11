@@ -24,7 +24,7 @@ void ConsoleManager::handleEvent(sf::Event& event, bool& run)
     while(ConsoleWindow.pollEvent(event))
     {
         if(event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
-				      run = false;
+                      run = false;
     }
 }
 

@@ -40,11 +40,11 @@ endif()
 
 #include sources, headers and runtime dependencies
 set(HEADERS
-		common/shader.hpp
-		common/texture.hpp
-		common/controls.hpp
-		console.hpp
-		Particle.hpp
+        common/shader.hpp
+        common/texture.hpp
+        common/controls.hpp
+        console.hpp
+        Particle.hpp
 )
 set(SOURCES
         main.cpp
@@ -65,16 +65,16 @@ if(USE_OPENCL)
             opencl/cl_tools.cpp
             kernels/update_particles.cl
     )
-	set(HEADERS ${HEADERS}
-			opencl/cl_particle_updater.hpp
-			opencl/cl_tools.hpp
-	)
-	set(SOURCES ${SOURCES}
-			opencl/cl_particle_updater.cpp
-			opencl/cl_tools.cpp
-	)
+    set(HEADERS ${HEADERS}
+            opencl/cl_particle_updater.hpp
+            opencl/cl_tools.hpp
+    )
+    set(SOURCES ${SOURCES}
+            opencl/cl_particle_updater.cpp
+            opencl/cl_tools.cpp
+    )
     set(RUNTIME_DEPENDENCIES ${RUNTIME_DEPENDENCIES}
-			kernels/update_particles.cl
+            kernels/update_particles.cl
     )
 endif()
 
