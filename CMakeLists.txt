@@ -22,6 +22,10 @@ configure_file(
 option (USE_OPENCL
     "Use OpenCL experimental implementation" OFF)
 
+#option to enable TGUI experimental
+option (USE_TGUI
+	"Use TGUI experimental implementation" ON)
+
 #include sources
 set(HEADERS
         common/shader.hpp
@@ -113,6 +117,12 @@ find_package(SFML 2 REQUIRED system window graphics)
 include_directories(${SFML_INCLUDE_DIR})
 target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
 
+#GLEW libraries
+find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_PATH})
+target_link_libraries(${EXECUTABLE_NAME} ${GLEW_LIBRARY})
+message( STATUS "Found GLEW in ${GLEW_INCLUDE_PATH}")
+
 #GLM libraries
 find_package(GLM REQUIRED)
 include_directories(${GLM_INCLUDE_DIRS})
@@ -127,11 +137,14 @@ if(USE_OPENCL)
     add_definitions("-DUSE_OPENCL")
 endif()
 
-#GLEW libraries
-find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_PATH})
-target_link_libraries(${EXECUTABLE_NAME} ${GLEW_LIBRARY})
-message( STATUS "Found GLEW in ${GLEW_INCLUDE_PATH}")
+#TGUI experimental
+if(USE_TGUI)
+  find_package(TGUI REQUIRED)
+  include_directories(${TGUI_INCLUDE_PATH})
+  target_link_libraries(${EXECUTABLE_NAME} ${TGUI_LIBRARY})
+  message(STATUS "Found TGUI in ${TGUI_INCLUDE_PATH}")
+  add_definitions("-DUSE_TGUI")
+endif()
 
 install (TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
 

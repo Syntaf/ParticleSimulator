@@ -1,7 +1,11 @@
 #ifndef CONSOLE_H_
 #define CONSOLE_H_
 
-#include <SFML/Graphics.hpp>
+#ifdef USE_TGUI
+#include <TGUI/TGUI.hpp>
+#else
+#include <SFML\Graphics.hpp>
+#endif
 
 class ConsoleManager {
     public:
@@ -15,6 +19,9 @@ class ConsoleManager {
         sf::CircleShape circle;
         sf::RenderWindow ConsoleWindow;
         sf::Window *ParentWindow;
+#ifdef USE_TGUI
+        tgui::Gui gui;
+#endif
 };
 
 #endif
