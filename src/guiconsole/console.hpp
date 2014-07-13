@@ -19,14 +19,13 @@ class ConsoleManager {
         void render();
     private:
         static const int COMMAND_COUNT = 12;
-        sf::CircleShape circle;
-        sf::RenderWindow ConsoleWindow;
-        sf::Window *ParentWindow;
+        sf::RenderWindow d_console_window;
+        sf::Window *d_parent_window;
 #ifdef USE_TGUI
         void translateCommandsUp();
         tgui::Gui gui;
-        tgui::EditBox::Ptr ConsoleEditBox;
-        tgui::ListBox::Ptr ConsoleCommandList;
+        tgui::EditBox::Ptr d_console_edit_box;
+        tgui::ListBox::Ptr d_console_command_list;
 #endif
 };
 

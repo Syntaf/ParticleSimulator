@@ -8,19 +8,19 @@
 #include <cstdlib>
 
 ConsoleManager::ConsoleManager(sf::Window *Parent):
-    ParentWindow(Parent)
+    d_parent_window(Parent)
 {
-    ConsoleWindow.create(sf::VideoMode(400,200),
+    d_console_window.create(sf::VideoMode(400,200),
         "Console",
         sf::Style::Default,
         sf::ContextSettings(32, 8, 0, 3, 3)
     );
 #ifdef USE_TGUI
-    gui.setWindow(ConsoleWindow);
+    gui.setWindow(d_console_window);
     gui.setGlobalFont("TGUI/fonts/DejaVuSans.ttf");
 #endif
     //to line console up with main window, divide parent size by some constant(2.35)
-    ConsoleWindow.setPosition( sf::Vector2i(
+    d_console_window.setPosition( sf::Vector2i(
         (int)(Parent->getPosition().x - Parent->getSize().x/2.35),
         Parent->getPosition().y));
 
@@ -28,33 +28,40 @@ ConsoleManager::ConsoleManager(sf::Window *Parent):
 
 void ConsoleManager::init()
 {
-    ConsoleEditBox = tgui::EditBox::Ptr(gui);
-    ConsoleEditBox->load("TGUI/widgets/black.conf");
-    ConsoleEditBox->setSize(400,20);
-    ConsoleEditBox->setPosition(0,180);
-    ConsoleEditBox->setTextSize(13);
-    ConsoleEditBox->setMaximumCharacters(32);
-    ConsoleEditBox->setText("> ");
+    //here we initialize the gui objects. now TGUI, or any other
+    //  SFML gui for that matter does offer any quick solutions to
+    //  creating a console, so here we are making a very ugly console
+    //  that will make the user think it is a fully functional window.
+    //  we place an edit box at the bottom, and simply use a list box
+    //  to display previous commands, everything blends so the user will
+    //  think this is all one window!
+    d_console_edit_box = tgui::EditBox::Ptr(gui);
+    d_console_edit_box->load("TGUI/widgets/black.conf");
+    d_console_edit_box->setSize(400,20);
+    d_console_edit_box->setPosition(0,180);
+    d_console_edit_box->setTextSize(13);
+    d_console_edit_box->setMaximumCharacters(32);
+    d_console_edit_box->setText("> ");
     
 
-    ConsoleCommandList = tgui::ListBox::Ptr(gui);
-    ConsoleCommandList->load("TGUI/widgets/black.conf");
-    ConsoleCommandList->setSize(400,180);
-    ConsoleCommandList->setPosition(0,0);
-    ConsoleCommandList->removeScrollbar();
-    ConsoleCommandList->setMaximumItems(COMMAND_COUNT+1);
-    ConsoleCommandList->setItemHeight(15);
+    d_console_command_list = tgui::ListBox::Ptr(gui);
+    d_console_command_list->load("TGUI/widgets/black.conf");
+    d_console_command_list->setSize(400,180);
+    d_console_command_list->setPosition(0,0);
+    d_console_command_list->removeScrollbar();
+    d_console_command_list->setMaximumItems(COMMAND_COUNT+1);
+    d_console_command_list->setItemHeight(15);
     for(int i = 0; i < COMMAND_COUNT; i++) {
-        ConsoleCommandList->addItem(" ", i);
+        d_console_command_list->addItem(" ", i);
     }
 
     //set input box in focus so user does not have to click
-    ConsoleEditBox->focus();
+    d_console_edit_box->focus();
 }
 
 void ConsoleManager::handleEvent(sf::Event& event, bool& run)
 {
-    while(ConsoleWindow.pollEvent(event))
+    while(d_console_window.pollEvent(event))
     {
         if(event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
             run = false;
@@ -69,22 +76,27 @@ void ConsoleManager::handleEvent(sf::Event& event, bool& run)
 
 void ConsoleManager::render()
 {
-    ConsoleWindow.clear();
-    ConsoleWindow.pushGLStates();
+    d_console_window.clear();
+    d_console_window.pushGLStates();
 #ifdef USE_TGUI
     gui.draw();
 #endif
-    ConsoleWindow.display();
-    ConsoleWindow.popGLStates();
+    d_console_window.display();
+    d_console_window.popGLStates();
 }
 
 void ConsoleManager::translateCommandsUp()
 {
+    //move all commands up one to simulate a normal console
     for(int i = 0; i < 11 ; i++) {
-        std::string next = (ConsoleCommandList->getItem(i+1)).toAnsiString();
-        ConsoleCommandList->changeItem(i,
+        std::string next = (d_console_command_list->getItem(i+1)).toAnsiString();
+        d_console_command_list->changeItem(i,
             next);
     }
-    ConsoleCommandList->changeItem(11, ConsoleEditBox->getText().getData());
-    ConsoleEditBox->setText("> ");
+    //change the last element to what the user just entered
+    d_console_command_list->changeItem(
+        11, 
+        d_console_edit_box->getText().getData()
+    );
+    d_console_edit_box->setText("> ");
 }

@@ -16,6 +16,7 @@
 #include "common/texture.hpp"
 #include "guiconsole/console.hpp"
 #include "Particle.hpp"
+#include "particlemanager.hpp"
 #include "config.h"
 
 //this is for experimental openCL support, if you do not have this enabled
@@ -27,15 +28,8 @@
 //this used to be needed... I guess not anymore though
 //#pragma comment(lib, "glew32.lib")
 
-int FindUnusedParticle();
 unsigned char clamp(float value, float min, float max);
 float Distance(glm::vec3 const&, glm::vec3 const&);
-
-//define physics constants
-const float DRAG = 20;
-const int MAXPARTICLES= 500000;
-std::vector<Particle> ParticlesContainer;
-int LastUsedParticle=0;
 
 int main(int argc, char* argv[]) {
 
@@ -72,12 +66,13 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
+    ParticleManager particles_manager;
+    particles_manager.genGlBuffers();
+
+    particles_manager.initParticles();
+
     //dark blue background
     glClearColor(0.0f, 0.0f, 0.15f, 0.0f);
-
-    GLuint VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
 
     // Create and compile our GLSL program from the shaders
     GLuint programID = LoadShaders( "shaders/vertexshader.vert", "shaders/fragmentshader.frag" );
@@ -90,62 +85,8 @@ int main(int argc, char* argv[]) {
     // fragment shader
     GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
 
-    //buffer data
-    static GLfloat* g_particule_position_size_data = new GLfloat[MAXPARTICLES* 4];
-    static GLubyte* g_particule_color_data         = new GLubyte[MAXPARTICLES* 4];
-
     //load texture
     GLuint Texture = loadDDS("textures/Particle.DDS");
-
-    // The VBO containing the 4 vertices of the particles.
-    // Thanks to instancing, they will be shared by all particles.
-    static const GLfloat g_vertex_buffer_data[] = {
-         -0.5f, -0.5f, 0.0f,
-          0.5f, -0.5f, 0.0f,
-         -0.5f,  0.5f, 0.0f,
-          0.5f,  0.5f, 0.0f,
-    };
-    //buffer data
-    GLuint billboard_vertex_buffer;
-    glGenBuffers(1, &billboard_vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-    // The VBO containing the positions and sizes of the particles
-    GLuint particles_position_buffer;
-    glGenBuffers(1, &particles_position_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
-    // Initialize with empty (NULL) buffer : it will be updated later, each frame.
-    glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
-
-    // The VBO containing the colors of the particles
-    GLuint particles_color_buffer;
-    glGenBuffers(1, &particles_color_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
-    // Initialize with empty (NULL) buffer : it will be updated later, each frame.
-    glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
-
-
-    //init particles and shape them like a rectangle, i*j should always = MAXPARTICLES or we have a problem
-    for(int i(0); i < (int)sqrt(MAXPARTICLES); i++) {
-        for(int j(0); j < (int)sqrt(MAXPARTICLES); j++) {
-            Particle particle;
-            glm::vec2 d2Pos = glm::vec2(j*0.06, i*0.06) + glm::vec2(-20.0f,-20.0f);
-            particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-70);
-
-            particle.mass=50.0;
-            particle.life = 1000.0f;
-            particle.cameradistance = -1.0f;
-
-            particle.r = 255;
-            particle.g = 0;
-            particle.b = 0;
-            particle.a = 255;
-
-            particle.size = .15f;
-            ParticlesContainer.push_back(particle);
-        }
-    }
 
 #ifdef USE_OPENCL
 
@@ -238,8 +179,8 @@ int main(int argc, char* argv[]) {
         // calculate next position of particles, determine color as well
         GLsizei ParticlesCount = 0;
 #ifndef USE_OPENCL
-        for(size_t i=0; i<ParticlesContainer.size(); i++){
-            Particle& p = ParticlesContainer[i]; // shortcut
+        for(size_t i=0; i<particles_manager.size(); i++){
+            Particle& p = particles_manager[i]; // shortcut
 
             //cycle through all particles currently alive
             if(p.life > 0.0f){
@@ -250,7 +191,7 @@ int main(int argc, char* argv[]) {
 
                     p.addForce(
                         (glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500, -70.0) - p.pos) * (float)(pressed*50000/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y, -70.0f),p.pos)+10,2))));
-                    p.addForce( -p.speed*DRAG);
+                    p.addForce( -p.speed*particles_manager.getDRAG());
 
                     glm::vec3 prevPosition = p.pos;
                     p.pos = p.pos + p.speed*(float)delta + 0.5f*p.getTotalForce()/p.mass*(float)pow(delta,2);
@@ -265,16 +206,7 @@ int main(int argc, char* argv[]) {
 
                     p.cameradistance = glm::length2( p.pos - CameraPosition );
 
-                    // Fill the GPU buffer
-                    g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
-                    g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
-                    g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
-                    g_particule_position_size_data[4*ParticlesCount+3] = p.size;
-
-                    g_particule_color_data[4*ParticlesCount+0] = p.r;
-                    g_particule_color_data[4*ParticlesCount+1] = p.g;
-                    g_particule_color_data[4*ParticlesCount+2] = p.b;
-                    g_particule_color_data[4*ParticlesCount+3] = p.a;
+                    particles_manager.fillParticleGlBuffers(i, ParticlesCount);
                 }else{
                     // Particles that just died will be put at the end of the buffer in SortParticles();
                     p.cameradistance = -1.0f;
@@ -285,14 +217,7 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        //update buffers openGL uses for rendering
-        glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
-        glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf
-        glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLfloat) * 4, g_particule_position_size_data);
-
-        glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
-        glBufferData(GL_ARRAY_BUFFER, MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf
-        glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLubyte) * 4, g_particule_color_data);
+        particles_manager.updateGlBuffers();
 
 #else // USE_OPENCL
 
@@ -327,55 +252,7 @@ int main(int argc, char* argv[]) {
 
         glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
-        // 1st attrib buffer: vertices
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
-        glVertexAttribPointer(
-            0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-            3,                  // size
-            GL_FLOAT,           // type
-            GL_FALSE,           // normalized?
-            0,                  // stride
-            (void*)0            // array buffer offset
-        );
-
-        // 2nd attrib buffer : positions of particle centers
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
-        glVertexAttribPointer(
-            1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-            4,                                // size : x + y + z + size => 4
-            GL_FLOAT,                         // type
-            GL_FALSE,                         // normalized?
-            0,                                // stride
-            (void*)0                          // array buffer offset
-        );
-
-        // 3rd attrib buffer : particles' colors
-        glEnableVertexAttribArray(2);
-        glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
-        glVertexAttribPointer(
-            2,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-            4,                                // size : r + g + b + a => 4
-            GL_UNSIGNED_BYTE,                 // type
-            GL_TRUE,                          // normalized?    *** YES, this means that the unsigned char[4] will be accessible with a vec4 (floats) in the shader ***
-            0,                                // stride
-            (void*)0                          // array buffer offset
-        );
-
-        // The first parameter is the attribute buffer.
-        // The second parameter is the "rate at which generic vertex attributes advance when rendering multiple instances"
-        glVertexAttribDivisor(0, 0); // particles vertices : always reuse the same 4 vertices -> 0
-        glVertexAttribDivisor(1, 1); // positions : one per quad (its center)                 -> 1
-        glVertexAttribDivisor(2, 1); // color : one per quad                                  -> 1
-
-        //draw particles
-        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, ParticlesCount);
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
-
+        particles_manager.drawParticles();
         console_window.render();
         window.display();
 
@@ -386,36 +263,9 @@ int main(int argc, char* argv[]) {
         std::cout << "\r" << fps;
     }
 
-    //free up memory openGL used
-    glDeleteBuffers(1, &particles_color_buffer);
-    glDeleteBuffers(1, &particles_position_buffer);
-    glDeleteBuffers(1, &billboard_vertex_buffer);
     glDeleteProgram(programID);
-    glDeleteVertexArrays(1, &VertexArrayID);
-
     return 0;
 
-}
-
-//Function to find all unused particles in the array, uses linear search and leaves off
-//on the last particle found. If out of particles then it overwrites first element
-int FindUnusedParticle(){
-
-    for(auto i=LastUsedParticle; i<MAXPARTICLES; i++){
-        if(ParticlesContainer[i].life < 0){
-            LastUsedParticle = i;
-            return i;
-        }
-    }
-
-    for(auto i=0; i<LastUsedParticle; i++){
-        if (ParticlesContainer[i].life<0){
-            LastUsedParticle = i;
-            return i;
-        }
-    }
-
-    return 0;        //All particles taken, override first one
 }
 
 unsigned char clamp(float value, float min, float max)
