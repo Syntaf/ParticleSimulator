@@ -15,20 +15,21 @@ Or see the full video here: https://vimeo.com/98855736  (**Password:** particles
 | GLM            | 0.9.5.3         | N/A          |  Yes        |
 | GLEW           | 1.5.3           | x64          |  No         |
 | SFML           | 2.1             | x64          |  No         |
-
+| TGUI           | 0.6             | x64          |  No         |
 [**GLM**](http://glm.g-truc.net/0.9.5/index.html):  A header only C++ mathematics library for graphics software based on the OpenGL Shading Language (GLSL) specification and released under the MIT license.
 
 [**GLEW**](http://glew.sourceforge.net/):   A cross-platform open-source C/C++ extension loading library. GLEW provides efficient run-time mechanisms for determining which OpenGL extensions are supported on the target platform. OpenGL core and extension functionality is exposed in a single header file. GLEW has been tested on a variety of operating systems, including Windows, Linux, Mac OS X, FreeBSD, Irix, and Solaris.
   
 [**SFML**](http://www.sfml-dev.org/):   SFML provides a simple interface to the various components of your PC, to ease the development of games and multimedia applications.
 
+[**TGUI**](http://tgui.eu/):  TGUI is an easy to use cross-platform GUI based on SFML2 and written in C++, **Note** that TGUI currently does not offer x64 downloads. If you plan on building the Particle Simulator with x64 you will need to build TGUI from source, you can see how [here](http://tgui.eu/tutorials/v06/visual-studio/)
 **Compiler Support**
 --------------------------------------------------------
 
 |  Compilers  |  Recommended Version  |  Minimum Version  |
 | ----------- | --------------------- | ----------------- |
 | MSVC | `v110` |  `v100` |
-| GNU Compiler Collection(G++) | `?` | `?` |
+| GNU Compiler Collection(G++) | `4.9.0` | `?` |
 | Clang | `?` | `?` |
 
 | Build System | Recommended Version | Minimum Version |
@@ -42,6 +43,8 @@ Before beginning to build this application, make sure you have downloaded the pr
 
 Windows
 --------
+a quick note before moving on: this build tutorial takes into account the user is using the x64 architecture. If you are planning on building the particle simulator with x86 you may have to change around a couple CMake lines, but the program should have no issue otherwise running with x86.
+
 1. Clone the master Particle Simulator repository in a directory of your choice.
 
 2. Create a build folder. This project requires and out-of-tree-build. This means you ~~will be unable to~~ **should not** run CMake in the Particle Simulator folder
@@ -52,9 +55,10 @@ Windows
     * `SFML_ROOT` - The root folder of SFML (e.g. *c:/local/sfml-2.1*)
     * `GLM_ROOT` - The root folder of GLM (e.g. *c:/local/glm*)
     * `GLEW_ROOT` - The root folder of GLEW (e.g. *c:/loacl/glew*)
+    * `TGUI_ROOT` - The root folder of TGUI (e.g. *c:/local/tgui*), CMake will currently look for libraries in ${TGUI_ROOT}/build/lib. If you did not build from source or did not build inside of the source make sure to modify FindTGUI.cmake
     * CMake will search for glew libraries in {GLEW_ROOT}/lib/release/x64 `{GLEW_ROOT}/lib/Release/x64/glew32.lib`, to change this path edit line `53` in `CMakeLists.txt`
     * `USE_OPENCL` - Currently an unfinished experimental implementation with OpenCL, default `false` is it is unfinished
-
+    * `USE_TGUI` - TGUI will soon become mandatory for the repository, but for now you can opt out of using TGUI by setting this to false
 5. Press the "Configure" button. A window will pop up asking you which compiler to use. Select your x64 version of your preferred compiler. Note that it is possible to build x32 without running into any errors, feel to modify your build to build x86 if you wish.
 
 6. If the "Generate" button is not clickable, press "Configure" again. Repeat this step until the "Generate" button becomes clickable.
@@ -69,6 +73,7 @@ Windows
     * `sfml-graphics-2.dll`
     * `sfml-system-2.dll`
     * `sfml-window-2.dll`
+    * `tgui.dll`
     * `glew32.dll`
     * for Debug mode make sure to use the debug SFML DLLS, the one's with a trailing `-d`. Previous versions of SFML do not have the `2` either as listed here.
 
