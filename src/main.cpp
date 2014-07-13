@@ -28,9 +28,6 @@
 //this used to be needed... I guess not anymore though
 //#pragma comment(lib, "glew32.lib")
 
-unsigned char clamp(float value, float min, float max);
-float Distance(glm::vec3 const&, glm::vec3 const&);
-
 int main(int argc, char* argv[]) {
 
 //debug is slow as fuck, make sure people are running on release
@@ -66,7 +63,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    ParticleManager particles_manager;
+    ParticleManager particles_manager(&window);
     particles_manager.genGlBuffers();
 
     particles_manager.initParticles();
@@ -87,24 +84,6 @@ int main(int argc, char* argv[]) {
 
     //load texture
     GLuint Texture = loadDDS("textures/Particle.DDS");
-
-#ifdef USE_OPENCL
-
-    // initialize opencl using opengl buffers
-    cl_particle_updater cl_updater(MAXPARTICLES,
-                                   particles_position_buffer, particles_color_buffer);
-
-    // move gl buffers to cl
-    cl_updater.lock_gl_buffers();
-
-    // set the initial values of the particles
-    cl_updater.set_particle_values(ParticlesContainer);
-
-    // move buffers back to gl
-    cl_updater.unlock_gl_buffers();
-
-#endif
-
 
     bool running=true;    //set up bool to run SFML loop
     bool pressed=false;   //bool for managing when LMB pressed
@@ -127,6 +106,13 @@ int main(int argc, char* argv[]) {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        //handle any input and grab matrices
+        computeMatricesFromInputs(window, delta);
+        glm::mat4 ProjectionMatrix = getProjectionMatrix();
+        glm::mat4 ViewMatrix = getViewMatrix();
+        glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
+        particles_manager.updateParticles(delta, ProjectionMatrix, ViewMatrix);
+        /*
         //handle any input and grab matrices
         computeMatricesFromInputs(window, delta);
         glm::mat4 ProjectionMatrix = getProjectionMatrix();
@@ -221,7 +207,7 @@ int main(int argc, char* argv[]) {
 
 #else // USE_OPENCL
 
-        ParticlesCount = (GLsizei)ParticlesContainer.size();
+        ParticlesCount = (GLsizei)particles_manager.size();
 
         // move gl buffers to cl
         cl_updater.lock_gl_buffers();
@@ -232,7 +218,7 @@ int main(int argc, char* argv[]) {
         cl_updater.unlock_gl_buffers();
 
 #endif // USE_OPENCL
-
+        */
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -268,19 +254,4 @@ int main(int argc, char* argv[]) {
 
 }
 
-unsigned char clamp(float value, float min, float max)
-{
-    float result;
-    if(value > max)
-        result = max;
-    else if(value < min)
-        result = min;
-    else
-        result = value;
-    return result;
-}
 
-float Distance(glm::vec3 const& v1, glm::vec3 const& v2)
-{
-    return sqrt(pow((v2.x-v1.x),2) + pow((v2.y-v1.y),2));
-}
