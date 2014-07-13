@@ -216,9 +216,7 @@ void ParticleManager::updateParticles(const float& delta, glm::mat4& ProjectionM
                     // Particles that just died will be put at the end of the buffer in SortParticles();
                     p.cameradistance = -1.0f;
                 }
-
                 ParticlesCount++;
-
             }
         }
 
