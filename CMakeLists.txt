@@ -26,35 +26,20 @@ option (USE_OPENCL
 option (USE_TGUI
 	"Use TGUI experimental implementation" ON)
 
-#include sources
-set(HEADERS
-        common/shader.hpp
-        common/texture.hpp
-        common/controls.hpp
-        console.hpp
-        Particle.hpp
-)
-if(USE_OPENCL)
-    set(HEADERS ${HEADERS}
-            opencl/cl_particle_updater.hpp
-            opencl/cl_tools.hpp
-    )
-endif()
-
 #include sources, headers and runtime dependencies
 set(HEADERS
-        common/shader.hpp
-        common/texture.hpp
-        common/controls.hpp
-        console.hpp
-        Particle.hpp
+        src/common/shader.hpp
+        src/common/texture.hpp
+        src/common/controls.hpp
+        src/guiconsole/console.hpp
+        src/Particle.hpp
 )
 set(SOURCES
-        main.cpp
-        console.cpp
-        common/shader.cpp
-        common/texture.cpp
-        common/controls.cpp
+        src/main.cpp
+        src/guiconsole/console.cpp
+        src/common/shader.cpp
+        src/common/texture.cpp
+        src/common/controls.cpp
 )
 set(RUNTIME_DEPENDENCIES
         shaders/vertexshader.vert
@@ -64,17 +49,13 @@ set(RUNTIME_DEPENDENCIES
 
 if(USE_OPENCL)
     set(SOURCES ${SOURCES}
-            opencl/cl_particle_updater.cpp
-            opencl/cl_tools.cpp
+            src/opencl/cl_particle_updater.cpp
+            src/opencl/cl_tools.cpp
             kernels/update_particles.cl
     )
     set(HEADERS ${HEADERS}
-            opencl/cl_particle_updater.hpp
-            opencl/cl_tools.hpp
-    )
-    set(SOURCES ${SOURCES}
-            opencl/cl_particle_updater.cpp
-            opencl/cl_tools.cpp
+            src/opencl/cl_particle_updater.hpp
+            src/opencl/cl_tools.hpp
     )
     set(RUNTIME_DEPENDENCIES ${RUNTIME_DEPENDENCIES}
             kernels/update_particles.cl

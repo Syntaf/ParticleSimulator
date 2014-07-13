@@ -30,17 +30,6 @@ glm::mat4 getProjectionMatrix(){return ProjectionMatrix;}
 
 void computeMatricesFromInputs(sf::Window& window, float time){
 
-    // Looking around, think of just a head pivoting
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-        horizontalAngle += lookSpeed * speed;
-    }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-        horizontalAngle += lookSpeed * speed * -1;
-    }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-        verticalAngle += lookSpeed * speed;
-    }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-        verticalAngle += lookSpeed * speed * -1;
-    }
-
     // Direction : Spherical coordinates to Cartesian coordinates conversion
     direction = glm::vec3(
         cos(verticalAngle) * sin(horizontalAngle), 
@@ -66,13 +55,13 @@ void computeMatricesFromInputs(sf::Window& window, float time){
     );
 
     // moving around, think of a person walking left/right/forward/backward
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
         position += direction * time * speed;
-    }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+    }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
         position -= direction * time * speed;
-    }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+    }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
         position += right * time * speed;
-    }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+    }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
         position -= right * time * speed;
     }
 }
