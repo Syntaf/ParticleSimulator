@@ -14,7 +14,7 @@
 #include "common/shader.hpp"
 #include "common/controls.hpp"
 #include "common/texture.hpp"
-#include "console.hpp"
+#include "guiconsole/console.hpp"
 #include "Particle.hpp"
 #include "config.h"
 
@@ -128,11 +128,11 @@ int main(int argc, char* argv[]) {
     for(int i(0); i < (int)sqrt(MAXPARTICLES); i++) {
         for(int j(0); j < (int)sqrt(MAXPARTICLES); j++) {
             Particle particle;
-            glm::vec2 d2Pos = glm::vec2(j*0.05, i*0.05) + glm::vec2(-15.0f,-15.0f);
+            glm::vec2 d2Pos = glm::vec2(j*0.06, i*0.06) + glm::vec2(-20.0f,-20.0f);
             particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-70);
 
             particle.mass=50.0;
-            particle.life = 100.0f;
+            particle.life = 1000.0f;
             particle.cameradistance = -1.0f;
 
             particle.r = 255;
@@ -140,7 +140,7 @@ int main(int argc, char* argv[]) {
             particle.b = 0;
             particle.a = 255;
 
-            particle.size = .1f;
+            particle.size = .15f;
             ParticlesContainer.push_back(particle);
         }
     }
