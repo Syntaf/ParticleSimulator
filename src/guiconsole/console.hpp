@@ -12,15 +12,21 @@ class ConsoleManager {
         ConsoleManager(sf::Window *Parent);
         ~ConsoleManager(){}
 
+        void init();
+
         void handleEvent(sf::Event& event,bool& run);
 
         void render();
     private:
+        static const int COMMAND_COUNT = 12;
         sf::CircleShape circle;
         sf::RenderWindow ConsoleWindow;
         sf::Window *ParentWindow;
 #ifdef USE_TGUI
+        void translateCommandsUp();
         tgui::Gui gui;
+        tgui::EditBox::Ptr ConsoleEditBox;
+        tgui::ListBox::Ptr ConsoleCommandList;
 #endif
 };
 

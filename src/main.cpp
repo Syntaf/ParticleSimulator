@@ -62,6 +62,8 @@ int main(int argc, char* argv[]) {
     window.setVerticalSyncEnabled(true);
     sf::Mouse::setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x + window.getSize().x/2, sf::Mouse::getPosition(window).y));
 
+    //create GUI console
+    console_window.init();
 
     // Initialize GLEW, needed for core profile
     glewExperimental = true;
