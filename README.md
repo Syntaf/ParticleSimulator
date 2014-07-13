@@ -43,6 +43,8 @@ Before beginning to build this application, make sure you have downloaded the pr
 
 Windows
 --------
+a quick note before moving on: this build tutorial takes into account the user is using the x64 architecture. If you are planning on building the particle simulator with x86 you may have to change around a couple CMake lines, but the program should have no issue otherwise running with x86.
+
 1. Clone the master Particle Simulator repository in a directory of your choice.
 
 2. Create a build folder. This project requires and out-of-tree-build. This means you ~~will be unable to~~ **should not** run CMake in the Particle Simulator folder
@@ -56,7 +58,7 @@ Windows
     * `TGUI_ROOT` - The root folder of TGUI (e.g. *c:/local/tgui*), CMake will currently look for libraries in ${TGUI_ROOT}/build/lib. If you did not build from source or did not build inside of the source make sure to modify FindTGUI.cmake
     * CMake will search for glew libraries in {GLEW_ROOT}/lib/release/x64 `{GLEW_ROOT}/lib/Release/x64/glew32.lib`, to change this path edit line `53` in `CMakeLists.txt`
     * `USE_OPENCL` - Currently an unfinished experimental implementation with OpenCL, default `false` is it is unfinished
-    * `USE_TGUI` - TGUI will soon become for the repository, but for now you can opt out of using TGUI by setting this to false
+    * `USE_TGUI` - TGUI will soon become mandatory for the repository, but for now you can opt out of using TGUI by setting this to false
 5. Press the "Configure" button. A window will pop up asking you which compiler to use. Select your x64 version of your preferred compiler. Note that it is possible to build x32 without running into any errors, feel to modify your build to build x86 if you wish.
 
 6. If the "Generate" button is not clickable, press "Configure" again. Repeat this step until the "Generate" button becomes clickable.
