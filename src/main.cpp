@@ -47,20 +47,21 @@ int main(int argc, char* argv[]) {
           sf::ContextSettings(32, 8, 0, 3, 3)       //we're using openGL 3.3
         );
 
+    ConsoleManager console_window(&window);
+
+    glViewport(0,0,window.getSize().x,window.getSize().y);
+    window.setVerticalSyncEnabled(true);
+    sf::Mouse::setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x + window.getSize().x/2, sf::Mouse::getPosition(window).y));
+
+    //create GUI console
+    console_window.init();
+
     // Initialize GLEW, needed for core profile
     glewExperimental = true;
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
         return -1;
     }
-
-    glViewport(0,0,window.getSize().x,window.getSize().y);
-    window.setVerticalSyncEnabled(true);
-    sf::Mouse::setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x + window.getSize().x/2, sf::Mouse::getPosition(window).y));
-
-    ConsoleManager console_window(&window);
-    //create GUI console
-    console_window.init();
 
     ParticleManager particles_manager(&window);
     particles_manager.genGlBuffers();
@@ -80,7 +81,7 @@ int main(int argc, char* argv[]) {
     GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
 
     //load texture
-    GLuint Texture = loadDDS("textures/Particle.DDS");
+    particles_manager.loadTexture("textures/Particle.DDS");
 
     //initialize particle position
     particles_manager.initParticles();
@@ -123,8 +124,7 @@ int main(int argc, char* argv[]) {
         glUseProgram(programID);
 
         // Bind texture to Texture Unit 0
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, Texture);
+        particles_manager.activateTexture();
         // Set "myTextureSampler" sampler to user Texture Unit 0
         glUniform1i(TextureID, 0);
 

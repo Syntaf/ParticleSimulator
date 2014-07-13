@@ -16,11 +16,13 @@ class ParticleManager{
         ~ParticleManager();
 
         void initParticles();
+        void loadTexture(const std::string& filename);
 
         void genGlBuffers();
         void fillParticleGlBuffers(const int& index, const int& particle_count);
         void updateGlBuffers();
 
+        void activateTexture();
         void updateParticles(const float& delta, glm::mat4& ProjectionMatrix,
                              glm::mat4& ViewMatrix);
         void drawParticles();
@@ -43,6 +45,8 @@ class ParticleManager{
         GLuint d_billboard_vertex_buffer;
         GLuint d_particles_position_buffer;
         GLuint d_particles_color_buffer;
+
+        GLuint d_texture;
 
         GLfloat* g_particle_position_size_data;
         GLubyte* g_particle_color_data;

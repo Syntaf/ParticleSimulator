@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
 #include "common/controls.hpp"
+#include "common/texture.hpp"
 #include "Particle.hpp"
 #include "particlemanager.hpp"
 #ifdef USE_OPENCL
@@ -84,6 +85,11 @@ void ParticleManager::initParticles()
 #endif
 }
 
+void ParticleManager::loadTexture(const std::string& filename)
+{
+    d_texture = loadDDS("textures/Particle.DDS");
+}
+
 void ParticleManager::genGlBuffers()
 {
 
@@ -132,6 +138,12 @@ void ParticleManager::updateGlBuffers()
     glBufferData(GL_ARRAY_BUFFER, d_MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf
     glBufferSubData(GL_ARRAY_BUFFER, 0, d_MAXPARTICLES * sizeof(GLubyte) * 4, g_particle_color_data);
 
+}
+
+void ParticleManager::activateTexture()
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, d_texture);
 }
 
 void ParticleManager::updateParticles(const float& delta, glm::mat4& ProjectionMatrix,
