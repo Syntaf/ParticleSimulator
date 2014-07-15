@@ -4,15 +4,17 @@
 #ifdef USE_TGUI
 #include <TGUI/TGUI.hpp>
 #else
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #endif
 
 class ConsoleManager {
     public:
         ConsoleManager(sf::Window *Parent);
+        ConsoleManager();
         ~ConsoleManager(){}
 
         void init();
+        void bindParentWindow(sf::Window *Parent);
 
         void handleEvent(sf::Event& event,bool& run);
 

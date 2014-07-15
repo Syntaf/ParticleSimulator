@@ -1,11 +1,11 @@
 #ifndef PARTICLE_MANAGER_H_
 #define PARTICLE_MANAGER_H_
 
-#include "Particle.hpp"
+#include "particle.hpp"
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #ifdef USE_OPENCL
-#include "opencl\cl_particle_updater.hpp"
+#include "opencl/cl_particle_updater.hpp"
 #endif
 
 class ParticleManager{
@@ -16,7 +16,7 @@ class ParticleManager{
         ~ParticleManager();
 
         void initParticles();
-        void loadTexture(const std::string& filename);
+        bool loadTexture(const std::string& filename);
 
         void genGlBuffers();
         void fillParticleGlBuffers(const int& index, const int& particle_count);

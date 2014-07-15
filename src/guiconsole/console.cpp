@@ -26,6 +26,11 @@ ConsoleManager::ConsoleManager(sf::Window *Parent):
 
 }
 
+void ConsoleManager::bindParentWindow(sf::Window *Parent)
+{
+    d_parent_window = Parent;
+}
+
 void ConsoleManager::init()
 {
     //here we initialize the gui objects. now TGUI, or any other

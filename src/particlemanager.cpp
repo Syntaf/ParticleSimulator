@@ -7,7 +7,7 @@
 #include <glm/gtx/norm.hpp>
 #include "common/controls.hpp"
 #include "common/texture.hpp"
-#include "Particle.hpp"
+#include "particle.hpp"
 #include "particlemanager.hpp"
 #ifdef USE_OPENCL
 #include "opencl\cl_particle_updater.hpp"
@@ -85,9 +85,11 @@ void ParticleManager::initParticles()
 #endif
 }
 
-void ParticleManager::loadTexture(const std::string& filename)
+bool ParticleManager::loadTexture(const std::string& filename)
 {
-    d_texture = loadDDS("textures/Particle.DDS");
+    if(!(d_texture = loadDDS("textures/Particle.DDS")))
+        return false;
+    return true;
 }
 
 void ParticleManager::genGlBuffers()

@@ -6,7 +6,7 @@
 #include <SFML/OpenGL.hpp>
 #include <CL/opencl.h>
 
-#include "../Particle.hpp"
+#include "../particle.hpp"
 
 
 class cl_particle_updater

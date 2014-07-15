@@ -32,12 +32,14 @@ set(HEADERS
         src/common/texture.hpp
         src/common/controls.hpp
         src/guiconsole/console.hpp
-        src/Particle.hpp
+        src/particle.hpp
 		src/particlemanager.hpp
+		src/app.hpp
 )
 set(SOURCES
         src/main.cpp
 		src/particlemanager.cpp
+		src/app.cpp
         src/guiconsole/console.cpp
         src/common/shader.cpp
         src/common/texture.cpp
