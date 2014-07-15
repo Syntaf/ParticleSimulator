@@ -17,6 +17,7 @@ class App{
         void run();
 
     private:
+        //main window to render to
         sf::Window d_main_window;
 
         //we need don't want these to be created until the constructor, so make them

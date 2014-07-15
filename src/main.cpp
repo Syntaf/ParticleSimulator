@@ -26,9 +26,6 @@
 #include "opencl/cl_particle_updater.hpp"
 #endif
 
-//this used to be needed... I guess not anymore though
-//#pragma comment(lib, "glew32.lib")
-
 int main(int argc, char* argv[]) {
 
 //debug is slow as fuck, make sure people are running on release
@@ -36,14 +33,19 @@ int main(int argc, char* argv[]) {
     std::cout << "\nWARNING: Debug is currently active, optimizations are not enabled this is configuration" <<
         ". Unless you are actually debugging, switch to Release mode\n" << std::endl;
 #endif
+
     std::cout << "Particle Simulator Version: " << VERSION_MAJOR << "." << VERSION_MINOR << "\n";
 
-    srand(time(NULL));//seed the random generator
+    //keep 1.33 ratio
     App programApp(sf::VideoMode(1000,750));
+
     //if either initialization fails, exit
-    programApp.initGL();
-    programApp.initParticles();
+    if( !(programApp.initGL()) || !(programApp.initParticles()) )
+        return -1;
+
+    //run main loop
     programApp.run();
+
     return 0;
 }
 
