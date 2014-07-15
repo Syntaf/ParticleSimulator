@@ -15,31 +15,39 @@ class ParticleManager{
             float size=0.15f, float mouseforce=5000);
         ~ParticleManager();
 
+        //particle initialization functions
         void initParticles();
         bool loadTexture(const std::string& filename);
 
+        //OpenGL buffer functions
         void genGlBuffers();
         void fillParticleGlBuffers(const int& index, const int& particle_count);
         void updateGlBuffers();
 
+        //active OpenGL texture for drawing to screen
         void activateTexture();
+
+        //update the positions of the particles and also update the openGL 
+        //  buffers
         void updateParticles(const float& delta, glm::mat4& ProjectionMatrix,
                              glm::mat4& ViewMatrix);
+
+        //draw all particles to the screen
         void drawParticles();
 
-        float getDRAG()const{return d_DRAG;}
-
-        size_t size(){return d_particles_container.size();}
-
-        Particle& operator[](const size_t& i){return d_particles_container[i];}
+        //set functions
 
     private:
-        sf::Window* d_parent_window;
         float Distance(glm::vec3 const& v1, glm::vec3 const& v2);
         unsigned char clamp(float value, float min, float max);
 
+        //keep a pointer to parent window for pulling data
+        sf::Window* d_parent_window;
+
+        //the meat of the class, all our particles
         std::vector<Particle> d_particles_container;
 
+        //openGL buffer data, texture id and vertex array id
         GLuint d_vertex_array_id;
         GLuint d_texture_id;
         GLuint d_billboard_vertex_buffer;
@@ -48,6 +56,7 @@ class ParticleManager{
 
         GLuint d_texture;
 
+        //data
         GLfloat* g_particle_position_size_data;
         GLubyte* g_particle_color_data;
 

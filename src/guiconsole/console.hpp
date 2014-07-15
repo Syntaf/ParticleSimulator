@@ -20,7 +20,9 @@ class ConsoleManager {
 
         void render();
     private:
-        static const int COMMAND_COUNT = 12;
+        //technically 12 since we start at zero
+        static const int COMMAND_COUNT = 11;
+        //console window and pointer to main window
         sf::RenderWindow d_console_window;
         sf::Window *d_parent_window;
 #ifdef USE_TGUI

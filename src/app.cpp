@@ -62,6 +62,7 @@ bool App::initGL()
         fprintf(stderr, "Failed to initialize GLEW\n");
         return false;
     }
+    //create our particle manager class
     d_particles_manager = new ParticleManager(&d_main_window);
     //generate particle manager GL buffers
     d_particles_manager->genGlBuffers();
@@ -83,10 +84,10 @@ bool App::initGL()
     return true;
 }
 
-bool App::initParticles()
+bool App::initParticles(const std::string& texturepath)
 {
     //load texture and initialize particle position
-    if(!(d_particles_manager->loadTexture("textures/Particle.DDS")))
+    if(!(d_particles_manager->loadTexture(texturepath.c_str())))
         return false;
     d_particles_manager->initParticles();
     return true;
@@ -96,7 +97,7 @@ void App::run()
 {
     while( running )
     {
-             float delta = clock.restart().asSeconds();
+        float delta = clock.restart().asSeconds();
         //handle window events
         sf::Event event;
         while(d_main_window.pollEvent(event))

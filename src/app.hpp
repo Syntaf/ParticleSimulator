@@ -12,16 +12,25 @@ class App{
         App(sf::VideoMode mode);
         ~App();
 
+        //initialize uniform locations, compile shaders and create
+        //  program ID
         bool initGL();
-        bool initParticles();
+
+        //load a texture and initialize particle starting positions
+        //  if openCL is enabled it will also put all of the new data
+        //  into a buffer for the GPU to use.
+        bool initParticles(const std::string& texturepath);
+
+        //the main program loop, run will handle event, receive user input
+        //  and handle user input. the most important part of the class
         void run();
 
     private:
         //main window to render to
         sf::Window d_main_window;
 
-        //we need don't want these to be created until the constructor, so make them
-        //pointers
+        //we need to control when these are created due to the nature of their
+        //  constructors, so we will use dynamic allocations.
         ConsoleManager *d_console_window;
         ParticleManager *d_particles_manager;
 
@@ -34,7 +43,7 @@ class App{
         //texture ID
         GLuint d_texture_id;
 
-        //timers
+        //timers for delta and FPS
         sf::Clock clock;
         sf::Clock fps_clock;
 

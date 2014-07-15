@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     App programApp(sf::VideoMode(1000,750));
 
     //if either initialization fails, exit
-    if( !(programApp.initGL()) || !(programApp.initParticles()) )
+    if( !(programApp.initGL()) || !(programApp.initParticles("textures/Particle.dds")) )
         return -1;
 
     //run main loop

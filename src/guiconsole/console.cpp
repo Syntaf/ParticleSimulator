@@ -93,14 +93,14 @@ void ConsoleManager::render()
 void ConsoleManager::translateCommandsUp()
 {
     //move all commands up one to simulate a normal console
-    for(int i = 0; i < 11 ; i++) {
+    for(int i = 0; i < COMMAND_COUNT; i++) {
         std::string next = (d_console_command_list->getItem(i+1)).toAnsiString();
         d_console_command_list->changeItem(i,
             next);
     }
     //change the last element to what the user just entered
     d_console_command_list->changeItem(
-        11, 
+        COMMAND_COUNT, 
         d_console_edit_box->getText().getData()
     );
     d_console_edit_box->setText("> ");
