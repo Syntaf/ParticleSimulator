@@ -125,9 +125,9 @@ endif()
 #TGUI experimental
 if(USE_TGUI)
   find_package(TGUI REQUIRED)
-  include_directories(${TGUI_INCLUDE_PATH})
+  include_directories(${TGUI_INCLUDE_DIR})
   target_link_libraries(${EXECUTABLE_NAME} ${TGUI_LIBRARY})
-  message(STATUS "Found TGUI in ${TGUI_INCLUDE_PATH}")
+  message(STATUS "Found TGUI in ${TGUI_INCLUDE_DIR}")
   add_definitions("-DUSE_TGUI")
 endif()
 
