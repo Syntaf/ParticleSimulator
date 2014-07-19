@@ -30,7 +30,7 @@ Or see the full video here: https://vimeo.com/98855736  (**Password:** particles
 | ----------- | --------------------- | ----------------- |
 | MSVC | `v110` |  `v100` |
 | GNU Compiler Collection(G++) | `4.9.0` | `?` |
-| Clang | `?` | `?` |
+| Clang | `3.4.0` | `?` |
 
 | Build System | Recommended Version | Minimum Version |
 |--------------|---------------------|-----------------|
