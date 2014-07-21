@@ -1,11 +1,7 @@
 #ifndef CONSOLE_H_
 #define CONSOLE_H_
 
-#ifdef USE_TGUI
 #include <TGUI/TGUI.hpp>
-#else
-#include <SFML/Graphics.hpp>
-#endif
 
 class ConsoleManager {
     public:
@@ -25,12 +21,11 @@ class ConsoleManager {
         //console window and pointer to main window
         sf::RenderWindow d_console_window;
         sf::Window *d_parent_window;
-#ifdef USE_TGUI
         void translateCommandsUp();
+
         tgui::Gui gui;
         tgui::EditBox::Ptr d_console_edit_box;
         tgui::ChatBox::Ptr d_console_command_list;
-#endif
 };
 
 #endif

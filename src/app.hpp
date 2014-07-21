@@ -31,7 +31,9 @@ class App{
 
         //we need to control when these are created due to the nature of their
         //  constructors, so we will use dynamic allocations.
+#ifdef USE_TGUI
         ConsoleManager *d_console_window;
+#endif
         ParticleManager *d_particles_manager;
 
         //OpenGL variables

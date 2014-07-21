@@ -28,7 +28,9 @@ App::App(sf::VideoMode mode):
         sf::ContextSettings(32, 8, 0, 3, 3)
     );
 
+#ifdef USE_TGUI
     d_console_window = new ConsoleManager(&d_main_window);
+#endif
 
     glViewport(0,0,d_main_window.getSize().x, d_main_window.getSize().y);
     //disable verical sync, set mouse position to middle of screen
@@ -40,8 +42,10 @@ App::App(sf::VideoMode mode):
         )
      );
 
+#ifdef USE_TGUI
     //create GUI console
     d_console_window->init();
+#endif
 
 }
 
@@ -49,7 +53,9 @@ App::App(sf::VideoMode mode):
 App::~App()
 {
     //free dynamic memory
+#ifdef USE_TGUI
     delete d_console_window;
+#endif
     delete d_particles_manager;
     //delete program
     glDeleteProgram(d_program_id);
@@ -107,7 +113,9 @@ void App::run()
             else if(event.type == sf::Event::Resized)
                 glViewport(0,0,event.size.width,event.size.height);
         }
+#ifdef USE_TGUI
         d_console_window->handleEvent(event, running);
+#endif
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -139,8 +147,10 @@ void App::run()
         glUniformMatrix4fv(d_viewprojmatrix_id, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
         d_particles_manager->drawParticles();
+#ifdef USE_TGUI
         d_console_window->render();
         d_main_window.display();
+#endif
 
         //used for determining application performance
         float fps_current_time = fps_clock.restart().asSeconds();

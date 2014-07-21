@@ -1,8 +1,4 @@
-#ifdef USE_TGUI
 #include <TGUI/TGUI.hpp>
-#else
-#include <SFML/Graphics.hpp>
-#endif
 #include <SFML/OpenGL.hpp>
 #include "console.hpp"
 #include <cstdlib>
@@ -15,10 +11,10 @@ ConsoleManager::ConsoleManager(sf::Window *Parent):
         sf::Style::Default,
         sf::ContextSettings(32, 8, 0, 3, 3)
     );
-#ifdef USE_TGUI
+
     gui.setWindow(d_console_window);
     gui.setGlobalFont("TGUI/fonts/DejaVuSans.ttf");
-#endif
+
     //to line console up with main window, divide parent size by some constant(2.35)
     d_console_window.setPosition( sf::Vector2i(
         (int)(Parent->getPosition().x - Parent->getSize().x/2.35),
@@ -71,10 +67,8 @@ void ConsoleManager::handleEvent(sf::Event& event, bool& run)
             run = false;
         if(event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Return)
             translateCommandsUp();
-#ifdef USE_TGUI
         //pass event to all widgets
         gui.handleEvent(event);
-#endif
     }
 }
 
@@ -82,9 +76,7 @@ void ConsoleManager::render()
 {
     d_console_window.clear();
     d_console_window.pushGLStates();
-#ifdef USE_TGUI
     gui.draw();
-#endif
     d_console_window.display();
     d_console_window.popGLStates();
 }
