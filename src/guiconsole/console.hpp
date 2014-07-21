@@ -29,7 +29,7 @@ class ConsoleManager {
         void translateCommandsUp();
         tgui::Gui gui;
         tgui::EditBox::Ptr d_console_edit_box;
-        tgui::ListBox::Ptr d_console_command_list;
+        tgui::ChatBox::Ptr d_console_command_list;
 #endif
 };
 

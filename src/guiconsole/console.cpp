@@ -37,7 +37,7 @@ void ConsoleManager::init()
     //  SFML gui for that matter does offer any quick solutions to
     //  creating a console, so here we are making a very ugly console
     //  that will make the user think it is a fully functional window.
-    //  we place an edit box at the bottom, and simply use a list box
+    //  we place an edit box at the bottom, and simply use a chat box
     //  to display previous commands, everything blends so the user will
     //  think this is all one window!
     d_console_edit_box = tgui::EditBox::Ptr(gui);
@@ -49,16 +49,15 @@ void ConsoleManager::init()
     d_console_edit_box->setText("> ");
     
 
-    d_console_command_list = tgui::ListBox::Ptr(gui);
+    d_console_command_list = tgui::ChatBox::Ptr(gui);
     d_console_command_list->load("TGUI/widgets/black.conf");
     d_console_command_list->setSize(400,180);
     d_console_command_list->setPosition(0,0);
     d_console_command_list->removeScrollbar();
-    d_console_command_list->setMaximumItems(COMMAND_COUNT+1);
-    d_console_command_list->setItemHeight(15);
-    for(int i = 0; i < COMMAND_COUNT; i++) {
-        d_console_command_list->addItem(" ", i);
-    }
+    d_console_command_list->setLinesStartFromBottom(true);
+    d_console_command_list->setLineLimit(COMMAND_COUNT+1);
+    d_console_command_list->setTextSize(13);
+    d_console_command_list->setTextColor(d_console_edit_box->getTextColor());
 
     //set input box in focus so user does not have to click
     d_console_edit_box->focus();
@@ -92,16 +91,7 @@ void ConsoleManager::render()
 
 void ConsoleManager::translateCommandsUp()
 {
-    //move all commands up one to simulate a normal console
-    for(int i = 0; i < COMMAND_COUNT; i++) {
-        std::string next = (d_console_command_list->getItem(i+1)).toAnsiString();
-        d_console_command_list->changeItem(i,
-            next);
-    }
-    //change the last element to what the user just entered
-    d_console_command_list->changeItem(
-        COMMAND_COUNT, 
-        d_console_edit_box->getText().getData()
-    );
+    d_console_command_list->
+        addLine(d_console_edit_box->getText().getData());
     d_console_edit_box->setText("> ");
 }
