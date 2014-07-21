@@ -3,12 +3,12 @@
 # Once done this will define
 #
 # TGUI_FOUND
-# TGUI_INCLUDE_PATH
+# TGUI_INCLUDE_DIR
 # TGUI_LIBRARY
 #
 
 IF (WIN32)
-    FIND_PATH( TGUI_INCLUDE_PATH TGUI/TGUI.hpp
+    FIND_PATH( TGUI_INCLUDE_DIR TGUI/TGUI.hpp
         $ENV{TGUI_ROOT}/include
         ${TGUI_ROOT}/include
         ${PROJECT_SOURCE_DIR}/src/nvgl/TGUI/include
@@ -30,15 +30,17 @@ IF (WIN32)
         ${PROJECT_SOURCE_DIR}/TGUI/lib
         DOC "The TGUI debug library")
 ELSE (WIN32)
-    FIND_PATH( TGUI_INCLUDE_PATH TGUI/TGUI.hpp
+    FIND_PATH( TGUI_INCLUDE_DIR TGUI/TGUI.hpp
+        ${TGUI_ROOT}/include
         /usr/include
         /usr/local/include
         /sw/include
         /opt/local/include
         DOC "The directory where TGUI.hpp resides")
     FIND_LIBRARY( TGUI_LIBRARY_RELEASE
-        NAMES TGUI
+        NAMES tgui
         PATHS
+        ${TGUI_ROOT}/lib
         /usr/lib64
         /usr/lib
         /usr/local/lib64
@@ -47,8 +49,9 @@ ELSE (WIN32)
         /opt/local/lib
         DOC "The TGUI release library")
 	FIND_LIBRARY( TGUI_LIBRARY_DEBUG
-		NAMES TGUI-D
+		NAMES tguid
 		PATHS
+        ${TGUI_ROOT}/lib
 		/usr/lib64
 		/usr/lib
 		/usr/local/lib64
@@ -58,12 +61,14 @@ ELSE (WIN32)
 		DOC "The TGUI debug library")
 ENDIF (WIN32)
 
-set(TGUI_LIBRARY optimized ${TGUI_LIBRARY_RELEASE} debug ${TGUI_LIBRARY_DEBUG})
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(TGUI_LIBRARY ${TGUI_LIBRARY_DEBUG})
+else()
+    set(TGUI_LIBRARY ${TGUI_LIBRARY_RELEASE})
+endif()
 
-IF (TGUI_INCLUDE_PATH)
-    SET( TGUI_FOUND TRUE CACHE STRING "Set to true if TGUI is found, false otherwise")
-ELSE (TGUI_INCLUDE_PATH)
-    SET( TGUI_FOUND FALSE CACHE STRING "Set to true if TGUI is found, false otherwise")
-ENDIF (TGUI_INCLUDE_PATH)
+include(FindPackageHandleStandardArgs)
 
-MARK_AS_ADVANCED( TGUI_FOUND )
+find_package_handle_standard_args(TGUI DEFAULT_MSG TGUI_LIBRARY TGUI_INCLUDE_DIR)
+
+MARK_AS_ADVANCED(TGUI_INCLUDE_DIR TGUI_LIBRARY)

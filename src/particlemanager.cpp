@@ -10,7 +10,7 @@
 #include "particle.hpp"
 #include "particlemanager.hpp"
 #ifdef USE_OPENCL
-#include "opencl\cl_particle_updater.hpp"
+#include "opencl/cl_particle_updater.hpp"
 #endif
 
 const GLfloat ParticleManager::g_vertex_buffer_data[] = {
