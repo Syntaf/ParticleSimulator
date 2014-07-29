@@ -225,7 +225,7 @@ void ParticleManager::updateParticles(const float& delta, glm::mat4& ProjectionM
 
                     p.cameradistance = glm::length2( p.pos - CameraPosition );
 
-                    fillParticleGlBuffers(i, ParticlesCount);
+                    fillParticleGlBuffers(int(i), ParticlesCount);
                 }else{
                     // Particles that just died will be put at the end of the buffer in SortParticles();
                     p.cameradistance = -1.0f;
@@ -312,7 +312,7 @@ unsigned char ParticleManager::clamp(float value, float min, float max)
         result = min;
     else
         result = value;
-    return result;
+    return unsigned char(result);
 }
 
 float ParticleManager::Distance(glm::vec3 const& v1, glm::vec3 const& v2)
