@@ -32,6 +32,7 @@ set(HEADERS
         src/common/texture.hpp
         src/common/controls.hpp
         src/guiconsole/console.hpp
+		src/guiconsole/consolecommands.hpp
         src/particle.hpp
 		src/particlemanager.hpp
 		src/app.hpp

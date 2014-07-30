@@ -13,6 +13,7 @@ class ConsoleManager {
         void bindParentWindow(sf::Window *Parent);
 
         void handleEvent(sf::Event& event,bool& run);
+        void handleCommand();
 
         void render();
     private:

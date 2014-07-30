@@ -1,6 +1,7 @@
 #include <TGUI/TGUI.hpp>
 #include <SFML/OpenGL.hpp>
 #include "console.hpp"
+#include "consolecommands.hpp"
 #include <cstdlib>
 
 ConsoleManager::ConsoleManager(sf::Window *Parent):
@@ -47,7 +48,7 @@ void ConsoleManager::init()
 
     d_console_command_list = tgui::ChatBox::Ptr(gui);
     d_console_command_list->load("TGUI/widgets/black.conf");
-    d_console_command_list->setSize(400,180);
+    d_console_command_list->setSize(400,182);
     d_console_command_list->setPosition(0,0);
     d_console_command_list->removeScrollbar();
     d_console_command_list->setLinesStartFromBottom(true);
@@ -65,11 +66,24 @@ void ConsoleManager::handleEvent(sf::Event& event, bool& run)
     {
         if(event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
             run = false;
-        if(event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Return)
-            translateCommandsUp();
+        if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Return) {
+            handleCommand();
+        }
         //pass event to all widgets
         gui.handleEvent(event);
     }
+}
+
+void ConsoleManager::handleCommand()
+{
+    std::string command = d_console_edit_box->getText().toAnsiString();
+    if(!isValidCommandKey(command.substr(2,command.size()))) {
+        d_console_command_list->
+            addLine(d_console_edit_box->getText().getData());
+        d_console_command_list->addLine(sf::String("invalid command"));
+        d_console_edit_box->setText("> ");
+    }else
+        translateCommandsUp();
 }
 
 void ConsoleManager::render()
