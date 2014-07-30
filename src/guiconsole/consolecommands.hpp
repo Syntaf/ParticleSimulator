@@ -4,18 +4,22 @@
 #include <string>
 #include <algorithm>
 
-//valid console commands
-std::string valid_command[] = {
-    "exit",
-    "set",
-    "get"
-};
+namespace consolecommands {
+    //valid console commands
+    std::string valid_command[] = {
+        "exit",
+        "set",
+        "get"
+    };
 
-bool isValidCommandKey(std::string key) 
-{
-    int comm = std::distance(key.begin(), std::find(key.begin(), key.end(), ' '));
-    std::cout << comm << std::endl;
-    return false;
+    bool isValidCommandKey(std::string key) 
+    {
+        for(std::size_t i=0; i<sizeof(valid_command)/sizeof(std::string); i++) {
+            if (key == valid_command[i])
+                return true;
+        }
+        return false;
+    }
 }
 
 #endif

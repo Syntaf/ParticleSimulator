@@ -3,6 +3,7 @@
 #include "console.hpp"
 #include "consolecommands.hpp"
 #include <cstdlib>
+#include <algorithm>
 
 ConsoleManager::ConsoleManager(sf::Window *Parent):
     d_parent_window(Parent)
@@ -41,19 +42,19 @@ void ConsoleManager::init()
     d_console_edit_box->load("TGUI/widgets/black.conf");
     d_console_edit_box->setSize(400,20);
     d_console_edit_box->setPosition(0,180);
-    d_console_edit_box->setTextSize(13);
+    d_console_edit_box->setTextSize(12);
     d_console_edit_box->setMaximumCharacters(32);
     d_console_edit_box->setText("> ");
     
 
     d_console_command_list = tgui::ChatBox::Ptr(gui);
     d_console_command_list->load("TGUI/widgets/black.conf");
-    d_console_command_list->setSize(400,182);
+    d_console_command_list->setSize(400,180);
     d_console_command_list->setPosition(0,0);
     d_console_command_list->removeScrollbar();
     d_console_command_list->setLinesStartFromBottom(true);
     d_console_command_list->setLineLimit(COMMAND_COUNT+1);
-    d_console_command_list->setTextSize(13);
+    d_console_command_list->setTextSize(12);
     d_console_command_list->setTextColor(d_console_edit_box->getTextColor());
 
     //set input box in focus so user does not have to click
@@ -77,13 +78,25 @@ void ConsoleManager::handleEvent(sf::Event& event, bool& run)
 void ConsoleManager::handleCommand()
 {
     std::string command = d_console_edit_box->getText().toAnsiString();
-    if(!isValidCommandKey(command.substr(2,command.size()))) {
+    //if the command is not valid, write error message and translate everything up
+    //currently every commands string has a '> ' attached, so grab everything after
+
+    std::string command_key = command.substr(
+        2, 
+        std::distance(
+            command.begin()+2, 
+            std::find(command.begin()+2, command.end(), ' ')
+        )
+    );
+
+    if(!consolecommands::isValidCommandKey(command_key)) {
         d_console_command_list->
             addLine(d_console_edit_box->getText().getData());
         d_console_command_list->addLine(sf::String("invalid command"));
         d_console_edit_box->setText("> ");
-    }else
+    }else{
         translateCommandsUp();
+    }
 }
 
 void ConsoleManager::render()
