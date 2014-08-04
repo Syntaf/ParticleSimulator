@@ -9,13 +9,15 @@ namespace consolecommands {
     std::string valid_command[] = {
         "exit",
         "set",
-        "get"
+        "get",
+        "boom"
     };
 
     enum Key {
         EXIT=0,
         SET,
-        GET
+        GET,
+        BOOM
     };
 
     bool isValidCommandKey(std::string key, Key& k) 

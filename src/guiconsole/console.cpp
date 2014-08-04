@@ -108,6 +108,9 @@ void ConsoleManager::handleCommand()
             case consolecommands::EXIT:
                 App::procClose();
                 break;
+            case consolecommands::BOOM:
+                
+                break;
         }
         translateCommandsUp();
     }
