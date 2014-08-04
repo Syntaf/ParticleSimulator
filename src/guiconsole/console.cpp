@@ -1,4 +1,5 @@
 #include <TGUI/TGUI.hpp>
+#include "../app.hpp"
 #include <SFML/OpenGL.hpp>
 #include "console.hpp"
 #include "consolecommands.hpp"
@@ -81,7 +82,7 @@ void ConsoleManager::handleCommand()
     //if the command is not valid, write error message and translate everything up
     //currently every commands string has a '> ' attached, so grab everything after
 
-    std::string command_key = command.substr(
+    std::string command_sub_string = command.substr(
         2, 
         std::distance(
             command.begin()+2, 
@@ -89,12 +90,25 @@ void ConsoleManager::handleCommand()
         )
     );
 
-    if(!consolecommands::isValidCommandKey(command_key)) {
+    consolecommands::Key command_key;
+
+    if(!consolecommands::isValidCommandKey(command_sub_string, command_key)) {
         d_console_command_list->
             addLine(d_console_edit_box->getText().getData());
         d_console_command_list->addLine(sf::String("invalid command"));
         d_console_edit_box->setText("> ");
     }else{
+        switch(command_key) {
+            case consolecommands::GET:
+                std::cout << std::endl << "GET" << std::endl;
+                break;
+            case consolecommands::SET:
+                std::cout << std::endl << "SET" << std::endl;
+                break;
+            case consolecommands::EXIT:
+                App::procClose();
+                break;
+        }
         translateCommandsUp();
     }
 }

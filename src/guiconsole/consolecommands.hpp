@@ -12,11 +12,19 @@ namespace consolecommands {
         "get"
     };
 
-    bool isValidCommandKey(std::string key) 
+    enum Key {
+        EXIT=0,
+        SET,
+        GET
+    };
+
+    bool isValidCommandKey(std::string key, Key& k) 
     {
         for(std::size_t i=0; i<sizeof(valid_command)/sizeof(std::string); i++) {
-            if (key == valid_command[i])
+            if (key == valid_command[i]) {
+                k = Key(i);
                 return true;
+            }
         }
         return false;
     }

@@ -25,6 +25,10 @@ class App{
         //  and handle user input. the most important part of the class
         void run();
 
+        //this is an exit method to be used for the console window, specifically to set running
+        //to false
+        static void procClose();
+
     private:
         //main window to render to
         sf::Window d_main_window;
@@ -50,7 +54,7 @@ class App{
         sf::Clock fps_clock;
 
         //loop variables
-        bool running;
+        static bool running;
         bool pressed;
         float fps_last_time;
 };

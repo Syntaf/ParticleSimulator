@@ -19,8 +19,10 @@
 #include "opencl/cl_particle_updater.hpp"
 #endif
 
+bool App::running=true;
+
 App::App(sf::VideoMode mode):
-    running(true), pressed(false), fps_last_time(0.0f)
+    pressed(false), fps_last_time(0.0f)
 {
     d_main_window.create(mode,
         "Particle Simulator",
@@ -158,4 +160,9 @@ void App::run()
         fps_last_time = fps_current_time;
         std::cout << "\r" << fps;
     }
+}
+
+void App::procClose() 
+{
+    running = false;
 }
