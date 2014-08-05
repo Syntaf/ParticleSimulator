@@ -10,13 +10,19 @@ class ConsoleManager {
         ConsoleManager();
         ~ConsoleManager(){}
 
+        //initialization functions
         void init();
         void bindParentWindow(sf::Window *Parent);
         void bindParticleManager(ParticleManager *Particlemanager);
 
+        //handle any events coming into the console window
+        //  also handle commands inputed into console
         void handleEvent(sf::Event& event,bool& run);
         void handleCommand();
 
+        //print any input to our console, new lines are
+        //  denoted as '%' characters as opposed to \n in
+        //  the standard output stream.
         void printToConsole(const std::string& text);
 
         void render();

@@ -100,7 +100,7 @@ void ConsoleManager::handleCommand()
     if(!consolecommands::isValidCommandKey(command_sub_string, command_key)) {
         d_console_command_list->
             addLine(d_console_edit_box->getText().getData());
-        d_console_command_list->addLine(sf::String("invalid command"));
+        printToConsole("Invalid Command");
         d_console_edit_box->setText("> ");
     }else{
         switch(command_key) {
@@ -114,7 +114,7 @@ void ConsoleManager::handleCommand()
                 App::procClose();
                 break;
             case consolecommands::HELP:
-                printToConsole("List of available commands:%GET%SET%EXIT");
+                printToConsole("List of available commands:%GET <var>%SET <var>%EXIT");
                 break;
         }
         translateCommandsUp();
@@ -139,6 +139,7 @@ void ConsoleManager::translateCommandsUp()
 
 void ConsoleManager::printToConsole(const std::string& text) 
 {
+    //a very weird way parsing the input and adding new lines to the console when a '%' is found
     auto Iter = std::find(text.begin(), text.end(), '%');
     std::string line = text.substr(0,std::distance(text.begin(), Iter));
     Iter++;
