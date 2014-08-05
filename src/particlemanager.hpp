@@ -35,6 +35,7 @@ class ParticleManager{
         //draw all particles to the screen
         void drawParticles();
 
+
         //set functions
 
     private:

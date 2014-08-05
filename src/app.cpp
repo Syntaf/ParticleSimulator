@@ -72,6 +72,10 @@ bool App::initGL()
     }
     //create our particle manager class
     d_particles_manager = new ParticleManager(&d_main_window);
+
+    //bind particle manager to console window
+    d_console_window->bindParticleManager(d_particles_manager);
+
     //generate particle manager GL buffers
     d_particles_manager->genGlBuffers();
 

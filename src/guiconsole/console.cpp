@@ -30,6 +30,11 @@ void ConsoleManager::bindParentWindow(sf::Window *Parent)
     d_parent_window = Parent;
 }
 
+void ConsoleManager::bindParticleManager(ParticleManager *Particlemanager) 
+{
+    d_particle_manager = Particlemanager;
+}
+
 void ConsoleManager::init()
 {
     //here we initialize the gui objects. now TGUI, or any other
@@ -108,8 +113,8 @@ void ConsoleManager::handleCommand()
             case consolecommands::EXIT:
                 App::procClose();
                 break;
-            case consolecommands::BOOM:
-                
+            case consolecommands::HELP:
+                printToConsole("List of available commands:%GET%SET%EXIT");
                 break;
         }
         translateCommandsUp();
@@ -130,4 +135,32 @@ void ConsoleManager::translateCommandsUp()
     d_console_command_list->
         addLine(d_console_edit_box->getText().getData());
     d_console_edit_box->setText("> ");
+}
+
+void ConsoleManager::printToConsole(const std::string& text) 
+{
+    auto Iter = std::find(text.begin(), text.end(), '%');
+    std::string line = text.substr(0,std::distance(text.begin(), Iter));
+    Iter++;
+    d_console_command_list->addLine(sf::String(line));
+    while(1) {
+        std::size_t start = std::distance(text.begin(),Iter);
+        auto IterEnd = std::find(text.begin()+start, text.end(), '%');
+
+        std::cout << *IterEnd << std::endl;
+
+        if(IterEnd == text.end()) {
+            std::string sline = text.substr(std::distance(text.begin(), text.begin()+start), std::distance(text.begin()+start, IterEnd));
+            d_console_command_list->addLine(sf::String(sline));
+            return;
+        }
+
+        std::string sline = text.substr(std::distance(text.begin(),text.begin()+start), std::distance(text.begin()+start,IterEnd));
+
+        Iter = IterEnd;
+        ++Iter;
+
+        d_console_command_list->addLine(sf::String(sline));
+
+    }
 }

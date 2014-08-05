@@ -10,14 +10,14 @@ namespace consolecommands {
         "exit",
         "set",
         "get",
-        "boom"
+        "help"
     };
 
     enum Key {
         EXIT=0,
         SET,
         GET,
-        BOOM
+        HELP
     };
 
     bool isValidCommandKey(std::string key, Key& k) 

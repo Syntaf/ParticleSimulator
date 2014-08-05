@@ -2,6 +2,7 @@
 #define CONSOLE_H_
 
 #include <TGUI/TGUI.hpp>
+#include "../particlemanager.hpp"
 
 class ConsoleManager {
     public:
@@ -11,9 +12,12 @@ class ConsoleManager {
 
         void init();
         void bindParentWindow(sf::Window *Parent);
+        void bindParticleManager(ParticleManager *Particlemanager);
 
         void handleEvent(sf::Event& event,bool& run);
         void handleCommand();
+
+        void printToConsole(const std::string& text);
 
         void render();
     private:
@@ -22,6 +26,7 @@ class ConsoleManager {
         //console window and pointer to main window
         sf::RenderWindow d_console_window;
         sf::Window *d_parent_window;
+        ParticleManager *d_particle_manager;
         void translateCommandsUp();
 
         tgui::Gui gui;
