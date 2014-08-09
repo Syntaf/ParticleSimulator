@@ -142,7 +142,8 @@ void ConsoleManager::printToConsole(const std::string& text)
     //a very weird way parsing the input and adding new lines to the console when a '%' is found
     auto Iter = std::find(text.begin(), text.end(), '%');
     std::string line = text.substr(0,std::distance(text.begin(), Iter));
-    Iter++;
+    if(Iter != text.end())
+        Iter++;
     d_console_command_list->addLine(sf::String(line));
     while(1) {
         std::size_t start = std::distance(text.begin(),Iter);
