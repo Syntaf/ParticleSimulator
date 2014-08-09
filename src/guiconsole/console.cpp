@@ -105,10 +105,8 @@ void ConsoleManager::handleCommand()
     }else{
         switch(command_key) {
             case consolecommands::GET:
-                std::cout << std::endl << "GET" << std::endl;
                 break;
             case consolecommands::SET:
-                std::cout << std::endl << "SET" << std::endl;
                 break;
             case consolecommands::EXIT:
                 App::procClose();
@@ -148,8 +146,6 @@ void ConsoleManager::printToConsole(const std::string& text)
     while(1) {
         std::size_t start = std::distance(text.begin(),Iter);
         auto IterEnd = std::find(text.begin()+start, text.end(), '%');
-
-        std::cout << *IterEnd << std::endl;
 
         if(IterEnd == text.end()) {
             std::string sline = text.substr(std::distance(text.begin(), text.begin()+start), std::distance(text.begin()+start, IterEnd));
