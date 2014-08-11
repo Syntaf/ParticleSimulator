@@ -7,6 +7,18 @@ A particle simulator written with C++ SFML OpenGL.
 
 Or see the full video here: https://vimeo.com/98855736  (**Password:** particles)
 
+* [Installation](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#installation)
+    * [Required Libraries](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#required-libraries)
+    * [Compiler Support](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#compiler-support)
+    * [Build](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#build)
+      * [Windows](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#windows)
+      * [Linux](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#linux)
+      * [OS X](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#os-x-mac)
+* [To-Do](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#to-do)
+
+
+#Installation#
+
 **Required Libraries**
 --------------------------------------------------------
 
