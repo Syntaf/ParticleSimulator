@@ -9,7 +9,7 @@ struct Particle{
     glm::vec3 pos, speed;            //position, speed
     std::vector<glm::vec3> force;    //total force
     unsigned char r,g,b,a;            //color
-    float mass,size;
+    float size;
     float life;                        //remaining life of a particle, if <0 it's super dead
     float cameradistance;            //squared distance to camera : -1.0f if dead
 

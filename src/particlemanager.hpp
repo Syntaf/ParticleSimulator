@@ -12,7 +12,7 @@ class ParticleManager{
     public:
         ParticleManager(sf::Window* parent_window, int maxparticles=200000, 
             float drag=20.0f, float mass=50.0f,
-            float size=0.15f, float mouseforce=5000);
+            float size=0.15f, float mouseforce=50000);
         ~ParticleManager();
 
         //particle initialization functions

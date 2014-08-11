@@ -55,7 +55,6 @@ void ParticleManager::initParticles()
             glm::vec2 d2Pos = glm::vec2(j*0.06, i*0.06) + glm::vec2(-20.0f,-20.0f);
             particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-70);
 
-            particle.mass= d_MASS;
             particle.life = 1000.0f;
             particle.cameradistance = -1.0f;
 
@@ -209,11 +208,11 @@ void ParticleManager::updateParticles(const float& delta, glm::mat4& ProjectionM
                 if (p.life > 0.0f){
 
                     p.addForce(
-                        (glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500, -70.0) - p.pos) * (float)(pressed*50000/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y, -70.0f),p.pos)+10,2))));
+                        (glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500, -70.0) - p.pos) * (float)(pressed*d_MOUSEFORCE/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y, -70.0f),p.pos)+10,2))));
                     p.addForce( -p.speed*d_DRAG);
 
                     glm::vec3 prevPosition = p.pos;
-                    p.pos = p.pos + p.speed*(float)delta + 0.5f*p.getTotalForce()/p.mass*(float)pow(delta,2);
+                    p.pos = p.pos + p.speed*(float)delta + 0.5f*p.getTotalForce()/d_MASS*(float)pow(delta,2);
                     p.speed = (p.pos - prevPosition)/(float)delta;
 
                     p.clearForce();
