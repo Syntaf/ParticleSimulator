@@ -129,7 +129,7 @@ void ConsoleManager::handleCommand()
                 App::procClose();
                 break;
             case consolecommands::HELP:
-                printToConsole("List of available commands:%GET <var>%SET <var>%EXIT");
+                printToConsole("List of available commands:%get <drag/mass/mouseforce/particlecount>%    get value of variable%set <drag/mass/mouseforce/particlecount>%     set value of variable%reset%    reset all particles on screen%exit%    exit program");
                 break;
             case consolecommands::RESET:
                 d_particle_manager->resetParticles();
