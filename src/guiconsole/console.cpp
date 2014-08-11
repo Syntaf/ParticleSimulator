@@ -4,6 +4,7 @@
 #include "console.hpp"
 #include "consolecommands.hpp"
 #include <cstdlib>
+#include <sstream>
 #include <algorithm>
 
 ConsoleManager::ConsoleManager(sf::Window *Parent):
@@ -83,17 +84,28 @@ void ConsoleManager::handleEvent(sf::Event& event, bool& run)
 
 void ConsoleManager::handleCommand()
 {
+    //get current text inside console
     std::string command = d_console_edit_box->getText().toAnsiString();
-    //if the command is not valid, write error message and translate everything up
-    //currently every commands string has a '> ' attached, so grab everything after
 
-    std::string command_sub_string = command.substr(
-        2, 
+    //determine distance from '>' character to end of first command
+    std::size_t dist_command_sub_string = 
         std::distance(
             command.begin()+2, 
             std::find(command.begin()+2, command.end(), ' ')
-        )
+        );
+
+    //get substring holding just the command
+    std::string command_sub_string = command.substr(
+        2, 
+        dist_command_sub_string
     );
+    
+    //if there is more after the command, set command to JUST that
+    if(dist_command_sub_string+2 != command.length()) {
+        command = command.substr(dist_command_sub_string+3,
+            std::distance(command.begin()+dist_command_sub_string+3, command.end())
+            );
+    }
 
     consolecommands::Key command_key;
 
@@ -107,6 +119,7 @@ void ConsoleManager::handleCommand()
             case consolecommands::GET:
                 break;
             case consolecommands::SET:
+                handleSetCommand(command);
                 break;
             case consolecommands::EXIT:
                 App::procClose();
@@ -161,4 +174,19 @@ void ConsoleManager::printToConsole(const std::string& text)
         d_console_command_list->addLine(sf::String(sline));
 
     }
+}
+
+void ConsoleManager::handleSetCommand(const std::string& str)
+{
+    consolecommands::VarKey key;
+    if(!consolecommands::isValidCommandVariable(str, key)) {
+        std::stringstream ss;
+        ss << "Variable " << str << " not found";
+        printToConsole(ss.str());
+    }
+}
+
+void ConsoleManager::handleGetCommand(const std::string& str)
+{
+
 }

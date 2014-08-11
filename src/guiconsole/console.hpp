@@ -33,7 +33,10 @@ class ConsoleManager {
         sf::RenderWindow d_console_window;
         sf::Window *d_parent_window;
         ParticleManager *d_particle_manager;
+
         void translateCommandsUp();
+        void handleSetCommand(const std::string& str);
+        void handleGetCommand(const std::string& str);
 
         tgui::Gui gui;
         tgui::EditBox::Ptr d_console_edit_box;

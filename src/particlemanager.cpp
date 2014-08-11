@@ -319,3 +319,18 @@ float ParticleManager::Distance(glm::vec3 const& v1, glm::vec3 const& v2)
 {
     return sqrt(pow((v2.x-v1.x),2) + pow((v2.y-v1.y),2));
 }
+
+void ParticleManager::setDrag(const float& val)
+{
+    d_DRAG = val;
+}
+
+void ParticleManager::setMass(const float& val)
+{
+    d_MASS = val;
+}
+
+void ParticleManager::setMouseForce(const float& val)
+{
+    d_MOUSEFORCE = val;
+}
