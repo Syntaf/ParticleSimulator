@@ -10,7 +10,8 @@ namespace consolecommands {
         "exit",
         "set",
         "get",
-        "help"
+        "help",
+        "reset"
     };
 
     std::string valid_variables[] = {
@@ -23,7 +24,8 @@ namespace consolecommands {
         EXIT=0,
         SET,
         GET,
-        HELP
+        HELP,
+        RESET
     };
 
     enum VarKey {

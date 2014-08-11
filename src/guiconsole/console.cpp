@@ -130,6 +130,9 @@ void ConsoleManager::handleCommand()
             case consolecommands::HELP:
                 printToConsole("List of available commands:%GET <var>%SET <var>%EXIT");
                 break;
+            case consolecommands::RESET:
+                d_particle_manager->resetParticles();
+                break;
         }
     }
 }

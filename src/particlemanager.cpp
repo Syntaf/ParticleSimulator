@@ -333,3 +333,26 @@ void ParticleManager::setMouseForce(const float& val)
 {
     d_MOUSEFORCE = val;
 }
+
+void ParticleManager::resetParticles()
+{
+    d_particles_container.clear();
+    for(int i=0; i<(int)sqrt(d_MAXPARTICLES); i++) {
+        for(int j=0; j<(int)sqrt(d_MAXPARTICLES); j++) {
+            Particle particle;
+            glm::vec2 d2Pos = glm::vec2(j*0.06, i*0.06) + glm::vec2(-20.0f,-20.0f);
+            particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-70);
+
+            particle.life = 1000.0f;
+            particle.cameradistance = -1.0f;
+
+            particle.r = 255;
+            particle.g = 0;
+            particle.b = 0;
+            particle.a = 255;
+
+            particle.size = d_SIZE;
+            d_particles_container.push_back(particle);
+        }
+    }
+}

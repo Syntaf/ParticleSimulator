@@ -35,6 +35,8 @@ class ParticleManager{
         //draw all particles to the screen
         void drawParticles();
 
+        //reset all particles back onto screen
+        void resetParticles();
 
         //set functions
         void setDrag(const float& val);
