@@ -115,6 +115,7 @@ void ConsoleManager::handleCommand()
         printToConsole("Invalid Command");
         d_console_edit_box->setText("> ");
     }else{
+        translateCommandsUp();
         switch(command_key) {
             case consolecommands::GET:
                 break;
@@ -128,7 +129,6 @@ void ConsoleManager::handleCommand()
                 printToConsole("List of available commands:%GET <var>%SET <var>%EXIT");
                 break;
         }
-        translateCommandsUp();
     }
 }
 
