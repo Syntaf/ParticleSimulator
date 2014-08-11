@@ -43,6 +43,11 @@ class ParticleManager{
         void setMass(const float& val);
         void setMouseForce(const float& val);
 
+        //get functions
+        float getDrag();
+        float getMass();
+        float getMouseForce();
+
     private:
         float Distance(glm::vec3 const& v1, glm::vec3 const& v2);
         unsigned char clamp(float value, float min, float max);

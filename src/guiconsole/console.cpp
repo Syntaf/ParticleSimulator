@@ -120,6 +120,7 @@ void ConsoleManager::handleCommand()
         translateCommandsUp();
         switch(command_key) {
             case consolecommands::GET:
+                handleGetCommand(command);
                 break;
             case consolecommands::SET:
                 handleSetCommand(command);
@@ -226,8 +227,8 @@ void ConsoleManager::handleSetCommand(const std::string& str)
             ss << value;
             float numeric_value;
             ss >> numeric_value;
-            if(numeric_value < 0) {
-                printToConsole("value cannot be negative wtf");
+            if(numeric_value <= 0) {
+                printToConsole("value cannot be negative or zero wtf");
                 return;
             }
             switch(key) {
@@ -247,5 +248,37 @@ void ConsoleManager::handleSetCommand(const std::string& str)
 
 void ConsoleManager::handleGetCommand(const std::string& str)
 {
+    //get substring holding just the str
+    std::string str_sub_string = str.substr(
+        0, 
+        std::distance(
+            str.begin(), 
+            std::find(str.begin(), str.end(), ' ')
+        )
+    );
 
+    consolecommands::VarKey key;
+    if(!consolecommands::isValidCommandVariable(str_sub_string, key)) {
+        if(str_sub_string.empty())
+            printToConsole("no variable specififed");
+        else {
+            std::stringstream ss;
+            ss << "variable " << str_sub_string << " not found";
+            printToConsole(ss.str());
+        }
+    }else{
+        std::stringstream ss;
+        switch(key) {
+            case consolecommands::DRAG:
+                ss << d_particle_manager->getDrag();
+            break;
+            case consolecommands::MASS:
+                ss << d_particle_manager->getMass();
+            break;
+            case consolecommands::MOUSEFORCE:
+                ss << d_particle_manager->getMouseForce();
+            break;
+        }
+        printToConsole(ss.str());
+    }
 }

@@ -356,3 +356,18 @@ void ParticleManager::resetParticles()
         }
     }
 }
+
+float ParticleManager::getDrag()
+{
+    return d_DRAG;
+}
+
+float ParticleManager::getMass()
+{
+    return d_MASS;
+}
+
+float ParticleManager::getMouseForce()
+{
+    return d_MOUSEFORCE;
+}
