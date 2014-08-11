@@ -47,6 +47,7 @@ class ParticleManager{
         float getDrag();
         float getMass();
         float getMouseForce();
+        int getParticleCount();
 
     private:
         float Distance(glm::vec3 const& v1, glm::vec3 const& v2);

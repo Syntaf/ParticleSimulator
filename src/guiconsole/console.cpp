@@ -241,6 +241,9 @@ void ConsoleManager::handleSetCommand(const std::string& str)
                 case consolecommands::MOUSEFORCE:
                     d_particle_manager->setMouseForce(numeric_value);
                 break;
+                case consolecommands::PARTICLECOUNT:
+                    printToConsole("command not yet supported, sorry!");
+                break;
             }
         }
     }
@@ -279,6 +282,8 @@ void ConsoleManager::handleGetCommand(const std::string& str)
             case consolecommands::MOUSEFORCE:
                 ss << std::fixed << d_particle_manager->getMouseForce() << "f";
             break;
+            case consolecommands::PARTICLECOUNT:
+                ss << d_particle_manager->getParticleCount();
         }
         printToConsole(ss.str());
     }

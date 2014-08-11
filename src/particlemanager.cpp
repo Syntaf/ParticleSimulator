@@ -371,3 +371,8 @@ float ParticleManager::getMouseForce()
 {
     return d_MOUSEFORCE;
 }
+
+int ParticleManager::getParticleCount()
+{
+    return d_MAXPARTICLES;
+}

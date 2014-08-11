@@ -17,7 +17,8 @@ namespace consolecommands {
     std::string valid_variables[] = {
         "drag",
         "mass",
-        "mouseforce"
+        "mouseforce",
+        "particlecount"
     };
 
     enum Key {
@@ -31,7 +32,8 @@ namespace consolecommands {
     enum VarKey {
         DRAG=0,
         MASS,
-        MOUSEFORCE
+        MOUSEFORCE,
+        PARTICLECOUNT
     };
 
     bool isValidCommandKey(const std::string& key, Key& k) 
