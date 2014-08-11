@@ -182,14 +182,62 @@ void ConsoleManager::printToConsole(const std::string& text)
 
 void ConsoleManager::handleSetCommand(const std::string& str)
 {
+    //determine distance from '>' character to end of first command
+    std::size_t dist_str_sub_string = 
+        std::distance(
+            str.begin(), 
+            std::find(str.begin(), str.end(), ' ')
+        );
+
+    //get substring holding just the str
+    std::string str_sub_string = str.substr(
+        0, 
+        dist_str_sub_string
+    );
+
+    std::string value;
+
+    if(dist_str_sub_string != str.length()) {
+        //get substring holding just the command
+        value = str.substr(
+            dist_str_sub_string,
+            str.length() - dist_str_sub_string
+        );
+    }else
+        value = "";
+
     consolecommands::VarKey key;
-    if(!consolecommands::isValidCommandVariable(str, key)) {
-        if(str.empty())
+    if(!consolecommands::isValidCommandVariable(str_sub_string, key)) {
+        if(str_sub_string.empty())
             printToConsole("no variable specififed");
         else {
             std::stringstream ss;
-            ss << "variable " << str << " not found";
+            ss << "variable " << str_sub_string << " not found";
             printToConsole(ss.str());
+        }
+    }else{
+        std::stringstream ss;
+        if(value.empty()){
+            printToConsole("no value specified");
+        }else{
+            ss << value;
+            float numeric_value;
+            ss >> numeric_value;
+            if(numeric_value < 0) {
+                printToConsole("value cannot be negative wtf");
+                return;
+            }
+            switch(key) {
+                case consolecommands::DRAG:
+                    d_particle_manager->setDrag(numeric_value);
+                break;
+                case consolecommands::MASS:
+                    d_particle_manager->setMass(numeric_value);
+                break;
+                case consolecommands::MOUSEFORCE:
+                    d_particle_manager->setMouseForce(numeric_value);
+                break;
+            }
         }
     }
 }
