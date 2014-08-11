@@ -105,6 +105,8 @@ void ConsoleManager::handleCommand()
         command = command.substr(dist_command_sub_string+3,
             std::distance(command.begin()+dist_command_sub_string+3, command.end())
             );
+    }else{
+        command = "";   
     }
 
     consolecommands::Key command_key;
@@ -156,6 +158,8 @@ void ConsoleManager::printToConsole(const std::string& text)
     if(Iter != text.end())
         Iter++;
     d_console_command_list->addLine(sf::String(line));
+    if(Iter == text.end())
+        return;
     while(1) {
         std::size_t start = std::distance(text.begin(),Iter);
         auto IterEnd = std::find(text.begin()+start, text.end(), '%');
@@ -180,9 +184,13 @@ void ConsoleManager::handleSetCommand(const std::string& str)
 {
     consolecommands::VarKey key;
     if(!consolecommands::isValidCommandVariable(str, key)) {
-        std::stringstream ss;
-        ss << "Variable " << str << " not found";
-        printToConsole(ss.str());
+        if(str.empty())
+            printToConsole("no variable specififed");
+        else {
+            std::stringstream ss;
+            ss << "variable " << str << " not found";
+            printToConsole(ss.str());
+        }
     }
 }
 
