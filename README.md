@@ -102,16 +102,16 @@ OS X (Mac)
 
 #Console Commands#
 The console in this application supports a number of commands aimed at allowing a ton of user interaction and fun. The available commands are:
-   * get <>
-   * set <> <>
-   * help
-   * reset
-   * exit
+   * `get <>`
+   * `set <> <>`
+   * `help`
+   * `reset`
+   * `exit`
 Get and set both require a name of a variable to either get/set, and set additionally requires a value to pass. The currently support variables are:
-   * drag
-   * mass
-   * mouseforce
-   * particlecount (*get* **only** for now)
+   * `drag`
+   * `mass`
+   * `mouseforce`
+   * `particlecount` (*get* **only** for now)
 An example run of the console might look like:
 ````
 > get drag
