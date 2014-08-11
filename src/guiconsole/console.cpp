@@ -268,15 +268,16 @@ void ConsoleManager::handleGetCommand(const std::string& str)
         }
     }else{
         std::stringstream ss;
+        ss.precision(2);
         switch(key) {
             case consolecommands::DRAG:
-                ss << d_particle_manager->getDrag();
+                ss << std::fixed << d_particle_manager->getDrag() << "f";
             break;
             case consolecommands::MASS:
-                ss << d_particle_manager->getMass();
+                ss << std::fixed << d_particle_manager->getMass() << "f";
             break;
             case consolecommands::MOUSEFORCE:
-                ss << d_particle_manager->getMouseForce();
+                ss << std::fixed << d_particle_manager->getMouseForce() << "f";
             break;
         }
         printToConsole(ss.str());
