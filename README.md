@@ -1,15 +1,15 @@
 ParticleSimulator
 =================
 
-* [Installation](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#installation)
-    * [Required Libraries](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#required-libraries)
-    * [Compiler Support](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#compiler-support)
-    * [Build](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#build)
-      * [Windows](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#windows)
-      * [Linux](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#linux)
-      * [OS X](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#os-x-mac)
-* [Console Commands](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#console-commands)
-* [To-Do](https://github.com/Syntaf/ParticleSimulator/tree/master/README.md#to-do)
+* [Installation](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#installation)
+    * [Required Libraries](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#required-libraries)
+    * [Compiler Support](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#compiler-support)
+    * [Build](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#build)
+      * [Windows](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#windows)
+      * [Linux](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#linux)
+      * [OS X](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#os-x-mac)
+* [Console Commands](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#console-commands)
+* [To-Do](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#to-do)
 
 A particle simulator written with C++ SFML OpenGL. 
 
