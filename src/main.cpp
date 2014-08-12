@@ -26,6 +26,8 @@
 #include "opencl/cl_particle_updater.hpp"
 #endif
 
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+
 int main(int argc, char* argv[]) {
 
 //debug is slow as fuck, make sure people are running on release

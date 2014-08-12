@@ -56,7 +56,7 @@ void ConsoleManager::init()
 
     d_console_command_list = tgui::ChatBox::Ptr(gui);
     d_console_command_list->load("TGUI/widgets/black.conf");
-    d_console_command_list->setSize(400,180);
+    d_console_command_list->setSize(400,185);
     d_console_command_list->setPosition(0,0);
     d_console_command_list->removeScrollbar();
     d_console_command_list->setLinesStartFromBottom(true);

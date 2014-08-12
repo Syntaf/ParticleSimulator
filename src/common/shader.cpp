@@ -6,19 +6,26 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <string.h>
+#include <sstream>
 #include <GL/glew.h>
 #include "shader.hpp"
+#include "../guiconsole/console.hpp"
 
 using namespace std;
 
-GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path){
+GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path, 
+                   ConsoleManager *out){
 
     // Create the shaders
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
     const unsigned char* version = (const unsigned char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
-    printf("Running GLSL Version %s\n",version);
+    std::stringstream ss;
+    ss << "running GLSL Version " << version;
+    out->printToConsole(ss.str());
+    ss.clear();
+    ss.str(std::string());
 
     // Read the Vertex Shader code from the file
     std::string VertexShaderCode;
@@ -29,7 +36,10 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
             VertexShaderCode += "\n" + Line;
         VertexShaderStream.close();
     }else{
-        printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
+        ss << "Impossible to open " << vertex_file_path << ". Are you in the right directory?";
+        out->printToConsole(ss.str());
+        ss.clear();
+        ss.str(std::string());
         return 0;
     }
 
@@ -47,7 +57,10 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
     int InfoLogLength;
 
     // Compile Vertex Shader
-    printf("Compiling shader : %s\n", vertex_file_path);
+    ss << "Compiling shader : " << vertex_file_path;
+    out->printToConsole(ss.str());
+    ss.clear();
+    ss.str(std::string());
     char const * VertexSourcePointer = VertexShaderCode.c_str();
     glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
     glCompileShader(VertexShaderID);
@@ -58,13 +71,22 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
     if ( InfoLogLength > 0 ){
         std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
         glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-        printf("%s\n", &VertexShaderErrorMessage[0]);
+        ss << &VertexShaderErrorMessage[0];
+        if(ss.rdbuf()->in_avail() > 0) {
+            out->printToConsole(ss.str());
+            ss.clear();
+            ss.str(std::string());
+    
+        }
     }
 
 
 
     // Compile Fragment Shader
-    printf("Compiling shader : %s\n", fragment_file_path);
+    ss << "Compiling shader : " << fragment_file_path;
+    out->printToConsole(ss.str());
+    ss.clear();
+    ss.str(std::string());
     char const * FragmentSourcePointer = FragmentShaderCode.c_str();
     glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
     glCompileShader(FragmentShaderID);
@@ -75,7 +97,12 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
     if ( InfoLogLength > 0 ){
         std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
         glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-        printf("%s\n", &FragmentShaderErrorMessage[0]);
+        ss << &FragmentShaderErrorMessage[0];
+        if(ss.rdbuf()->in_avail() > 0) {
+            out->printToConsole(ss.str());
+            ss.clear();
+            ss.str(std::string());
+        }
     }
 
 
@@ -93,9 +120,15 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
     if ( InfoLogLength > 0 ){
         std::vector<char> ProgramErrorMessage(InfoLogLength+1);
         glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-        printf("%s\n", &ProgramErrorMessage[0]);
+        ss << &ProgramErrorMessage[0];
+        if(ss.rdbuf()->in_avail() > 0) {
+            out->printToConsole(ss.str());
+            ss.clear();
+            ss.str(std::string());
+        }
     }
-
+    //move text to top of console
+    out->printToConsole("%%%%%%%%%");
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
 

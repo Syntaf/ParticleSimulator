@@ -67,7 +67,7 @@ bool App::initGL()
 {
     glewExperimental = true;
     if(glewInit() != GLEW_OK) {
-        fprintf(stderr, "Failed to initialize GLEW\n");
+        d_console_window->printToConsole("Failed to initialize GLEW");
         return false;
     }
     //create our particle manager class
@@ -80,11 +80,11 @@ bool App::initGL()
     d_particles_manager->genGlBuffers();
 
     //dark blue background
-    glClearColor(0.0f, 0.0f, 0.15f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.3f, 0.0f);
 
     //create and compile our GLSL program from the shaders
     d_program_id = LoadShaders("shaders/vertexshader.vert",
-        "shaders/fragmentshader.frag");
+        "shaders/fragmentshader.frag", d_console_window);
 
     //vertex shader locations
     d_cameraright_worldspace_id = glGetUniformLocation(d_program_id, "CameraRight_worldspace");
@@ -157,12 +157,6 @@ void App::run()
         d_console_window->render();
         d_main_window.display();
 #endif
-
-        //used for determining application performance
-        float fps_current_time = fps_clock.restart().asSeconds();
-        float fps = 1.f / (fps_current_time - (fps_current_time - fps_last_time));
-        fps_last_time = fps_current_time;
-        std::cout << "\r" << fps;
     }
 }
 
