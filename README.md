@@ -1,11 +1,26 @@
 ParticleSimulator
 =================
 
+* [Installation](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#installation)
+    * [Required Libraries](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#required-libraries)
+    * [Compiler Support](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#compiler-support)
+    * [Build](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#build)
+      * [Windows](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#windows)
+      * [Linux](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#linux)
+      * [OS X](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#os-x-mac)
+* [Console Commands](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#console-commands)
+* [To-Do](https://github.com/Syntaf/ParticleSimulator/tree/mGL_sync/README.md#to-do)
+
 A particle simulator written with C++ SFML OpenGL. 
 
 ![gif](http://i.imgur.com/xreESqX.gif)
 
 Or see the full video here: https://vimeo.com/98855736  (**Password:** particles)
+
+
+
+
+#Installation#
 
 **Required Libraries**
 --------------------------------------------------------
@@ -85,8 +100,29 @@ OS X (Mac)
 ----------
 *support coming soon*
 
-To-Do
--------------------
+#Console Commands#
+The console in this application supports a number of commands aimed at allowing a ton of user interaction and fun. The available commands are:
+   * `get <>`
+   * `set <> <>`
+   * `help`
+   * `reset`
+   * `exit`
+
+Get and set both require a name of a variable to either get/set, and set additionally requires a value to pass. The currently support variables are:
+
+   * `drag`
+   * `mass`
+   * `mouseforce`
+   * `particlecount` (*get* **only** for now)
+An example run of the console might look like:
+````
+> get drag
+20.f
+> set drag 50
+> get drag
+50.0f
+````
+#To-Do#
 - [x] Begin GUI development
 - [ ] Optimize particle container(chunking)
 - [x] Provide a CMake build system
