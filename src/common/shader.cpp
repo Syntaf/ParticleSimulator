@@ -16,6 +16,8 @@ using namespace std;
 GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path, 
                    ConsoleManager *out){
 
+    bool error_happened = false;
+
     // Create the shaders
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -73,6 +75,7 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
         glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
         ss << &VertexShaderErrorMessage[0];
         if(ss.rdbuf()->in_avail() > 0) {
+            error_happened = true;
             out->printToConsole(ss.str());
             ss.clear();
             ss.str(std::string());
@@ -99,6 +102,7 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
         glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
         ss << &FragmentShaderErrorMessage[0];
         if(ss.rdbuf()->in_avail() > 0) {
+            error_happened = true;
             out->printToConsole(ss.str());
             ss.clear();
             ss.str(std::string());
@@ -128,7 +132,10 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
         }
     }
     //move text to top of console
-    out->printToConsole("%%%%%%%%%");
+    if(error_happened)
+        out->printToConsole("%%%%%");
+    else
+        out->printToConsole("%%%%%%%%%");
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
 

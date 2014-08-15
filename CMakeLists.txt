@@ -141,4 +141,6 @@ set(CPACK_PACKAGE_VERSION_MAJOR "${myproject_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${myproject_VERSION_MINOR}")
 include(CPack)
 
-list(APPEND CMAKE_CXX_FLAGS "-std=c++0x")
+if(NOT MSVC)
+	list(APPEND CMAKE_CXX_FLAGS "-std=c++0x")
+endif()

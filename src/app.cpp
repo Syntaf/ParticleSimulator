@@ -80,7 +80,7 @@ bool App::initGL()
     d_particles_manager->genGlBuffers();
 
     //dark blue background
-    glClearColor(0.0f, 0.0f, 0.3f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
 
     //create and compile our GLSL program from the shaders
     d_program_id = LoadShaders("shaders/vertexshader.vert",
