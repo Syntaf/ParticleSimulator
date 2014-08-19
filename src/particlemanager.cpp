@@ -150,102 +150,102 @@ void ParticleManager::activateTexture()
 void ParticleManager::updateParticles(const float& delta, glm::mat4& ProjectionMatrix,
                                       glm::mat4& ViewMatrix)
 {
-        bool pressed = false;
-        //Need the cameras position in order to sort the particles
-        glm::vec3 CameraPosition(glm::inverse(ViewMatrix)[3]);
-        //get the VP
+    bool pressed = false;
+    //Need the cameras position in order to sort the particles
+    glm::vec3 CameraPosition(glm::inverse(ViewMatrix)[3]);
+    //get the VP
 
-        //grab mouse coordinates so the particles can accelerate toward the given
-        //  position. The following code converts SFML mouse coordinates into model
-        //  space coordinates that OpenGL can use with the current particle coords
-        //  . The equation is a brain twister, I barley understand what I did myself
-        glm::vec4 mousePos(
-            sf::Mouse::getPosition(*d_parent_window).x,
-            sf::Mouse::getPosition(*d_parent_window).y,
-            0.0f,
-            1.0f
-            );
+    //grab mouse coordinates so the particles can accelerate toward the given
+    //  position. The following code converts SFML mouse coordinates into model
+    //  space coordinates that OpenGL can use with the current particle coords
+    //  . The equation is a brain twister, I barley understand what I did myself
+    glm::vec4 mousePos(
+        sf::Mouse::getPosition(*d_parent_window).x,
+        sf::Mouse::getPosition(*d_parent_window).y,
+        0.0f,
+        1.0f
+        );
 
-        //manipulation from mouse cords to model-view mouse cords
-        //find inverse of Proj * View
-        glm::mat4 matProj = ViewMatrix * ProjectionMatrix;
-        glm::mat4 inverse = glm::inverse(matProj);
-        float winZ = 1.0;
+    //manipulation from mouse cords to model-view mouse cords
+    //find inverse of Proj * View
+    glm::mat4 matProj = ViewMatrix * ProjectionMatrix;
+    glm::mat4 inverse = glm::inverse(matProj);
+    float winZ = 1.0;
 
-        //determine space cords
-        glm::vec4 vIn(    (2.0f*((float)(mousePos.x) / (d_parent_window->getSize().x))) - 1.0f,    //2 * x / window.x - 1.0f
-            1.0f - (2.0f * ((float)(mousePos.y)) / (d_parent_window->getSize().y)),            //1 - 2 * y / window.y
-            2.0 * winZ - 1.0f,                                                        //equates to 1, we are only manipulating y,z
-            1.0f                                                                    //dont question it
-            );
+    //determine space cords
+    glm::vec4 vIn(    (2.0f*((float)(mousePos.x) / (d_parent_window->getSize().x))) - 1.0f,    //2 * x / window.x - 1.0f
+        1.0f - (2.0f * ((float)(mousePos.y)) / (d_parent_window->getSize().y)),            //1 - 2 * y / window.y
+        2.0 * winZ - 1.0f,                                                        //equates to 1, we are only manipulating y,z
+        1.0f                                                                    //dont question it
+        );
 
 
-        //find inverse
-        glm::vec4 mousePosmdl = vIn * inverse;
+    //find inverse
+    glm::vec4 mousePosmdl = vIn * inverse;
 
-        mousePosmdl.w = 1.0f / mousePosmdl.w;
-        mousePosmdl.x *= mousePosmdl.w;
-        mousePosmdl.y *= mousePosmdl.w;
-        mousePosmdl.z *= mousePosmdl.w;
+    mousePosmdl.w = 1.0f / mousePosmdl.w;
+    mousePosmdl.x *= mousePosmdl.w;
+    mousePosmdl.y *= mousePosmdl.w;
+    mousePosmdl.z *= mousePosmdl.w;
 
-        //if left mouse button is pressed
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-            pressed = true;
-        }else
-            pressed = false;
+    //if left mouse button is pressed
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+        pressed = true;
+    }else
+        pressed = false;
 
-        // calculate next position of particles, determine color as well
-        GLsizei ParticlesCount = 0;
+    // calculate next position of particles, determine color as well
+    GLsizei ParticlesCount = 0;
 #ifndef USE_OPENCL
-        for(size_t i=0; i<d_particles_container.size(); i++){
-            Particle& p = d_particles_container[i]; // shortcut
+    for(size_t i=0; i<d_particles_container.size(); i++){
+        Particle& p = d_particles_container[i]; // shortcut
 
-            //cycle through all particles currently alive
-            if(p.life > 0.0f){
+        //cycle through all particles currently alive
+        if(p.life > 0.0f){
 
-                // Decrease life, cycle through now if it's *still alive
-                p.life -= delta;
-                if (p.life > 0.0f){
+            // Decrease life, cycle through now if it's *still alive
+            p.life -= delta;
+            if (p.life > 0.0f){
 
-                    p.addForce(
-                        (glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500, -70.0) - p.pos) * (float)(pressed*d_MOUSEFORCE/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y, -70.0f),p.pos)+10,2))));
-                    p.addForce( -p.speed*d_DRAG);
+                p.addForce(
+                    (glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500, -70.0) - p.pos) * (float)(pressed*d_MOUSEFORCE/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y, -70.0f),p.pos)+10,2))));
+                p.addForce( -p.speed*d_DRAG);
 
-                    glm::vec3 prevPosition = p.pos;
-                    p.pos = p.pos + p.speed*(float)delta + 0.5f*p.getTotalForce()/d_MASS*(float)pow(delta,2);
-                    p.speed = (p.pos - prevPosition)/(float)delta;
+                glm::vec3 prevPosition = p.pos;
+                p.pos = p.pos + p.speed*(float)delta + 0.5f*p.getTotalForce()/d_MASS*(float)pow(delta,2);
+                p.speed = (p.pos - prevPosition)/(float)delta;
 
-                    p.clearForce();
+                p.clearForce();
 
-                    float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
-                    p.r = 120;
-                    p.g = clamp(200 - (normSpeed)*20,5,255);
-                    p.b = 10;
+                float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
+                p.r = 120;
+                p.g = clamp(200 - (normSpeed)*20,5,255);
+                p.b = 10;
 
-                    p.cameradistance = glm::length2( p.pos - CameraPosition );
+                p.cameradistance = glm::length2( p.pos - CameraPosition );
 
-                    fillParticleGlBuffers(int(i), ParticlesCount);
-                }else{
-                    // Particles that just died will be put at the end of the buffer in SortParticles();
-                    p.cameradistance = -1.0f;
-                }
-                ParticlesCount++;
+                fillParticleGlBuffers(int(i), ParticlesCount);
+            }else{
+                // Particles that just died will be put at the end of the buffer in SortParticles();
+                p.cameradistance = -1.0f;
             }
+            ParticlesCount++;
         }
+    }
 
-        updateGlBuffers();
+    updateGlBuffers();
 
 #else // USE_OPENCL
 
-        ParticlesCount = (GLsizei)d_particles_container.size();
+    ParticlesCount = (GLsizei)d_particles_container.size();
 
-        // move gl buffers to cl
-        cl_updater->lock_gl_buffers();
+    // move gl buffers to cl
+    cl_updater->lock_gl_buffers();
 
-        cl_updater->update(mousePosmdl, pressed, delta, ParticlesCount);
+    cl_updater->update(mousePosmdl, pressed, delta, ParticlesCount);
 
-        // move buffers back to gl
-        cl_updater->unlock_gl_buffers();
+    // move buffers back to gl
+    cl_updater->unlock_gl_buffers();
 
 #endif // USE_OPENCL
 }
