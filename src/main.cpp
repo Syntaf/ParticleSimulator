@@ -27,7 +27,7 @@
 #endif
 
 #ifdef WIN32
-#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 
 int main(int argc, char* argv[]) {
@@ -38,13 +38,20 @@ int main(int argc, char* argv[]) {
         ". Unless you are actually debugging, switch to Release mode\n" << std::endl;
 #endif
 
+    //particle count for program specified during command line
+    int particle_count;
+    if(argc == 2)
+        particle_count = atoi(argv[1]);
+    else
+        particle_count = 300000;
+
     std::cout << "Particle Simulator Version: " << VERSION_MAJOR << "." << VERSION_MINOR << "\n";
 
     //keep 1.33 ratio
     App programApp(sf::VideoMode(1000,750));
 
     //if either initialization fails, exit
-    if( !(programApp.initGL()) || !(programApp.initParticles("textures/Particle.dds")) )
+    if( !(programApp.initGL(particle_count)) || !(programApp.initParticles("textures/Particle.dds")) )
         return -1;
 
     //run main loop

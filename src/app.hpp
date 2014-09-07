@@ -14,7 +14,7 @@ class App{
 
         //initialize uniform locations, compile shaders and create
         //  program ID
-        bool initGL();
+        bool initGL(const int& particle_count);
 
         //load a texture and initialize particle starting positions
         //  if openCL is enabled it will also put all of the new data

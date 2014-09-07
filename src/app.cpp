@@ -63,7 +63,7 @@ App::~App()
     glDeleteProgram(d_program_id);
 }
 
-bool App::initGL()
+bool App::initGL(const int& particle_count)
 {
     glewExperimental = true;
     if(glewInit() != GLEW_OK) {
@@ -71,7 +71,7 @@ bool App::initGL()
         return false;
     }
     //create our particle manager class
-    d_particles_manager = new ParticleManager(&d_main_window);
+    d_particles_manager = new ParticleManager(&d_main_window, particle_count);
 
     //bind particle manager to console window
     d_console_window->bindParticleManager(d_particles_manager);
