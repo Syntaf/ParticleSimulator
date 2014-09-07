@@ -129,7 +129,7 @@ void ConsoleManager::handleCommand()
                 App::procClose();
                 break;
             case consolecommands::HELP:
-                printToConsole("List of available commands:%get <drag/mass/mouseforce/particlecount>%    get value of variable%set <drag/mass/mouseforce/particlecount>%     set value of variable%reset%    reset all particles on screen%exit%    exit program");
+                printToConsole("  List of available commands:%  get <drag/mass/mouseforce/particlecount>%      get value of variable%  set <drag/mass/mouseforce/particlecount>%       set value of variable%  reset%    reset all particles on screen%  exit%      exit program");
                 break;
             case consolecommands::RESET:
                 d_particle_manager->resetParticles();
@@ -213,22 +213,22 @@ void ConsoleManager::handleSetCommand(const std::string& str)
     consolecommands::VarKey key;
     if(!consolecommands::isValidCommandVariable(str_sub_string, key)) {
         if(str_sub_string.empty())
-            printToConsole("no variable specififed");
+            printToConsole("  no variable specififed");
         else {
             std::stringstream ss;
-            ss << "variable " << str_sub_string << " not found";
+            ss << "  variable " << str_sub_string << " not found";
             printToConsole(ss.str());
         }
     }else{
         std::stringstream ss;
         if(value.empty()){
-            printToConsole("no value specified");
+            printToConsole("  no value specified");
         }else{
             ss << value;
             float numeric_value;
             ss >> numeric_value;
             if(numeric_value <= 0) {
-                printToConsole("value cannot be negative or zero wtf");
+                printToConsole("  value cannot be negative or zero wtf");
                 return;
             }
             switch(key) {
@@ -242,7 +242,7 @@ void ConsoleManager::handleSetCommand(const std::string& str)
                     d_particle_manager->setMouseForce(numeric_value);
                 break;
                 case consolecommands::PARTICLECOUNT:
-                    printToConsole("command not yet supported, sorry!");
+                    printToConsole("  command not yet supported, sorry!");
                 break;
             }
         }
@@ -274,13 +274,13 @@ void ConsoleManager::handleGetCommand(const std::string& str)
         ss.precision(2);
         switch(key) {
             case consolecommands::DRAG:
-                ss << std::fixed << d_particle_manager->getDrag() << "f";
+                ss << "  " << std::fixed << d_particle_manager->getDrag() << "f";
             break;
             case consolecommands::MASS:
-                ss << std::fixed << d_particle_manager->getMass() << "f";
+                ss << "  " << std::fixed << d_particle_manager->getMass() << "f";
             break;
             case consolecommands::MOUSEFORCE:
-                ss << std::fixed << d_particle_manager->getMouseForce() << "f";
+                ss << "  " << std::fixed << d_particle_manager->getMouseForce() << "f";
             break;
             case consolecommands::PARTICLECOUNT:
                 ss << d_particle_manager->getParticleCount();
