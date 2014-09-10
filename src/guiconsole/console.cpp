@@ -244,6 +244,18 @@ void ConsoleManager::handleSetCommand(const std::string& str)
                 case consolecommands::PARTICLECOUNT:
                     printToConsole("  command not yet supported, sorry!");
                 break;
+                case consolecommands::COLOR_R:
+                    d_particle_manager->setColorR(numeric_value);
+                break;
+                case consolecommands::COLOR_G:
+                    d_particle_manager->setColorG(numeric_value);
+                break;
+                case consolecommands::COLOR_B:
+                    d_particle_manager->setColorB(numeric_value);
+                break;
+                case consolecommands::COLOR_A:
+                    d_particle_manager->setColorA(numeric_value);
+                break;
             }
         }
     }
@@ -283,7 +295,20 @@ void ConsoleManager::handleGetCommand(const std::string& str)
                 ss << "  " << std::fixed << d_particle_manager->getMouseForce() << "f";
             break;
             case consolecommands::PARTICLECOUNT:
-                ss << d_particle_manager->getParticleCount();
+                ss << "  " << d_particle_manager->getParticleCount();
+            break;
+            case consolecommands::COLOR_R:
+                ss << "  " << d_particle_manager->getColorR();
+            break;
+            case consolecommands::COLOR_G:
+                ss << "  " << d_particle_manager->getColorG();
+            break;
+            case consolecommands::COLOR_B:
+                ss << "  " << d_particle_manager->getColorB();
+            break;
+            case consolecommands::COLOR_A:
+                ss << "  " << d_particle_manager->getColorA();
+            break;
         }
         printToConsole(ss.str());
     }

@@ -18,7 +18,11 @@ namespace consolecommands {
         "drag",
         "mass",
         "mouseforce",
-        "particlecount"
+        "particlecount",
+        "color_r",
+        "color_g",
+        "color_b",
+        "color_a"
     };
 
     enum Key {
@@ -33,7 +37,11 @@ namespace consolecommands {
         DRAG=0,
         MASS,
         MOUSEFORCE,
-        PARTICLECOUNT
+        PARTICLECOUNT,
+        COLOR_R,
+        COLOR_G,
+        COLOR_B,
+        COLOR_A
     };
 
     bool isValidCommandKey(const std::string& key, Key& k) 

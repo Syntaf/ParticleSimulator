@@ -42,12 +42,21 @@ class ParticleManager{
         void setDrag(const float& val);
         void setMass(const float& val);
         void setMouseForce(const float& val);
+        void setColorR(const unsigned char& val);
+        void setColorG(const unsigned char& val);
+        void setColorB(const unsigned char& val);
+        void setColorA(const unsigned char& val);
+
 
         //get functions
         float getDrag();
         float getMass();
         float getMouseForce();
         int getParticleCount();
+        int getColorR();
+        int getColorG();
+        int getColorB();
+        int getColorA();
 
     private:
         float Distance(glm::vec3 const& v1, glm::vec3 const& v2);
@@ -79,6 +88,7 @@ class ParticleManager{
 #endif
 
         //define program 'constants'
+        unsigned char d_R, d_G, d_B, d_A;
         float d_MOUSEFORCE;
         float d_MASS;
         float d_SIZE;

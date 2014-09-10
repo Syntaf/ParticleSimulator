@@ -23,7 +23,8 @@ const GLfloat ParticleManager::g_vertex_buffer_data[] = {
 ParticleManager::ParticleManager(sf::Window* parent_window, int maxparticles, float drag,
                                  float mass, float size, float mouseforce):
 d_MAXPARTICLES(maxparticles), d_DRAG(drag), d_MASS(mass),
-d_SIZE(size), d_MOUSEFORCE(mouseforce)
+d_SIZE(size), d_MOUSEFORCE(mouseforce), d_R(120), d_G(200),
+d_B(10), d_A(255)
 {
     d_parent_window = parent_window;
 
@@ -218,9 +219,9 @@ void ParticleManager::updateParticles(const float& delta, glm::mat4& ProjectionM
                 p.clearForce();
 
                 float normSpeed = sqrt( pow(p.speed.x,2) + pow(p.speed.y,2));
-                p.r = 120;
-                p.g = clamp(200 - (normSpeed)*20,5,255);
-                p.b = 10;
+                p.r = d_R;
+                p.g = clamp(d_G - (normSpeed)*20,5,255);
+                p.b = d_B;
 
                 p.cameradistance = glm::length2( p.pos - CameraPosition );
 
@@ -334,6 +335,26 @@ void ParticleManager::setMouseForce(const float& val)
     d_MOUSEFORCE = val;
 }
 
+void ParticleManager::setColorR(const unsigned char& val)
+{
+    d_R = val;
+}
+
+void ParticleManager::setColorG(const unsigned char& val)
+{
+    d_G = val;
+}
+
+void ParticleManager::setColorB(const unsigned char& val)
+{
+    d_B = val;
+}
+
+void ParticleManager::setColorA(const unsigned char& val)
+{
+    d_A = val;
+}
+
 void ParticleManager::resetParticles()
 {
     d_particles_container.clear();
@@ -375,4 +396,24 @@ float ParticleManager::getMouseForce()
 int ParticleManager::getParticleCount()
 {
     return d_MAXPARTICLES;
+}
+
+int ParticleManager::getColorR()
+{
+    return d_R;
+}
+
+int ParticleManager::getColorG()
+{
+    return d_G;
+}
+
+int ParticleManager::getColorB()
+{
+    return d_B;
+}
+
+int ParticleManager::getColorA()
+{
+    return d_A;
 }
