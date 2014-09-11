@@ -67,6 +67,10 @@ if(USE_OPENCL)
     )
 endif()
 
+if(USE_TGUI)
+    file(COPY ${PROJECT_SOURCE_DIR}/TGUI DESTINATION ${PROJECT_BINARY_DIR}/Release)
+endif()
+
 #include needed directories
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/shaders")

@@ -46,7 +46,7 @@ void ConsoleManager::init()
     //  to display previous commands, everything blends so the user will
     //  think this is all one window!
     d_console_edit_box = tgui::EditBox::Ptr(gui);
-    d_console_edit_box->load("TGUI/widgets/black.conf");
+    d_console_edit_box->load("TGUI/widgets/Black.conf");
     d_console_edit_box->setSize(400,20);
     d_console_edit_box->setPosition(0,180);
     d_console_edit_box->setTextSize(12);
@@ -55,7 +55,7 @@ void ConsoleManager::init()
     
 
     d_console_command_list = tgui::ChatBox::Ptr(gui);
-    d_console_command_list->load("TGUI/widgets/black.conf");
+    d_console_command_list->load("TGUI/widgets/Black.conf");
     d_console_command_list->setSize(400,185);
     d_console_command_list->setPosition(0,0);
     d_console_command_list->removeScrollbar();
