@@ -24,7 +24,7 @@ option (USE_OPENCL
 
 #option to enable TGUI experimental
 option (USE_TGUI
-	"Use TGUI experimental implementation" ON)
+    "Use TGUI experimental implementation" ON)
 
 #include sources, headers and runtime dependencies
 set(HEADERS
@@ -32,15 +32,15 @@ set(HEADERS
         src/common/texture.hpp
         src/common/controls.hpp
         src/guiconsole/console.hpp
-		src/guiconsole/consolecommands.hpp
+        src/guiconsole/consolecommands.hpp
         src/particle.hpp
-		src/particlemanager.hpp
-		src/app.hpp
+        src/particlemanager.hpp
+        src/app.hpp
 )
 set(SOURCES
         src/main.cpp
-		src/particlemanager.cpp
-		src/app.cpp
+        src/particlemanager.cpp
+        src/app.cpp
         src/guiconsole/console.cpp
         src/common/shader.cpp
         src/common/texture.cpp
@@ -142,5 +142,5 @@ set(CPACK_PACKAGE_VERSION_MINOR "${myproject_VERSION_MINOR}")
 include(CPack)
 
 if(NOT MSVC)
-	list(APPEND CMAKE_CXX_FLAGS "-std=c++0x")
+    list(APPEND CMAKE_CXX_FLAGS "-std=c++0x")
 endif()

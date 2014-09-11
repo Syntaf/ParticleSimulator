@@ -30,6 +30,8 @@ App::App(sf::VideoMode mode):
         sf::ContextSettings(32, 8, 0, 3, 3)
     );
 
+    d_main_window.setPosition(sf::Vector2i(500,50));
+
 #ifdef USE_TGUI
     d_console_window = new ConsoleManager(&d_main_window);
 #endif

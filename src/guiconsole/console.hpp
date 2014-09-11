@@ -28,7 +28,7 @@ class ConsoleManager {
         void render();
     private:
         //technically 12 since we start at zero
-        static const int COMMAND_COUNT = 12;
+        static const int COMMAND_COUNT = 16;
         //console window and pointer to main window
         sf::RenderWindow d_console_window;
         sf::Window *d_parent_window;

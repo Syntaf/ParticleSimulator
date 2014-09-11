@@ -133,9 +133,9 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
     }
     //move text to top of console
     if(error_happened)
-        out->printToConsole("%%%%%");
+        out->printToConsole("%%%%");
     else
-        out->printToConsole("%%%%%%%%%");
+        out->printToConsole("%%%%%%%%");
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
 
