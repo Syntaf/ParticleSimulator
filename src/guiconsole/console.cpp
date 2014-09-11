@@ -17,7 +17,7 @@ ConsoleManager::ConsoleManager(sf::Window *Parent):
     );
 
     gui.setWindow(d_console_window);
-    gui.setGlobalFont("TGUI/fonts/TerminalVector.ttf");
+    gui.setGlobalFont("tgui/fonts/TerminalVector.ttf");
 
     //to line console up with main window, divide parent size by some constant(2.35)
     d_console_window.setPosition( sf::Vector2i(
@@ -46,7 +46,7 @@ void ConsoleManager::init()
     //  to display previous commands, everything blends so the user will
     //  think this is all one window!
     d_console_edit_box = tgui::EditBox::Ptr(gui);
-    d_console_edit_box->load("TGUI/widgets/Black.conf");
+    d_console_edit_box->load("tgui/widgets/Black.conf");
     d_console_edit_box->setSize(400,20);
     d_console_edit_box->setPosition(0,180);
     d_console_edit_box->setTextSize(12);
@@ -55,7 +55,7 @@ void ConsoleManager::init()
     
 
     d_console_command_list = tgui::ChatBox::Ptr(gui);
-    d_console_command_list->load("TGUI/widgets/Black.conf");
+    d_console_command_list->load("tgui/widgets/Black.conf");
     d_console_command_list->setSize(400,185);
     d_console_command_list->setPosition(0,0);
     d_console_command_list->removeScrollbar();
