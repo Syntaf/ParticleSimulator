@@ -59,10 +59,10 @@ void ParticleManager::initParticles()
             particle.life = 1000.0f;
             particle.cameradistance = -1.0f;
 
-            particle.r = 255;
-            particle.g = 0;
-            particle.b = 0;
-            particle.a = 255;
+            particle.r = d_R;
+            particle.g = d_G;
+            particle.b = d_B;
+            particle.a = d_A;
 
             particle.size = d_SIZE;
             d_particles_container.push_back(particle);
@@ -367,10 +367,10 @@ void ParticleManager::resetParticles()
             particle.life = 1000.0f;
             particle.cameradistance = -1.0f;
 
-            particle.r = 255;
-            particle.g = 0;
-            particle.b = 0;
-            particle.a = 255;
+            particle.r = d_R;
+            particle.g = d_G;
+            particle.b = d_B;
+            particle.a = d_A;
 
             particle.size = d_SIZE;
             d_particles_container.push_back(particle);

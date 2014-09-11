@@ -37,6 +37,7 @@ class ConsoleManager {
         void translateCommandsUp();
         void handleSetCommand(const std::string& str);
         void handleGetCommand(const std::string& str);
+        void handleHelpCommand(const std::string& str);
 
         tgui::Gui gui;
         tgui::EditBox::Ptr d_console_edit_box;

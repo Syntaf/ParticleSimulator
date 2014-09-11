@@ -129,7 +129,8 @@ void ConsoleManager::handleCommand()
                 App::procClose();
                 break;
             case consolecommands::HELP:
-                printToConsole("get%    return value of certain variable%    mass,mouseforce,drag,particlecount,color_r/g/b/a");
+                printToConsole("list of available commands:%    get%    set%    reset%    exit%%type help <command> for additional information");
+                handleHelpCommand(command);
                 break;
             case consolecommands::RESET:
                 d_particle_manager->resetParticles();
@@ -227,8 +228,8 @@ void ConsoleManager::handleSetCommand(const std::string& str)
             ss << value;
             float numeric_value;
             ss >> numeric_value;
-            if(numeric_value <= 0) {
-                printToConsole("value cannot be negative or zero wtf");
+            if(numeric_value < 0) {
+                printToConsole("value cannot be negative wtf");
                 return;
             }
             switch(key) {
@@ -311,5 +312,46 @@ void ConsoleManager::handleGetCommand(const std::string& str)
             break;
         }
         printToConsole(ss.str());
+    }
+}
+
+void ConsoleManager::handleHelpCommand(const std::string& str)
+{
+     //get substring holding just the str
+    std::string str_sub_string = str.substr(
+        0, 
+        std::distance(
+            str.begin(), 
+            std::find(str.begin(), str.end(), ' ')
+        )
+    );
+
+    if(str_sub_string.empty())
+        return;
+
+    consolecommands::Key key;
+    if(!consolecommands::isValidCommandKey(str_sub_string, key)) {
+        if(str_sub_string.empty())
+            printToConsole("no variable specififed");
+        else {
+            std::stringstream ss;
+            ss << "command " << str_sub_string << " not found";
+            printToConsole(ss.str());
+        }
+    }else{
+        switch(key) {
+            case consolecommands::GET:
+                printToConsole("get:%    retrieve variable values, list of var's:%    mass,drag,mouseforce%    particlecount,color_r/g/b/a");
+            break;
+            case consolecommands::SET:
+                printToConsole("set:%    set value of variable, list of var's allowed:%    mass,drag,mouseforce%    color_r/g/b/a");
+            break;
+            case consolecommands::RESET:
+                printToConsole("reset:%    remove all acting force on particles and%    position them at the center of the screen");
+            break;
+            case consolecommands::EXIT:
+                printToConsole("exit:%    exit the program, esc will also exit the%    program");
+            break;
+        }
     }
 }
