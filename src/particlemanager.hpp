@@ -46,6 +46,7 @@ class ParticleManager{
         void setColorG(const unsigned char& val);
         void setColorB(const unsigned char& val);
         void setColorA(const unsigned char& val);
+        void setColorRand(const int& val);
 
 
         //get functions

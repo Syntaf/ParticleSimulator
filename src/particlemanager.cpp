@@ -23,8 +23,8 @@ const GLfloat ParticleManager::g_vertex_buffer_data[] = {
 ParticleManager::ParticleManager(sf::Window* parent_window, int maxparticles, float drag,
                                  float mass, float size, float mouseforce):
 d_MAXPARTICLES(maxparticles), d_DRAG(drag), d_MASS(mass),
-d_SIZE(size), d_MOUSEFORCE(mouseforce), d_R(120), d_G(200),
-d_B(10), d_A(255)
+d_SIZE(size), d_MOUSEFORCE(mouseforce), d_R(15), d_G(200),
+d_B(75), d_A(255)
 {
     d_parent_window = parent_window;
 
@@ -53,7 +53,7 @@ void ParticleManager::initParticles()
     for(int i=0; i<(int)sqrt(d_MAXPARTICLES); i++) {
         for(int j=0; j<(int)sqrt(d_MAXPARTICLES); j++) {
             Particle particle;
-            glm::vec2 d2Pos = glm::vec2(j*0.06, i*0.06) + glm::vec2(-20.0f,-20.0f);
+            glm::vec2 d2Pos = glm::vec2(j*0.06, i*0.06) + glm::vec2(-17.0f,-17.0f);
             particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-70);
 
             particle.life = 1000.0f;
@@ -355,6 +355,14 @@ void ParticleManager::setColorA(const unsigned char& val)
     d_A = val;
 }
 
+void ParticleManager::setColorRand(const int& val)
+{
+    if(val > 255 || val < 0) return;
+    d_R = std::rand() % 255 - val;
+    d_G = std::rand() % 255 - val;
+    d_B = std::rand() % 255 - val;
+}
+
 void ParticleManager::resetParticles()
 {
     d_particles_container.clear();
@@ -417,3 +425,4 @@ int ParticleManager::getColorA()
 {
     return d_A;
 }
+

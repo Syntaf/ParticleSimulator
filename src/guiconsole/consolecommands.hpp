@@ -11,7 +11,8 @@ namespace consolecommands {
         "set",
         "get",
         "help",
-        "reset"
+        "reset",
+        "vars"
     };
 
     std::string valid_variables[] = {
@@ -22,7 +23,9 @@ namespace consolecommands {
         "color_r",
         "color_g",
         "color_b",
-        "color_a"
+        "color_a",
+        "color_rand",
+        "colors"
     };
 
     enum Key {
@@ -30,7 +33,8 @@ namespace consolecommands {
         SET,
         GET,
         HELP,
-        RESET
+        RESET,
+        VARS
     };
 
     enum VarKey {
@@ -41,7 +45,9 @@ namespace consolecommands {
         COLOR_R,
         COLOR_G,
         COLOR_B,
-        COLOR_A
+        COLOR_A,
+        COLOR_RAND,
+        COLORS
     };
 
     bool isValidCommandKey(const std::string& key, Key& k) 

@@ -129,12 +129,15 @@ void ConsoleManager::handleCommand()
                 App::procClose();
                 break;
             case consolecommands::HELP:
-                printToConsole("list of available commands:%    get%    set%    reset%    exit%%type help <command> for additional information");
+                printToConsole("list of available commands:%    get%    set%    reset%    exit%    vars%%type help <command> for additional information");
                 handleHelpCommand(command);
                 break;
             case consolecommands::RESET:
                 d_particle_manager->resetParticles();
                 break;
+            case consolecommands::VARS:
+                printToConsole("Invalid Command");
+            break;
         }
     }
 }
@@ -257,6 +260,12 @@ void ConsoleManager::handleSetCommand(const std::string& str)
                 case consolecommands::COLOR_A:
                     d_particle_manager->setColorA(numeric_value);
                 break;
+                case consolecommands::COLOR_RAND:
+                    d_particle_manager->setColorRand(numeric_value);
+                break;
+                case consolecommands::COLORS:
+                    printToConsole("cannot set command 'colors', specify each value with color_r/g/b");
+                break;
             }
         }
     }
@@ -310,6 +319,13 @@ void ConsoleManager::handleGetCommand(const std::string& str)
             case consolecommands::COLOR_A:
                 ss << d_particle_manager->getColorA();
             break;
+            case consolecommands::COLOR_RAND:
+                ss << "cannot get color_rand, command is specific to set";
+            break;
+            case consolecommands::COLORS:
+                ss << "R " << d_particle_manager->getColorR() 
+                   << "%G " << d_particle_manager->getColorG() 
+                   << "%B " << d_particle_manager->getColorB();
         }
         printToConsole(ss.str());
     }
@@ -341,16 +357,19 @@ void ConsoleManager::handleHelpCommand(const std::string& str)
     }else{
         switch(key) {
             case consolecommands::GET:
-                printToConsole("get:%    retrieve variable values, list of var's:%    mass,drag,mouseforce%    particlecount,color_r/g/b/a");
+                printToConsole("get:%    retrieve variable values, to list of vars:%    help vars");
             break;
             case consolecommands::SET:
-                printToConsole("set:%    set value of variable, list of var's allowed:%    mass,drag,mouseforce%    color_r/g/b/a");
+                printToConsole("set:%    set value of variable, to list of vars:%    help vars");
             break;
             case consolecommands::RESET:
                 printToConsole("reset:%    remove all acting force on particles and%    position them at the center of the screen");
             break;
             case consolecommands::EXIT:
                 printToConsole("exit:%    exit the program, esc will also exit the%    program");
+            break;
+            case consolecommands::VARS:
+                printToConsole("list of available program variables:%    drag,mass,mouseforce,particlecount%    color_r/g/b/a,colors,color_rand");
             break;
         }
     }
