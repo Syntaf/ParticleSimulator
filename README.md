@@ -104,7 +104,7 @@ OS X (Mac)
 The console in this application supports a number of commands aimed at allowing a ton of user interaction and fun. The available commands are:
    * `get <>`
    * `set <> <>`
-   * `help`
+   * `help <>`
    * `reset`
    * `exit`
 
@@ -114,6 +114,7 @@ Get and set both require a name of a variable to either get/set, and set additio
    * `mass`
    * `mouseforce`
    * `particlecount` (*get* **only** for now)
+   * `color_r/g/b/a`
 An example run of the console might look like:
 ````
 > get drag
@@ -126,7 +127,7 @@ An example run of the console might look like:
 - [x] Begin GUI development
 - [ ] Optimize particle container(chunking)
 - [x] Provide a CMake build system
-- [ ] Implement highly customizable enviroment
+- [x] Implement highly customizable enviroment
 - [ ] Move particle calculations to GPU
 
 Additional Notes
