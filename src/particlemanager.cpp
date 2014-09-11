@@ -209,7 +209,7 @@ void ParticleManager::updateParticles(const float& delta, glm::mat4& ProjectionM
             if (p.life > 0.0f){
 
                 p.addForce(
-                    (glm::vec3(glm::vec3(-mousePosmdl.x*500,-mousePosmdl.y*500, -70.0) - p.pos) * (float)(pressed*d_MOUSEFORCE/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y, -70.0f),p.pos)+10,2))));
+                    (glm::vec3(glm::vec3(-mousePosmdl.x*1500,-mousePosmdl.y*1500, -70.0) - p.pos) * (float)(pressed*d_MOUSEFORCE/pow(Distance(glm::vec3(mousePosmdl.x,mousePosmdl.y, -70.0f),p.pos)+10,2))));
                 p.addForce( -p.speed*d_DRAG);
 
                 glm::vec3 prevPosition = p.pos;
