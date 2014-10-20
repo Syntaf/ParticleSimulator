@@ -13,7 +13,9 @@ ParticleSimulator
 
 A particle simulator written with C++ SFML OpenGL. 
 
-![gif](http://i.imgur.com/WNB2BEY.gif)
+Random color | Default color
+:-----------:|:--------------:
+![gif](http://i.imgur.com/WNB2BEY.gif) | ![gif](http://i.imgur.com/DaPWowN.gif)
 
 #Installation#
 
@@ -110,6 +112,7 @@ Get and set both require a name of a variable to either get/set, and set additio
    * `mouseforce`
    * `particlecount` (*get* **only** for now)
    * `color_r/g/b/a`
+   * `color_rand` (*set* **only**, the value after this command is the range to pick random values from).
 An example run of the console might look like:
 ````
 > get drag
