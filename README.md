@@ -91,8 +91,19 @@ a quick note before moving on: this build tutorial takes into account the user i
 
 Linux
 ------
-*support coming soon*
+1. Clone the ParticleSimulator repository 
 
+    `git clone https://github.com/Syntaf/ParticleSimulator`
+
+2. Create a build directory, the Particle Simulator does not required a seperate build directory but it is **highly** recommended.
+
+    ```
+    cd ParticleSimulator
+    mkdir my_psim_build
+    cd my_psim_build
+    ```
+
+3. Invode CMake from your build directory, pointing the CMake driver to the root of your 
 OS X (Mac)
 ----------
 *support coming soon*
