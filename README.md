@@ -103,7 +103,22 @@ Linux
     cd my_psim_build
     ```
 
-3. Invode CMake from your build directory, pointing the CMake driver to the root of your 
+3. Invode CMake from your build directory, pointing the CMake driver to the root of your source
+
+    ```
+    cmake -DSFML_ROOT=/your_sfml_dir \
+          -DTGUI_ROOT=/your_tgui_dir \
+          -DGLM_ROOT=/your_glm_dir   \
+          -DGLEW_ROOT=/your_glew_dir \
+          /path/to/psim/source/tree
+   ```
+
+4. Invoke GNU make.
+
+   ``` 
+   gmake
+   gmake all_build
+   ```
 OS X (Mac)
 ----------
 *support coming soon*
