@@ -104,22 +104,16 @@ bool ParticleManager::loadTexture(const std::string& filename)
 
 void ParticleManager::genGlBuffers()
 {
-
-    //billboard vertex_buffer
     glGenBuffers(1, &d_billboard_vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, d_billboard_vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
-    // The VBO containing the positions and sizes of the particles
     glGenBuffers(1, &d_particles_position_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, d_particles_position_buffer);
-    // Initialize with empty (NULL) buffer : it will be updated later, each frame.
     glBufferData(GL_ARRAY_BUFFER, d_MAXPARTICLES* 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
 
-    // The VBO containing the colors of the particles
     glGenBuffers(1, &d_particles_color_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, d_particles_color_buffer);
-    // Initialize with empty (NULL) buffer : it will be updated later, each frame.
     glBufferData(GL_ARRAY_BUFFER, d_MAXPARTICLES* 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
 
 }
@@ -127,6 +121,7 @@ void ParticleManager::genGlBuffers()
 void ParticleManager::fillParticleGlBuffers(const int& index,const int& particle_count)
 {
     Particle& p = d_particles_container[index];
+
     // Fill the GPU buffer
     g_particle_position_size_data[4*particle_count+0] = p.pos.x;
     g_particle_position_size_data[4*particle_count+1] = p.pos.y;
@@ -263,7 +258,7 @@ void ParticleManager::updateParticles(const float& delta, glm::mat4& ProjectionM
 
 void ParticleManager::drawParticles()
 {
-            // 1st attrib buffer: vertices
+        // 1st attrib buffer: vertices
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, d_billboard_vertex_buffer);
         glVertexAttribPointer(
@@ -305,7 +300,7 @@ void ParticleManager::drawParticles()
         glVertexAttribDivisor(1, 1); // positions : one per quad (its center)                 -> 1
         glVertexAttribDivisor(2, 1); // color : one per quad                                  -> 1
 
-        //draw particles
+        // draw particles
         glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, d_MAXPARTICLES);
 
         glDisableVertexAttribArray(0);
