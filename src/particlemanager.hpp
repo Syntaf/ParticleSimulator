@@ -55,13 +55,13 @@ class ParticleManager{
         void updateParticles(const float& delta, glm::mat4& ProjectionMatrix,
                              glm::mat4& ViewMatrix);
 
-        //draw all particles to the screen
+        // Draw all particles to the screen
         void drawParticles();
 
-        //reset all particles back onto screen
+        // Reset all particles back onto screen
         void resetParticles();
 
-        //set functions
+        // Set functions
         void setDrag(const float& val);
         void setMass(const float& val);
         void setMouseForce(const float& val);
@@ -72,7 +72,7 @@ class ParticleManager{
         void setColorRand(const int& val);
 
 
-        //get functions
+        // Get functions
         float getDrag();
         float getMass();
         float getMouseForce();
