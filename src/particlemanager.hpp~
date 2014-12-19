@@ -87,21 +87,21 @@ class ParticleManager{
         unsigned char clamp(float value, float min, float max);
 
         
-        sf::Window* d_parent_window;                // keep a pointer to parent window for
+        sf::Window* d_parent_window;			    // keep a pointer to parent window for
                                                     // mouse data
 
         std::vector<Particle> d_particles_container;// meat of the class, all particles
 
-        GLuint d_vertex_array_id;                   // our vertex array id for drawing
-        GLuint d_texture_id;                        // holds the id of our particle texture
-        GLuint d_billboard_vertex_buffer;           // ensure particles always face screen
-        GLuint d_particles_position_buffer;         // position buffer for OpenGL
-        GLuint d_particles_color_buffer;            // color buffer for OpenGL
+        GLuint d_vertex_array_id;					// our vertex array id for drawing
+        GLuint d_texture_id;						// holds the id of our particle texture
+        GLuint d_billboard_vertex_buffer;			// ensure particles always face screen
+        GLuint d_particles_position_buffer;			// position buffer for OpenGL
+        GLuint d_particles_color_buffer;			// color buffer for OpenGL
 
-        GLuint d_texture;                           // location of our texture
+        GLuint d_texture;							// location of our texture
 
-        GLfloat* g_particle_position_size_data;     // particle position size data
-        GLubyte* g_particle_color_data;             // particle color data
+        GLfloat* g_particle_position_size_data;		// particle position size data
+        GLubyte* g_particle_color_data;				// particle color data
 
         static const GLfloat g_vertex_buffer_data[];// simple coordinates
         
@@ -109,12 +109,12 @@ class ParticleManager{
         cl_particle_updater *cl_updater;
 #endif
 
-        unsigned char d_R, d_G, d_B, d_A;           // the color of each particle
-        float d_MOUSEFORCE;                         // force of the mouse click
-        float d_MASS;                               // mass of each particle
-        float d_SIZE;                               // how big is each particle?
-        float d_DRAG;                               // drag after mouse released
-        int d_MAXPARTICLES;                         // number of particles
+        unsigned char d_R, d_G, d_B, d_A;			// the color of each particle
+        float d_MOUSEFORCE;							// force of the mouse click
+        float d_MASS;								// mass of each particle
+        float d_SIZE;								// how big is each particle?
+        float d_DRAG;								// drag after mouse released
+        int d_MAXPARTICLES;							// number of particles
 
 };
 
