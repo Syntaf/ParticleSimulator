@@ -97,7 +97,7 @@ void ParticleManager::initParticles()
 
 bool ParticleManager::loadTexture(const std::string& filename)
 {
-    if(!(d_texture = loadDDS("textures/Particle.DDS")))
+    if(!(d_texture = Syn::loadDDS("textures/Particle.DDS")))
         return false;
     return true;
 }

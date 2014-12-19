@@ -85,7 +85,7 @@ bool App::initGL(const int& particle_count)
     glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
 
     //create and compile our GLSL program from the shaders
-    d_program_id = LoadShaders("shaders/vertexshader.vert",
+    d_program_id = Syn::LoadShaders("shaders/vertexshader.vert",
         "shaders/fragmentshader.frag", d_console_window);
 
     //vertex shader locations
