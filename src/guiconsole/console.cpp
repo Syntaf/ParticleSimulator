@@ -26,11 +26,6 @@ ConsoleManager::ConsoleManager(sf::Window *Parent):
 
 }
 
-void ConsoleManager::bindParentWindow(sf::Window *Parent)
-{
-    d_parent_window = Parent;
-}
-
 void ConsoleManager::bindParticleManager(ParticleManager *Particlemanager) 
 {
     d_particle_manager = Particlemanager;
