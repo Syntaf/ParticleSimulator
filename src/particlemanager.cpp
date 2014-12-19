@@ -50,22 +50,22 @@ ParticleManager::~ParticleManager()
 
 void ParticleManager::initParticles()
 {
-	int max_particles = (int)sqrt(d_MAXPARTICLES);
+    int max_particles = (int)sqrt(d_MAXPARTICLES);
     for(int i=0; i<max_particles; i++) {
         for(int j=0; j<max_particles; j++) {
-			//create single particle and place it in allignment with other particles to form
-			//a square
+            //create single particle and place it in allignment with other particles to form
+            //a square
             Particle particle;
-			auto factor_x = (i - (float)max_particles / 2.0f) / (float)max_particles;
-			auto factor_y = (j - (float)max_particles / 2.0f) / (float)max_particles;
+            auto factor_x = (i - (float)max_particles / 2.0f) / (float)max_particles;
+            auto factor_y = (j - (float)max_particles / 2.0f) / (float)max_particles;
 
-			//multiply by arbitrary constant
-			glm::vec2 particle_locale_delta = glm::vec2(30  * factor_x, 30 * factor_y);
-			glm::vec2 d2Pos = glm::vec2(0, 0);
-			d2Pos += particle_locale_delta;
+            //multiply by arbitrary constant
+            glm::vec2 particle_locale_delta = glm::vec2(30  * factor_x, 30 * factor_y);
+            glm::vec2 d2Pos = glm::vec2(0, 0);
+            d2Pos += particle_locale_delta;
             particle.pos = glm::vec3(d2Pos.x,d2Pos.y,-70);
 
-			//set particle constants
+            //set particle constants
             particle.life = 1000.0f;
             particle.cameradistance = -1.0f;
 
@@ -371,20 +371,20 @@ void ParticleManager::setColorRand(const int& val)
 void ParticleManager::resetParticles()
 {
     d_particles_container.clear();
-	int max_particles = (int)sqrt(d_MAXPARTICLES);
+    int max_particles = (int)sqrt(d_MAXPARTICLES);
     for(int i=0; i<max_particles; i++) {
         for(int j=0; j<max_particles; j++) {
-			//create single particle and place it in allignment with other particles to form
-			//a square
-			Particle particle;
-			auto factor_x = (i - (float)max_particles / 2.0f) / (float)max_particles;
-			auto factor_y = (j - (float)max_particles / 2.0f) / (float)max_particles;
+            //create single particle and place it in allignment with other particles to form
+            //a square
+            Particle particle;
+            auto factor_x = (i - (float)max_particles / 2.0f) / (float)max_particles;
+            auto factor_y = (j - (float)max_particles / 2.0f) / (float)max_particles;
 
-			//multiply by arbitrary constant
-			glm::vec2 particle_locale_delta = glm::vec2(30 * factor_x, 30 * factor_y);
-			glm::vec2 d2Pos = glm::vec2(0, 0);
-			d2Pos += particle_locale_delta;
-			particle.pos = glm::vec3(d2Pos.x, d2Pos.y, -70);
+            //multiply by arbitrary constant
+            glm::vec2 particle_locale_delta = glm::vec2(30 * factor_x, 30 * factor_y);
+            glm::vec2 d2Pos = glm::vec2(0, 0);
+            d2Pos += particle_locale_delta;
+            particle.pos = glm::vec3(d2Pos.x, d2Pos.y, -70);
 
             particle.life = 1000.0f;
             particle.cameradistance = -1.0f;
