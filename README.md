@@ -103,7 +103,7 @@ Linux
     cd my_psim_build
     ```
 
-3. Invode CMake from your build directory, pointing the CMake driver to the root of your source
+3. Invoke CMake from your build directory, pointing the CMake driver to the root of your source
 
     ```
     cmake -DSFML_ROOT=/your_sfml_dir \
